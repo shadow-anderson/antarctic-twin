@@ -20,7 +20,7 @@ Response:
 Response:
 {
   "station_id": "maitri",
-  "timestamp": "2026-09-26T00:00:00Z",
+  "observation_time": "2026-09-26T00:00:00Z",
   "weather": {
     "temperature_c": { "value": -18.2, "source": "real" },
     "wind_speed_ms": { "value": 6.1, "source": "real" },

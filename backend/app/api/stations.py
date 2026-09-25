@@ -7,7 +7,6 @@ GET /stations/{station_id}/current
   given station, plus hardcoded energy / logistics placeholder values.
 """
 
-import math
 import os
 from pathlib import Path
 
@@ -18,7 +17,6 @@ from app.models.station_current import (
     EnergyBlock,
     LogisticsBlock,
     Metric,
-    NullableMetric,
     StationCurrent,
     WeatherBlock,
 )
@@ -78,16 +76,21 @@ def _csv_path(station_id: str) -> Path:
     return _PROC_DIR / f"{station_id}_clean.csv"
 
 
-def _nullable(raw_value) -> float | None:
-    """Return None for NaN / missing values, otherwise a plain float."""
-    if raw_value is None:
-        return None
-    try:
-        if math.isnan(float(raw_value)):
-            return None
-    except (TypeError, ValueError):
-        return None
-    return float(raw_value)
+def _find_latest_complete_row(df: pd.DataFrame):
+    """
+    Return the most-recent row where tempr, ap, AND ws are all non-null.
+    Sorts by obstime descending and returns the first fully-populated row.
+    Raises HTTPException 503 if no such row exists.
+    """
+    complete = df.dropna(subset=["tempr", "ap", "ws"]).sort_values(
+        "obstime", ascending=False
+    )
+    if complete.empty:
+        raise HTTPException(
+            status_code=503,
+            detail="No row with all three weather fields (tempr, ap, ws) present.",
+        )
+    return complete.iloc[0]
 
 
 # ---------------------------------------------------------------------------
@@ -135,29 +138,27 @@ def get_station_current(station_id: str) -> StationCurrent:
             detail=f"Processed data file for '{station_id}' is empty.",
         )
 
-    # 3. Sort and take latest row
-    df = df.sort_values("obstime")
-    latest = df.iloc[-1]
+    # 3. Find most-recent row where tempr, ap, AND ws are all non-null
+    latest = _find_latest_complete_row(df)
 
-    timestamp = latest["obstime"]
-    # Ensure ISO 8601 string regardless of pandas version
-    if hasattr(timestamp, "isoformat"):
-        timestamp_str = timestamp.isoformat()
+    obs_time = latest["obstime"]
+    if hasattr(obs_time, "isoformat"):
+        observation_time_str = obs_time.isoformat()
     else:
-        timestamp_str = str(timestamp)
+        observation_time_str = str(obs_time)
 
-    # 4. Build weather block — NaN → None (never crash, never lie)
+    # 4. Build weather block — all three values guaranteed non-null by row selection
     weather = WeatherBlock(
-        temperature_c=NullableMetric(value=_nullable(latest.get("tempr")), source="real"),
-        wind_speed_ms=NullableMetric(value=_nullable(latest.get("ws")), source="real"),
-        pressure_hpa=NullableMetric(value=_nullable(latest.get("ap")), source="real"),
+        temperature_c=Metric(value=float(latest["tempr"]), source="real"),
+        wind_speed_ms=Metric(value=float(latest["ws"]),    source="real"),
+        pressure_hpa= Metric(value=float(latest["ap"]),    source="real"),
     )
 
     # 5. Assemble response
     placeholder = _PLACEHOLDER[station_id]
     return StationCurrent(
         station_id=station_id,
-        timestamp=timestamp_str,
+        observation_time=observation_time_str,
         weather=weather,
         energy=placeholder["energy"],
         logistics=placeholder["logistics"],

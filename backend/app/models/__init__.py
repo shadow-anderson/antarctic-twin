@@ -1,7 +1,6 @@
 # app/models/__init__.py
 from .station_current import (
     Metric,
-    NullableMetric,
     WeatherBlock,
     EnergyBlock,
     LogisticsBlock,
@@ -10,7 +9,6 @@ from .station_current import (
 
 __all__ = [
     "Metric",
-    "NullableMetric",
     "WeatherBlock",
     "EnergyBlock",
     "LogisticsBlock",

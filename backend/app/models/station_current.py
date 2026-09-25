@@ -6,7 +6,7 @@ The shape here is a locked contract — do not change field names or nesting
 without coordinating with the frontend developer.
 """
 
-from typing import Literal, Optional
+from typing import Literal
 from pydantic import BaseModel
 
 
@@ -17,20 +17,13 @@ class Metric(BaseModel):
     source: Literal["real", "simulated", "derived"]
 
 
-class NullableMetric(BaseModel):
-    """
-    Like Metric but value may be None when the underlying data has a gap.
-    Used for weather fields that can genuinely be missing in the raw CSV.
-    """
-
-    value: Optional[float]
-    source: Literal["real", "simulated", "derived"]
-
-
 class WeatherBlock(BaseModel):
-    temperature_c: NullableMetric
-    wind_speed_ms: NullableMetric
-    pressure_hpa: NullableMetric
+    """All three fields are guaranteed non-null (router selects the most
+    recent row where tempr, ap, and ws are all present simultaneously)."""
+
+    temperature_c: Metric
+    wind_speed_ms: Metric
+    pressure_hpa: Metric
 
 
 class EnergyBlock(BaseModel):
@@ -46,7 +39,7 @@ class LogisticsBlock(BaseModel):
 
 class StationCurrent(BaseModel):
     station_id: str
-    timestamp: str  # ISO 8601 string from obstime
+    observation_time: str  # ISO 8601 string — most recent row with full weather data
     weather: WeatherBlock
     energy: EnergyBlock
     logistics: LogisticsBlock
