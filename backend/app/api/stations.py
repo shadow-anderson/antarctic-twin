@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # app/api/stations.py
 """
 Router for station-related endpoints.
@@ -962,8 +962,8 @@ def get_station_asset(station_id: str, asset_id: str) -> AssetDetail:
         raise HTTPException(status_code=404, detail=f"Asset '{asset_id}' not found.")
     return asset
 
-=======
-<<<<<<< HEAD
+
+
 # app/api/stations.py
 """
 Router for station-related endpoints.
@@ -1129,7 +1129,7 @@ def get_station_current(station_id: str) -> StationCurrent:
         energy=placeholder["energy"],
         logistics=placeholder["logistics"],
     )
-=======
+
 # app/api/stations.py
 """
 Router for station-related endpoints.
@@ -2092,6 +2092,3 @@ def get_station_asset(station_id: str, asset_id: str) -> AssetDetail:
     if asset is None:
         raise HTTPException(status_code=404, detail=f"Asset '{asset_id}' not found.")
     return asset
-
->>>>>>> 8d07530 (connected end points)
->>>>>>> 38f2e56 (connected end points)
