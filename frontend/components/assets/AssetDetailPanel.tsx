@@ -272,7 +272,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             </div>
 
             {/* TEMPERATURE */}
-            {asset.temperature_c !== undefined && (
+            {asset.temperature_c != null && (
               <div className="rounded-[20px] bg-[#E7F0F3] border border-[#D1E1E5] p-4">
 
                 <div className="flex items-start justify-between">
@@ -308,7 +308,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             )}
 
             {/* VIBRATION */}
-            {asset.vibration_mms !== undefined && (
+            {asset.vibration_mms != null && (
               <div className="rounded-[20px] bg-[#F5EDDD] border border-[#E7D9BB] p-4">
 
                 <div className="flex items-start justify-between">
@@ -344,7 +344,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             )}
 
             {/* EFFICIENCY */}
-            {asset.efficiency_pct !== undefined && (
+            {asset.efficiency_pct != null && (
               <div className="rounded-[20px] bg-[#E8EEF0] border border-[#D2DEE1] p-4">
 
                 <div className="flex items-start justify-between">
@@ -387,7 +387,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             )}
 
             {/* RUNTIME */}
-            {asset.runtime_hours !== undefined && (
+            {asset.runtime_hours != null && (
               <div className="rounded-[20px] bg-[#ECE9F2] border border-[#DDD7E7] p-4">
 
                 <div className="flex items-start justify-between">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { AssetNode, AssetDetail } from "@/lib/types";
 import { getAssetTree, getAssetDetail } from "@/lib/api";
+import { useStation } from "@/context/StationContext";
 import { AssetTree } from "./AssetTree";
 import { AssetDetailPanel } from "./AssetDetailPanel";
 import {
@@ -11,50 +12,144 @@ import {
   ShieldCheck,
   HardDrive,
   Menu,
+  AlertTriangle,
 } from "lucide-react";
 
 export const AssetsPanel: React.FC = () => {
+  /* =========================================================
+     SELECTED STATION
+  ========================================================= */
+  const { selectedStation } = useStation();
+
+  /* =========================================================
+     ASSET STATE
+  ========================================================= */
   const [treeData, setTreeData] = useState<AssetNode[]>([]);
+
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(
     "gen-01"
   );
+
   const [selectedDetail, setSelectedDetail] =
     useState<AssetDetail | null>(null);
+
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [error, setError] = useState<string | null>(null);
 
   // Controls visibility of the left hierarchy
   const [showHierarchy, setShowHierarchy] = useState<boolean>(true);
 
+  /* =========================================================
+     LOAD ASSETS FOR SELECTED STATION
+  ========================================================= */
   useEffect(() => {
     let isMounted = true;
 
-    Promise.all([
-      getAssetTree(),
-      getAssetDetail("gen-01"),
-    ]).then(([nodes, detail]) => {
-      if (isMounted) {
-        setTreeData(nodes);
-        setSelectedDetail(detail);
-        setLoading(false);
+    const loadAssets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [nodes, detail] = await Promise.all([
+          getAssetTree(selectedStation),
+          getAssetDetail(selectedStation, "gen-01"),
+        ]);
+
+        if (isMounted) {
+          setTreeData(nodes);
+          setSelectedAssetId("gen-01");
+          setSelectedDetail(detail);
+          setLoading(false);
+        }
+      } catch (err: any) {
+        if (isMounted) {
+          console.error(
+            `Failed to load asset data for station "${selectedStation}":`,
+            err
+          );
+
+          setError(
+            err?.message ??
+              `Failed to load asset data for ${selectedStation}`
+          );
+
+          setLoading(false);
+        }
       }
-    });
+    };
+
+    loadAssets();
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [selectedStation]);
 
+  /* =========================================================
+     SELECT ASSET
+  ========================================================= */
   const handleSelectNode = async (node: AssetNode) => {
+    // Only leaf assets should open diagnostics.
+    // Folder/category nodes have children.
+    if (node.children && node.children.length > 0) {
+      return;
+    }
+
     setSelectedAssetId(node.id);
 
-    const detail = await getAssetDetail(node.id);
+    try {
+      const detail = await getAssetDetail(
+        selectedStation,
+        node.id
+      );
 
-    setSelectedDetail(detail);
+      setSelectedDetail(detail);
+    } catch (err) {
+      console.error(
+        `Failed to load detail for asset "${node.id}" at station "${selectedStation}":`,
+        err
+      );
+
+      // Keep the previous detail visible rather than crashing
+    }
   };
 
-  /* =========================
+  /* =========================================================
+     RETRY
+  ========================================================= */
+  const handleRetry = async () => {
+    try {
+      setError(null);
+      setLoading(true);
+
+      const [nodes, detail] = await Promise.all([
+        getAssetTree(selectedStation),
+        getAssetDetail(selectedStation, "gen-01"),
+      ]);
+
+      setTreeData(nodes);
+      setSelectedAssetId("gen-01");
+      setSelectedDetail(detail);
+      setLoading(false);
+    } catch (err: any) {
+      console.error(
+        `Retry failed for station "${selectedStation}":`,
+        err
+      );
+
+      setError(
+        err?.message ??
+          `Failed to load asset data for ${selectedStation}`
+      );
+
+      setLoading(false);
+    }
+  };
+
+  /* =========================================================
      LOADING STATE
-  ========================= */
+  ========================================================= */
   if (loading) {
     return (
       <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-[#D8E3E5] bg-gradient-to-br from-[#F1F6F7] to-[#E8F0F2]">
@@ -71,6 +166,41 @@ export const AssetsPanel: React.FC = () => {
               Loading Asset Subsystem Hierarchy...
             </span>
           </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  /* =========================================================
+     ERROR STATE
+  ========================================================= */
+  if (error) {
+    return (
+      <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-[#E8C7C7] bg-gradient-to-br from-[#FBF3F3] to-[#F5ECEC]">
+        <div className="flex flex-col items-center gap-4 text-[#7A4A4A] text-center px-8">
+
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#F2DADA]">
+            <AlertTriangle className="w-5 h-5 text-[#B65C5C]" />
+          </div>
+
+          <div>
+            <p className="font-semibold text-sm mb-1">
+              Failed to load asset data
+            </p>
+
+            <p className="text-xs text-[#9A6A6A] max-w-sm">
+              {error}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="px-4 py-2 rounded-xl bg-[#E8C7C7] hover:bg-[#DEB8B8] text-[#7A4A4A] text-xs font-bold uppercase tracking-wider transition-colors"
+          >
+            Retry
+          </button>
 
         </div>
       </div>

@@ -5,13 +5,18 @@ export interface Metric {
   source: DataSource;
 }
 
+export interface NullableMetric {
+  value: number | null;
+  source: DataSource;
+}
+
 export interface StationCurrent {
   station_id: string;
   timestamp: string;
   weather: {
-    temperature_c: Metric;
-    wind_speed_ms: Metric;
-    pressure_hpa: Metric;
+    temperature_c: NullableMetric;
+    wind_speed_ms: NullableMetric;
+    pressure_hpa: NullableMetric;
   };
   energy: {
     generation_kw: Metric;
@@ -23,6 +28,7 @@ export interface StationCurrent {
     diesel_days_remaining: Metric;
   };
 }
+
 
 export interface Anomaly {
   variable: string;

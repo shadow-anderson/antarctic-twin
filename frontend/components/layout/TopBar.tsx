@@ -10,6 +10,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { getMissionTime } from "@/lib/api";
+
 export type ConsoleTab = "overview" | "assets" | "whatif";
 
 interface TopBarProps {
@@ -24,22 +26,65 @@ export const TopBar: React.FC<TopBarProps> = ({
   const [utcTime, setUtcTime] = useState<string>("14:32:00 UTC");
 
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
+    let isMounted = true;
+    let offsetMs = 0;
 
-      const hours = String(now.getUTCHours()).padStart(2, "0");
-      const minutes = String(now.getUTCMinutes()).padStart(2, "0");
-      const seconds = String(now.getUTCSeconds()).padStart(2, "0");
-
-      setUtcTime(`${hours}:${minutes}:${seconds} UTC`);
+    const formatUtc = (d: Date) => {
+      const hours = String(d.getUTCHours()).padStart(2, "0");
+      const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+      const seconds = String(d.getUTCSeconds()).padStart(2, "0");
+      return `${hours}:${minutes}:${seconds} UTC`;
     };
 
-    updateTime();
+    // 1. Initial sync with backend server time
+    const syncServerTime = async () => {
+      try {
+        const timeStr = await getMissionTime();
+        if (!isMounted) return;
+        // Parse timeStr like "HH:MM:SS UTC"
+        const parts = timeStr.replace(" UTC", "").split(":");
+        if (parts.length === 3) {
+          const now = new Date();
+          const serverDate = new Date(Date.UTC(
+            now.getUTCFullYear(),
+            now.getUTCMonth(),
+            now.getUTCDate(),
+            parseInt(parts[0], 10),
+            parseInt(parts[1], 10),
+            parseInt(parts[2], 10)
+          ));
+          offsetMs = serverDate.getTime() - Date.now();
+          setUtcTime(formatUtc(new Date(Date.now() + offsetMs)));
+        } else {
+          setUtcTime(timeStr);
+        }
+      } catch {
+        // Fallback to local UTC
+        if (isMounted) {
+          setUtcTime(formatUtc(new Date()));
+        }
+      }
+    };
 
-    const interval = setInterval(updateTime, 1000);
+    syncServerTime();
 
-    return () => clearInterval(interval);
+    // 2. Smooth 1-second local tick using offset
+    const tickInterval = setInterval(() => {
+      if (!isMounted) return;
+      setUtcTime(formatUtc(new Date(Date.now() + offsetMs)));
+    }, 1000);
+
+    // 3. Periodic re-sync every 60 seconds to prevent drift
+    const syncInterval = setInterval(syncServerTime, 60000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(tickInterval);
+      clearInterval(syncInterval);
+    };
   }, []);
+
+
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[#F7FAFA]/95 backdrop-blur-md border-b border-[#D9E2E5] px-4 lg:px-8 py-3 shadow-[0_1px_8px_rgba(23,54,74,0.05)]">

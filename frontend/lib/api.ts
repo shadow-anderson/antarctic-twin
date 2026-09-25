@@ -8,42 +8,13 @@ import {
   ScenarioTrigger,
 } from "./types";
 
-import {
-  MOCK_CURRENT_MAITRI,
-  MOCK_CURRENT_BHARATI,
-  MOCK_ANOMALIES_MAITRI,
-  MOCK_ANOMALIES_BHARATI,
-  ASSET_TREE_DATA,
-  MOCK_ASSET_DETAILS,
-  MOCK_WHATIF_RESULTS,
-  MOCK_LINK_INITIAL,
-} from "./mockData";
-
 /*
  * ============================================================
  * API CONFIGURATION
  * ============================================================
- *
- * NEXT_PUBLIC_USE_MOCK=true
- *      → Use deterministic mock data
- *
- * NEXT_PUBLIC_USE_MOCK=false
- *      → Use the real backend API
- *
- * This allows us to switch from mock → real backend without
- * changing the components.
  */
-
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
-
-/*
- * ============================================================
- * HELPER
- * ============================================================
- */
 
 function getApiUrl(path: string) {
   return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
@@ -53,106 +24,61 @@ function getApiUrl(path: string) {
 /*
  * ============================================================
  * STATION CURRENT DATA
+ * GET /stations/{stationId}/current
  * ============================================================
  */
 
 export async function getStationCurrent(
   stationId: string
 ): Promise<StationCurrent> {
-
-  // -------------------------
-  // MOCK MODE
-  // -------------------------
-  if (USE_MOCK) {
-    return stationId === "bharati"
-      ? MOCK_CURRENT_BHARATI
-      : MOCK_CURRENT_MAITRI;
-  }
-
-  // -------------------------
-  // REAL API MODE
-  // -------------------------
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_URL is not configured");
   }
 
-  try {
-    const res = await fetch(
-      getApiUrl(`/stations/${stationId}/current`),
-      {
-        cache: "no-store",
-      }
-    );
+  const res = await fetch(
+    getApiUrl(`/stations/${stationId}/current`),
+    { cache: "no-store" }
+  );
 
-    if (!res.ok) {
-      throw new Error(
-        `Failed to fetch station data (${res.status})`
-      );
-    }
-
-    return await res.json();
-
-  } catch (error) {
-    console.error("getStationCurrent failed:", error);
-
-    throw error;
+  if (!res.ok) {
+    throw new Error(`Failed to fetch station data (${res.status})`);
   }
+
+  return res.json();
 }
 
 
 /*
  * ============================================================
  * STATION ANOMALIES
+ * GET /stations/{stationId}/anomalies
  * ============================================================
  */
 
 export async function getStationAnomalies(
   stationId: string
 ): Promise<Anomaly[]> {
-
-  // -------------------------
-  // MOCK MODE
-  // -------------------------
-  if (USE_MOCK) {
-    return stationId === "bharati"
-      ? [...MOCK_ANOMALIES_BHARATI]
-      : [...MOCK_ANOMALIES_MAITRI];
-  }
-
-  // -------------------------
-  // REAL API MODE
-  // -------------------------
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_URL is not configured");
   }
 
-  try {
-    const res = await fetch(
-      getApiUrl(`/stations/${stationId}/anomalies`),
-      {
-        cache: "no-store",
-      }
-    );
+  const res = await fetch(
+    getApiUrl(`/stations/${stationId}/anomalies`),
+    { cache: "no-store" }
+  );
 
-    if (!res.ok) {
-      throw new Error(
-        `Failed to fetch station anomalies (${res.status})`
-      );
-    }
-
-    return await res.json();
-
-  } catch (error) {
-    console.error("getStationAnomalies failed:", error);
-
-    throw error;
+  if (!res.ok) {
+    throw new Error(`Failed to fetch station anomalies (${res.status})`);
   }
+
+  return res.json();
 }
 
 
 /*
  * ============================================================
  * WHAT-IF SIMULATION
+ * POST /stations/{stationId}/simulate
  * ============================================================
  */
 
@@ -160,100 +86,159 @@ export async function simulateWhatIf(
   stationId: string,
   trigger: ScenarioTrigger
 ): Promise<WhatIfResult> {
-
-  // -------------------------
-  // MOCK MODE
-  // -------------------------
-  if (USE_MOCK) {
-
-    // Keep the demo simulation delay.
-    await new Promise((resolve) =>
-      setTimeout(resolve, 600)
-    );
-
-    return (
-      MOCK_WHATIF_RESULTS[trigger] ||
-      MOCK_WHATIF_RESULTS.generator_failure
-    );
-  }
-
-  // -------------------------
-  // REAL API MODE
-  // -------------------------
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_URL is not configured");
   }
 
-  try {
-    const res = await fetch(
-      getApiUrl(`/stations/${stationId}/simulate`),
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          trigger,
-        }),
-      }
-    );
-
-    if (!res.ok) {
-      throw new Error(
-        `What-if simulation failed (${res.status})`
-      );
+  const res = await fetch(
+    getApiUrl(`/stations/${stationId}/simulate`),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trigger }),
     }
+  );
 
-    return await res.json();
-
-  } catch (error) {
-    console.error("simulateWhatIf failed:", error);
-
-    throw error;
+  if (!res.ok) {
+    throw new Error(`What-if simulation failed (${res.status})`);
   }
+
+  return res.json();
 }
 
 
 /*
  * ============================================================
  * LINK STATUS
+ * GET /link/status
  * ============================================================
- *
- * There is currently no real endpoint defined for this.
- * Therefore this remains mock data until the backend contract
- * provides a link-status endpoint.
  */
 
 export async function getLinkStatus(): Promise<LinkStatus> {
-  return MOCK_LINK_INITIAL;
+  if (!API_BASE_URL) {
+    return { connected: true, last_synced: "--:-- UTC" };
+  }
+
+  try {
+    const res = await fetch(getApiUrl("/link/status"), {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch link status (${res.status})`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("getLinkStatus failed:", error);
+    return { connected: true, last_synced: "--:-- UTC" };
+  }
+}
+
+
+/*
+ * ============================================================
+ * LINK TOGGLE
+ * POST /link/toggle
+ * ============================================================
+ */
+
+export async function toggleLink(): Promise<LinkStatus> {
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  const res = await fetch(getApiUrl("/link/toggle"), {
+    method: "POST",
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to toggle link status (${res.status})`);
+  }
+
+  return res.json();
+}
+
+
+/*
+ * ============================================================
+ * UTC MISSION TIME
+ * GET /system/time
+ * ============================================================
+ */
+
+export async function getMissionTime(): Promise<string> {
+  if (!API_BASE_URL) {
+    const now = new Date();
+    return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}:${String(now.getUTCSeconds()).padStart(2, "0")} UTC`;
+  }
+
+  try {
+    const res = await fetch(getApiUrl("/system/time"), {
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      return data.utc_time;
+    }
+  } catch (error) {
+    console.error("getMissionTime failed:", error);
+  }
+
+  const now = new Date();
+  return `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")}:${String(now.getUTCSeconds()).padStart(2, "0")} UTC`;
 }
 
 
 /*
  * ============================================================
  * ASSET TREE
+ * GET /stations/{stationId}/assets
  * ============================================================
- *
- * Currently mock-only because no real asset endpoint has
- * been defined yet.
  */
 
-export async function getAssetTree(): Promise<AssetNode[]> {
-  return ASSET_TREE_DATA;
+export async function getAssetTree(stationId: string): Promise<AssetNode[]> {
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  const res = await fetch(getApiUrl(`/stations/${stationId}/assets`), {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch asset tree (${res.status})`);
+  }
+
+  return res.json();
 }
 
 
 /*
  * ============================================================
  * ASSET DETAIL
+ * GET /stations/{stationId}/assets/{assetId}
  * ============================================================
- *
- * Currently mock-only because no real asset-detail endpoint
- * has been defined yet.
  */
 
 export async function getAssetDetail(
+  stationId: string,
   assetId: string
 ): Promise<AssetDetail | null> {
-  return MOCK_ASSET_DETAILS[assetId] || null;
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  const res = await fetch(getApiUrl(`/stations/${stationId}/assets/${assetId}`), {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    if (res.status === 404) return null;
+    throw new Error(`Failed to fetch asset detail (${res.status})`);
+  }
+
+  return res.json();
 }
