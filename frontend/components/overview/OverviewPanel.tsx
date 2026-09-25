@@ -47,7 +47,7 @@ It is an inland station about 100 km from the shore, at an elevation of approxim
 The station consists of a main building, fuel farm, fuel station, lake water pump house, summer camp and several smaller containerized modules. The main building provides regulated power supply, automated heating, hot and cold running water, incinerator toilets, cold storage, PA system, living and dining areas, lounge facilities and containerized laboratory space.
 Communication is provided through dedicated satellite channels, enabling voice, video and data connectivity with mainland India.`,
 
-      image: "/images/stations/maitri.jpg",
+      image: "/images/stations/Maitri.jpg",
 
       location: "Schirmacher Oasis",
       establishedLabel: "Established",
@@ -67,7 +67,7 @@ Bharati can support 47 personnel on a twin-sharing basis in the main building du
 The station consists of a main building, fuel farm, fuel station, sea water pump house, summer camp and several smaller containerized modules. The main building provides regulated power supply, automated heating and air conditioning, hot and cold running water, flush toilets, sauna, cold storage, PA system, living and dining areas, lounge facilities and laboratory space.
 Communication is provided through dedicated satellite channels, enabling voice, video and data connectivity with mainland India.`,
 
-      image: "/images/stations/bharati.jpg",
+      image: "/images/stations/Bharati.jpg",
 
       location: "Stornes Peninsula",
       establishedLabel: "Commissioned",
