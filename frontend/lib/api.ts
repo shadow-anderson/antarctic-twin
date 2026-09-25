@@ -7,6 +7,7 @@ import {
   AssetDetail,
   ScenarioTrigger,
 } from "./types";
+
 import {
   MOCK_CURRENT_MAITRI,
   MOCK_CURRENT_BHARATI,
@@ -18,75 +19,241 @@ import {
   MOCK_LINK_INITIAL,
 } from "./mockData";
 
-// API Boundary for the Antarctic Twin Console
-// Currently powered by deterministic mock datasets matching the API contract
-// When backend endpoints are ready, this file will switch to fetch() calls with zero component disruption.
+/*
+ * ============================================================
+ * API CONFIGURATION
+ * ============================================================
+ *
+ * NEXT_PUBLIC_USE_MOCK=true
+ *      → Use deterministic mock data
+ *
+ * NEXT_PUBLIC_USE_MOCK=false
+ *      → Use the real backend API
+ *
+ * This allows us to switch from mock → real backend without
+ * changing the components.
+ */
+
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-export async function getStationCurrent(stationId: string): Promise<StationCurrent> {
-  if (API_BASE_URL) {
-    try {
-      const res = await fetch(`${API_BASE_URL}/stations/${stationId}/current`);
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch {
-      // Fallback to deterministic mock data
-    }
-  }
 
-  // Deterministic mock return
-  return stationId === "bharati" ? MOCK_CURRENT_BHARATI : MOCK_CURRENT_MAITRI;
+/*
+ * ============================================================
+ * HELPER
+ * ============================================================
+ */
+
+function getApiUrl(path: string) {
+  return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
 }
 
-export async function getStationAnomalies(stationId: string): Promise<Anomaly[]> {
-  if (API_BASE_URL) {
-    try {
-      const res = await fetch(`${API_BASE_URL}/stations/${stationId}/anomalies`);
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch {
-      // Fallback to deterministic mock data
-    }
+
+/*
+ * ============================================================
+ * STATION CURRENT DATA
+ * ============================================================
+ */
+
+export async function getStationCurrent(
+  stationId: string
+): Promise<StationCurrent> {
+
+  // -------------------------
+  // MOCK MODE
+  // -------------------------
+  if (USE_MOCK) {
+    return stationId === "bharati"
+      ? MOCK_CURRENT_BHARATI
+      : MOCK_CURRENT_MAITRI;
   }
 
-  return stationId === "bharati" ? [...MOCK_ANOMALIES_BHARATI] : [...MOCK_ANOMALIES_MAITRI];
+  // -------------------------
+  // REAL API MODE
+  // -------------------------
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  try {
+    const res = await fetch(
+      getApiUrl(`/stations/${stationId}/current`),
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch station data (${res.status})`
+      );
+    }
+
+    return await res.json();
+
+  } catch (error) {
+    console.error("getStationCurrent failed:", error);
+
+    throw error;
+  }
 }
+
+
+/*
+ * ============================================================
+ * STATION ANOMALIES
+ * ============================================================
+ */
+
+export async function getStationAnomalies(
+  stationId: string
+): Promise<Anomaly[]> {
+
+  // -------------------------
+  // MOCK MODE
+  // -------------------------
+  if (USE_MOCK) {
+    return stationId === "bharati"
+      ? [...MOCK_ANOMALIES_BHARATI]
+      : [...MOCK_ANOMALIES_MAITRI];
+  }
+
+  // -------------------------
+  // REAL API MODE
+  // -------------------------
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  try {
+    const res = await fetch(
+      getApiUrl(`/stations/${stationId}/anomalies`),
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch station anomalies (${res.status})`
+      );
+    }
+
+    return await res.json();
+
+  } catch (error) {
+    console.error("getStationAnomalies failed:", error);
+
+    throw error;
+  }
+}
+
+
+/*
+ * ============================================================
+ * WHAT-IF SIMULATION
+ * ============================================================
+ */
 
 export async function simulateWhatIf(
   stationId: string,
   trigger: ScenarioTrigger
 ): Promise<WhatIfResult> {
-  if (API_BASE_URL) {
-    try {
-      const res = await fetch(`${API_BASE_URL}/stations/${stationId}/simulate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trigger }),
-      });
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch {
-      // Fallback to deterministic mock data
-    }
+
+  // -------------------------
+  // MOCK MODE
+  // -------------------------
+  if (USE_MOCK) {
+
+    // Keep the demo simulation delay.
+    await new Promise((resolve) =>
+      setTimeout(resolve, 600)
+    );
+
+    return (
+      MOCK_WHATIF_RESULTS[trigger] ||
+      MOCK_WHATIF_RESULTS.generator_failure
+    );
   }
 
-  // Quick 600ms delay to reflect computation during demo
-  await new Promise((resolve) => setTimeout(resolve, 600));
-  return MOCK_WHATIF_RESULTS[trigger] || MOCK_WHATIF_RESULTS.generator_failure;
+  // -------------------------
+  // REAL API MODE
+  // -------------------------
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  try {
+    const res = await fetch(
+      getApiUrl(`/stations/${stationId}/simulate`),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trigger,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(
+        `What-if simulation failed (${res.status})`
+      );
+    }
+
+    return await res.json();
+
+  } catch (error) {
+    console.error("simulateWhatIf failed:", error);
+
+    throw error;
+  }
 }
+
+
+/*
+ * ============================================================
+ * LINK STATUS
+ * ============================================================
+ *
+ * There is currently no real endpoint defined for this.
+ * Therefore this remains mock data until the backend contract
+ * provides a link-status endpoint.
+ */
 
 export async function getLinkStatus(): Promise<LinkStatus> {
   return MOCK_LINK_INITIAL;
 }
 
+
+/*
+ * ============================================================
+ * ASSET TREE
+ * ============================================================
+ *
+ * Currently mock-only because no real asset endpoint has
+ * been defined yet.
+ */
+
 export async function getAssetTree(): Promise<AssetNode[]> {
   return ASSET_TREE_DATA;
 }
 
-export async function getAssetDetail(assetId: string): Promise<AssetDetail | null> {
+
+/*
+ * ============================================================
+ * ASSET DETAIL
+ * ============================================================
+ *
+ * Currently mock-only because no real asset-detail endpoint
+ * has been defined yet.
+ */
+
+export async function getAssetDetail(
+  assetId: string
+): Promise<AssetDetail | null> {
   return MOCK_ASSET_DETAILS[assetId] || null;
 }
