@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   ANTARCTIC TWIN — LIGHT THEME
+   Soft Ice / Blue-Gray Enterprise UI
+   ========================================= */
+
+:root {
+  /* Page */
+  --bg-ice: #F1F5F6;
+
+  /* Surfaces */
+  --surface-card: #F9FBFB;
+  --surface-soft: #EEF3F4;
+  --surface-hover: #E8EFF1;
+
+  /* Borders */
+  --border-card: #D9E2E5;
+  --border-soft: #E4EAEC;
+
+  /* Main brand colors */
+  --polar-navy: #17364A;
+  --glacier-teal: #287C80;
+  --glacier-teal-light: #DCEEEF;
+
+  /* Accent */
+  --amber-gold: #B98232;
+  --amber-light: #F4E8D1;
+
+  /* Text */
+  --text-primary: #263746;
+  --text-secondary: #647582;
+  --text-muted: #8A99A3;
+
+  /* Status */
+  --success: #3F8068;
+  --success-light: #E1EEE9;
+
+  --warning: #B98232;
+  --warning-light: #F4E8D1;
+
+  --danger: #B65C5C;
+  --danger-light: #F4E3E3;
+
+  --info: #4C7891;
+  --info-light: #E2EDF2;
+}
+
+/* =========================================
+   BASE
+   ========================================= */
+
+html {
+  background-color: var(--bg-ice);
+}
+
+body {
+  background-color: var(--bg-ice);
+  color: var(--text-primary);
+
+  min-height: 100vh;
+  margin: 0;
+
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   TEXT SELECTION
+   ========================================= */
+
+::selection {
+  background: var(--glacier-teal-light);
+  color: var(--polar-navy);
+}
+
+/* =========================================
+   SCROLLBAR
+   ========================================= */
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #EAF0F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4D0D5;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #AABBC2;
+}
+
+/* =========================================
+   COMMON UTILITY
+   ========================================= */
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================
+   FOCUS
+   ========================================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--glacier-teal);
+  outline-offset: 2px;
+}
+
+/* =========================================
+   SMOOTH INTERACTIONS
+   ========================================= */
+
+button,
+a,
+input,
+select,
+textarea {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
