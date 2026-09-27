@@ -6,24 +6,30 @@ The shape here is a locked contract — do not change field names or nesting
 without coordinating with the frontend developer.
 """
 
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import BaseModel
 
 
 class Metric(BaseModel):
-    """A single telemetry value with its provenance label."""
+    """A single non-nullable telemetry value with its provenance label."""
 
     value: float
     source: Literal["real", "simulated", "derived"]
 
 
-class WeatherBlock(BaseModel):
-    """All three fields are guaranteed non-null (router selects the most
-    recent row where tempr, ap, and ws are all present simultaneously)."""
+class NullableMetric(BaseModel):
+    """A telemetry value that can be None when the data source has a gap."""
 
-    temperature_c: Metric
-    wind_speed_ms: Metric
-    pressure_hpa: Metric
+    value: Optional[float]
+    source: Literal["real", "simulated", "derived"]
+
+
+class WeatherBlock(BaseModel):
+    """Weather readings — values may be None when the latest CSV row has gaps."""
+
+    temperature_c: NullableMetric
+    wind_speed_ms: NullableMetric
+    pressure_hpa: NullableMetric
 
 
 class EnergyBlock(BaseModel):
@@ -39,7 +45,7 @@ class LogisticsBlock(BaseModel):
 
 class StationCurrent(BaseModel):
     station_id: str
-    observation_time: str  # ISO 8601 string — most recent row with full weather data
+    timestamp: str  # ISO 8601 string — most recent row with full weather data
     weather: WeatherBlock
     energy: EnergyBlock
     logistics: LogisticsBlock

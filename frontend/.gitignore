@@ -17,6 +17,11 @@ node_modules
 .DS_Store
 *.pem
 
+# local env files — never commit secrets
+.env*.local
+# but DO commit the example template
+!.env*.local.example
+
 # debug
 npm-debug.log*
 yarn-debug.log*
