@@ -6,6 +6,7 @@ import {
   AssetNode,
   AssetDetail,
   ScenarioTrigger,
+  StationForecast,
 } from "./types";
 
 /*
@@ -242,3 +243,30 @@ export async function getAssetDetail(
 
   return res.json();
 }
+
+
+/*
+ * ============================================================
+ * STATION DEPLETION FORECAST
+ * GET /stations/{stationId}/forecast
+ * ============================================================
+ */
+
+export async function getStationForecast(
+  stationId: string
+): Promise<StationForecast> {
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not configured");
+  }
+
+  const res = await fetch(
+    getApiUrl(`/stations/${stationId}/forecast`),
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch station forecast (${res.status})`);
+  }
+
+  return res.json();
+}

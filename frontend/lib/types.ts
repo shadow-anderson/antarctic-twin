@@ -83,3 +83,30 @@ export interface ScenarioDefinition {
   description: string;
   impact_summary: string[];
 }
+
+export interface ForecastPoint {
+  day: number;
+  days_remaining: number;
+}
+
+export interface ThresholdCrossing {
+  threshold_label: "warning" | "critical";
+  threshold_days: number;
+  projected_day: number | null;
+}
+
+export interface ResourceForecast {
+  resource: "diesel" | "food";
+  current_days_remaining: number;
+  burn_rate_multiplier: number;
+  status: "nominal" | "warning" | "critical";
+  daily_projection: ForecastPoint[];
+  threshold_crossings: ThresholdCrossing[];
+}
+
+export interface StationForecast {
+  station_id: string;
+  diesel: ResourceForecast;
+  food: ResourceForecast;
+}
+

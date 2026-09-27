@@ -5,6 +5,7 @@ import { TopBar, ConsoleTab } from "@/components/layout/TopBar";
 import { OverviewPanel } from "@/components/overview/OverviewPanel";
 import { AssetsPanel } from "@/components/assets/AssetsPanel";
 import { WhatIfPanel } from "@/components/whatif/WhatIfPanel";
+import { ForecastPanel } from "@/components/forecast/ForecastPanel";
 
 export default function TwinConsolePage() {
   const [activeTab, setActiveTab] = useState<ConsoleTab>("overview");
@@ -19,6 +20,7 @@ export default function TwinConsolePage() {
         {activeTab === "overview" && <OverviewPanel />}
         {activeTab === "assets" && <AssetsPanel />}
         {activeTab === "whatif" && <WhatIfPanel />}
+        {activeTab === "forecast" && <ForecastPanel />}
       </main>
 
       {/* Enterprise Polar Footer */}

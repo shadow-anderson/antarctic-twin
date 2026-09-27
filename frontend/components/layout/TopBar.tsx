@@ -8,11 +8,12 @@ import {
   LayoutDashboard,
   Layers,
   Sparkles,
+  TrendingDown,
 } from "lucide-react";
 
 import { getMissionTime } from "@/lib/api";
 
-export type ConsoleTab = "overview" | "assets" | "whatif";
+export type ConsoleTab = "overview" | "assets" | "whatif" | "forecast";
 
 interface TopBarProps {
   activeTab: ConsoleTab;
@@ -187,6 +188,19 @@ export const TopBar: React.FC<TopBarProps> = ({
             What-If
           </button>
 
+          {/* Forecast */}
+          <button
+            type="button"
+            onClick={() => onTabChange("forecast")}
+            className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
+              activeTab === "forecast"
+                ? "bg-[#17364A] text-white shadow-[0_2px_6px_rgba(23,54,74,0.15)]"
+                : "text-[#647582] hover:text-[#263746] hover:bg-[#F5F8F8]"
+            }`}
+          >
+            <TrendingDown className="w-3.5 h-3.5 stroke-[2]" />
+            Forecast
+          </button>
         </nav>
 
         {/* =====================================================
