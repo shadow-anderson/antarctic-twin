@@ -43,10 +43,22 @@ class EnergyBlock(BaseModel):
     consumption_kw: Metric
     diesel_pct: Metric
 
+    def __getitem__(self, item: str):
+        return getattr(self, item)
+
+    def __setitem__(self, item: str, value):
+        setattr(self, item, value)
+
 
 class LogisticsBlock(BaseModel):
     food_days_remaining: Metric
     diesel_days_remaining: Metric
+
+    def __getitem__(self, item: str):
+        return getattr(self, item)
+
+    def __setitem__(self, item: str, value):
+        setattr(self, item, value)
 
 
 class StationCurrent(BaseModel):

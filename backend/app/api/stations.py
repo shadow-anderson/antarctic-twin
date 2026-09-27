@@ -292,53 +292,220 @@ _STATION_CAPS = {
 }
 
 # ---------------------------------------------------------------------------
-# What-if scenario catalogue (hardcoded; simulation module not yet built)
+# What-if scenario parameters — HOW each scenario affects the station.
+# These multipliers are applied to the station's live state to compute
+# projected values; no canned output text is stored here.
 # ---------------------------------------------------------------------------
 
-_WHATIF_CATALOGUE: dict[str, dict] = {
+_SCENARIO_PARAMS: dict[str, dict] = {
     "generator_failure": {
-        "timeline": [
-            {"day": 0, "event": "Generator failure detected on primary power bus"},
-            {"day": 1, "event": "Backup generation activated; non-critical lab heaters throttled"},
-            {"day": 2, "event": "Fuel consumption increases by 18% on secondary unit"},
-            {"day": 3, "event": "Scheduled maintenance window required for injector rebuild"},
-        ],
-        "recommendations": [
-            "Activate backup generation immediately",
-            "Prioritize critical life-support and habitat heating loads",
-            "Schedule emergency generator mechanical inspection",
-            "Monitor diesel reserve drawdown rate",
-        ],
+        "generation_multiplier": 0.55,   # lose ~45% of generation capacity
+        "consumption_multiplier": 1.0,   # consumption unchanged
+        "diesel_burn_multiplier": 1.30,  # backup generator burns diesel faster
+        "trigger_event": "Generator failure detected on primary power bus",
     },
     "blizzard": {
-        "timeline": [
-            {"day": 0, "event": "Category 3 Blizzard warning triggered; wind gusting 32 m/s"},
-            {"day": 1, "event": "External HVAC intake filters iced; switch to recirculated mode"},
-            {"day": 2, "event": "Station structural thermal leakage increases generator load to 490 kW"},
-            {"day": 3, "event": "Blizzard winds subside; external antenna alignment verification required"},
-        ],
-        "recommendations": [
-            "Seal outer airlocks and engage emergency perimeter heating",
-            "Preheat secondary backup generators to avoid cold-start stall",
-            "Lock down external transport and outside scientific array tasks",
-            "Reroute vital satellite comms to redundant radome feed",
-        ],
+        "generation_multiplier": 0.85,   # reduced efficiency in extreme cold/wind
+        "consumption_multiplier": 1.25,  # heating/HVAC load spike
+        "diesel_burn_multiplier": 1.20,
+        "trigger_event": "Category 3 blizzard warning triggered; wind gusting 32 m/s",
     },
     "resupply_delay": {
-        "timeline": [
-            {"day": 0, "event": "Supply vessel polar ice encounter; arrival delayed by 45 days"},
-            {"day": 1, "event": "Logistics audit locks current diesel stock at 41 days reserve"},
-            {"day": 2, "event": "Thermal setpoint reduced to 18°C across non-habitation modules"},
-            {"day": 3, "event": "Extended ration schedule initiated; medical supplies verified stable"},
-        ],
-        "recommendations": [
-            "Reduce non-essential research power usage during night hours",
-            "Implement stage-1 fuel conservation protocol",
-            "Re-evaluate food inventory expiry horizons and freeze-dry balance",
-            "Coordinate with Bharati station for inter-station supply contingency",
-        ],
+        "generation_multiplier": 1.0,
+        "consumption_multiplier": 1.0,
+        "diesel_burn_multiplier": 1.0,
+        "resupply_delay_days": 45,        # this scenario delays restock, not burn rate
+        "trigger_event": "Supply vessel encountered polar ice; arrival delayed",
     },
 }
+
+
+# ---------------------------------------------------------------------------
+# What-if computation engine
+# ---------------------------------------------------------------------------
+
+
+def compute_whatif(station_id: str, trigger: str) -> SimulateResult:
+    """
+    Compute a realistic what-if simulation result from the station's current
+    state and the named scenario's physics multipliers.
+
+    Steps:
+      1. Fetch station's current state via get_station_current(station_id).
+      2. Apply scenario multipliers to compute post-event generation,
+         consumption, and diesel reserves.
+      3. Compute days_until_critical — when diesel reaches 15% threshold.
+      4. Build a dynamic timeline and urgency-tiered recommendations from
+         the computed numbers, not from fixed text.
+    """
+    if station_id not in STATIONS:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Station '{station_id}' not found. Valid options are: {sorted(STATIONS.keys())}",
+        )
+    if trigger not in _SCENARIO_PARAMS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown trigger: '{trigger}'",
+        )
+
+    params = _SCENARIO_PARAMS[trigger]
+    current = get_station_current(station_id)
+
+    # --- 1. Current station state ---
+    cur_gen_kw = current.energy.generation_kw.value
+    cur_con_kw = current.energy.consumption_kw.value
+    cur_diesel_pct = current.energy.diesel_pct.value
+    raw_diesel_days = current.logistics.diesel_days_remaining.value
+    cur_food_days = current.logistics.food_days_remaining.value
+
+    # Nominal capacity reference: Maitri 61% = 42 days; Bharati 58% = 37 days.
+    nominal_pct = 61.0 if station_id == "maitri" else 58.0
+    cur_diesel_days = raw_diesel_days * (cur_diesel_pct / nominal_pct)
+
+    # --- 2. Apply scenario multipliers ---
+    gen_mult = params["generation_multiplier"]
+    con_mult = params["consumption_multiplier"]
+    burn_mult = params["diesel_burn_multiplier"]
+
+    new_generation_kw = cur_gen_kw * gen_mult
+    new_consumption_kw = cur_con_kw * con_mult
+    new_diesel_days_remaining = (
+        cur_diesel_days if trigger == "resupply_delay" else cur_diesel_days / burn_mult
+    )
+
+    # --- 3. Compute days until diesel crosses 15% critical threshold ---
+    days_until_critical = max(0, round(new_diesel_days_remaining * 0.15))
+
+    # --- 4. Build timeline dynamically ---
+    timeline: list[TimelineEvent] = []
+
+    if trigger == "resupply_delay":
+        delay_days = params["resupply_delay_days"]
+        timeline.append(TimelineEvent(day=0, event=params["trigger_event"]))
+
+        diesel_shortfall = delay_days > cur_diesel_days
+        food_shortfall = delay_days > cur_food_days
+
+        if diesel_shortfall or food_shortfall:
+            if diesel_shortfall and food_shortfall:
+                first_out_days = min(cur_diesel_days, cur_food_days)
+                resource = "Diesel" if cur_diesel_days <= cur_food_days else "Food"
+                timeline.append(
+                    TimelineEvent(
+                        day=round(first_out_days),
+                        event=(
+                            f"{resource} reserves exhausted on day {round(first_out_days)} "
+                            f"— {delay_days - round(first_out_days)} days before resupply arrives"
+                        ),
+                    )
+                )
+            elif diesel_shortfall:
+                timeline.append(
+                    TimelineEvent(
+                        day=round(cur_diesel_days),
+                        event=(
+                            f"Diesel reserves exhausted on day {round(cur_diesel_days)} "
+                            f"— {delay_days - round(cur_diesel_days)} days before resupply arrives"
+                        ),
+                    )
+                )
+            else:
+                timeline.append(
+                    TimelineEvent(
+                        day=round(cur_food_days),
+                        event=(
+                            f"Food reserves exhausted on day {round(cur_food_days)} "
+                            f"— {delay_days - round(cur_food_days)} days before resupply arrives"
+                        ),
+                    )
+                )
+        else:
+            timeline.append(
+                TimelineEvent(
+                    day=delay_days,
+                    event=(
+                        f"Supply vessel arrives on day {delay_days}; "
+                        f"diesel (+{cur_diesel_days - delay_days:.0f}d) and "
+                        f"food (+{cur_food_days - delay_days:.0f}d) reserves held"
+                    ),
+                )
+            )
+    else:
+        timeline.append(TimelineEvent(day=0, event=params["trigger_event"]))
+        timeline.append(
+            TimelineEvent(
+                day=1,
+                event=f"Generation drops to {new_generation_kw:.0f} kW, consumption at {new_consumption_kw:.0f} kW",
+            )
+        )
+        timeline.append(
+            TimelineEvent(
+                day=days_until_critical,
+                event=(
+                    f"Diesel reserves fall below 15% operational threshold "
+                    f"(projected {new_diesel_days_remaining:.0f}-day reserve exhausted early)"
+                ),
+            )
+        )
+
+    # --- 5. Urgency-tiered recommendations ---
+    recs: list[str] = []
+
+    if trigger == "resupply_delay":
+        delay_days = params["resupply_delay_days"]
+        if cur_diesel_days < delay_days or cur_food_days < delay_days:
+            first_out = min(cur_diesel_days, cur_food_days)
+            first_resource = "diesel" if cur_diesel_days <= cur_food_days else "food"
+            shortfall = delay_days - first_out
+            if first_out <= 10:
+                recs.append(
+                    f"URGENT: {first_resource} reserve exhausted in {round(first_out)} days ({round(shortfall)} days before resupply) — implement emergency rationing immediately"
+                )
+            else:
+                recs.append(
+                    f"WARNING: projected {first_resource} deficit of {round(shortfall)} days before resupply on day {delay_days} — activate stage-1 conservation"
+                )
+        else:
+            recs.append(
+                f"Reserves adequate for {delay_days}-day delay; maintain standard polar inventory monitoring"
+            )
+        recs += [
+            "Reduce non-essential research power usage during night hours",
+            "Audit food inventory and transition to emergency freeze-dried rationing",
+            "Coordinate with nearby international stations for emergency supply air-drop contingency",
+        ]
+    else:
+        if days_until_critical <= 3:
+            recs.append(
+                f"URGENT: diesel reserve critical within {days_until_critical} days — initiate emergency load shedding immediately"
+            )
+        elif days_until_critical <= 7:
+            recs.append(
+                f"WARNING: diesel reaches 15% operational threshold in {days_until_critical} days — begin non-critical load reduction now"
+            )
+        else:
+            recs.append(
+                f"Monitor diesel burn rate; 15% operational threshold reached in {days_until_critical} days under current conditions"
+            )
+
+        if trigger == "generator_failure":
+            recs += [
+                "Prioritize critical life-support and habitat heating loads over auxiliary research",
+                "Schedule emergency mechanical inspection and injector rebuild on backup generator",
+                f"Projected net balance: {new_generation_kw - new_consumption_kw:+.0f} kW — request priority spare parts resupply",
+            ]
+        else:  # blizzard
+            recs += [
+                "Seal outer airlocks and engage emergency perimeter heating systems",
+                "Lock down external transport and suspend outdoor scientific array operations",
+                "Reroute power to maintain primary satellite communication radomes and life support",
+            ]
+
+    return SimulateResult(
+        timeline=timeline,
+        recommendations=recs,
+    )
 
 # ---------------------------------------------------------------------------
 # Anomaly detection helpers
@@ -486,10 +653,13 @@ def get_station_anomalies(station_id: str) -> List[AnomalyItem]:
 )
 def simulate_whatif(station_id: str, body: SimulateRequest) -> SimulateResult:
     """
-    Run a pre-defined what-if scenario for the given station.
+    Run a what-if scenario simulation for the given station.
 
-    The simulation module is not yet built; responses are drawn from a
-    curated catalogue of realistic cascade timelines and recommendations.
+    Results are computed dynamically from the station's current energy and
+    logistics telemetry (generation_kw, consumption_kw, diesel_pct,
+    diesel_days_remaining, food_days_remaining) combined with the scenario's
+    physics multipliers in _SCENARIO_PARAMS. Timeline events and recommendation
+    urgency are derived from the computed projected values — not from static canned catalogues.
     """
     if station_id not in STATIONS:
         raise HTTPException(
@@ -500,17 +670,13 @@ def simulate_whatif(station_id: str, body: SimulateRequest) -> SimulateResult:
             ),
         )
 
-    scenario = _WHATIF_CATALOGUE.get(body.trigger)
-    if scenario is None:
+    if body.trigger not in _SCENARIO_PARAMS:
         raise HTTPException(
             status_code=400,
             detail=f"Unknown trigger: '{body.trigger}'",
         )
 
-    return SimulateResult(
-        timeline=[TimelineEvent(**e) for e in scenario["timeline"]],
-        recommendations=scenario["recommendations"],
-    )
+    return compute_whatif(station_id, body.trigger)
 
 
 # ---------------------------------------------------------------------------
