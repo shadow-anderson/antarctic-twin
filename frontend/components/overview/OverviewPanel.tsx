@@ -11,6 +11,7 @@ import {
 import { STATION_METADATA } from "@/lib/mockData";
 
 import { AnomalyBanner } from "../shared/AnomalyBanner";
+import { AntarcticaMap } from "../shared/AntarcticaMap";
 import { WeatherSection } from "./WeatherSection";
 import { EnergySection } from "./EnergySection";
 import { LogisticsSection } from "./LogisticsSection";
@@ -594,6 +595,12 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
         </div>
       </section>
+
+      {/* =====================================================
+          ANTARCTIC STATION MAP
+      ===================================================== */}
+
+      <AntarcticaMap />
 
       {/* =====================================================
           STATION PROFILE
