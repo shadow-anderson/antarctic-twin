@@ -6,6 +6,7 @@ Router for station-related endpoints.
 GET  /stations                        → list all stations
 GET  /stations/{station_id}/current   → latest telemetry snapshot
 GET  /stations/{station_id}/anomalies → anomaly detection against baselines
+GET  /stations/{station_id}/forecast  → 30-day depletion forecast for diesel & food
 POST /stations/{station_id}/simulate  → what-if simulation
 GET  /link/status                     → satellite link state
 POST /link/toggle                     → toggle link connected/disconnected
@@ -25,9 +26,13 @@ from pydantic import BaseModel
 
 from app.models.station_current import (
     EnergyBlock,
+    ForecastPoint,
     LogisticsBlock,
     Metric,
+    ResourceForecast,
     StationCurrent,
+    StationForecast,
+    ThresholdCrossing,
     WeatherBlock,
 )
 
@@ -539,6 +544,85 @@ def compute_whatif(station_id: str, trigger: str) -> SimulateResult:
         recommendations=recs,
     )
 
+
+# ---------------------------------------------------------------------------
+# Depletion forecast computation engine
+# ---------------------------------------------------------------------------
+
+
+def compute_forecast(station_id: str) -> StationForecast:
+    if station_id not in STATIONS:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Station '{station_id}' not found. Valid options are: {sorted(STATIONS.keys())}",
+        )
+
+    current = get_station_current(station_id)
+
+    gen_kw = current.energy.generation_kw.value
+    con_kw = current.energy.consumption_kw.value
+    diesel_days = current.logistics.diesel_days_remaining.value
+    food_days = current.logistics.food_days_remaining.value
+
+    # --- Diesel: burn rate accelerates if consumption exceeds generation ---
+    # (deficit means backup/reserve diesel draw is happening right now)
+    deficit_ratio = max(0.0, (con_kw - gen_kw) / gen_kw) if gen_kw > 0 else 0.0
+    diesel_burn_rate = 1.0 + deficit_ratio   # 1.0 = nominal, >1.0 = accelerated
+
+    # --- Food: no power-linked acceleration, straightforward depletion ---
+    food_burn_rate = 1.0
+
+    def build_resource_forecast(resource_name: str, days_remaining: float, burn_rate: float) -> ResourceForecast:
+        WARNING_DAYS = 15.0
+        CRITICAL_DAYS = 7.0
+
+        projection: list[ForecastPoint] = []
+        for day in range(0, 31):  # day 0 through day 30 inclusive
+            remaining = max(0.0, days_remaining - (day * burn_rate))
+            projection.append(ForecastPoint(day=day, days_remaining=round(remaining, 1)))
+
+        def find_crossing_day(threshold: float) -> int | None:
+            for point in projection:
+                if point.days_remaining <= threshold:
+                    return point.day
+            return None
+
+        crossings = [
+            ThresholdCrossing(
+                threshold_label="warning",
+                threshold_days=WARNING_DAYS,
+                projected_day=find_crossing_day(WARNING_DAYS),
+            ),
+            ThresholdCrossing(
+                threshold_label="critical",
+                threshold_days=CRITICAL_DAYS,
+                projected_day=find_crossing_day(CRITICAL_DAYS),
+            ),
+        ]
+
+        if days_remaining <= CRITICAL_DAYS:
+            status = "critical"
+        elif days_remaining <= WARNING_DAYS:
+            status = "warning"
+        else:
+            status = "nominal"
+
+        return ResourceForecast(
+            resource=resource_name,
+            current_days_remaining=round(days_remaining, 1),
+            burn_rate_multiplier=round(burn_rate, 2),
+            status=status,
+            daily_projection=projection,
+            threshold_crossings=crossings,
+        )
+
+    return StationForecast(
+        station_id=station_id,
+        diesel=build_resource_forecast("diesel", diesel_days, diesel_burn_rate),
+        food=build_resource_forecast("food", food_days, food_burn_rate),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Anomaly detection helpers
 # ---------------------------------------------------------------------------
@@ -671,6 +755,16 @@ def get_station_anomalies(station_id: str) -> List[AnomalyItem]:
         )
 
     return _detect_anomalies(station_id)
+
+
+# ---------------------------------------------------------------------------
+# GET /stations/{station_id}/forecast
+# ---------------------------------------------------------------------------
+
+
+@router.get("/stations/{station_id}/forecast", response_model=StationForecast)
+def get_station_forecast(station_id: str) -> StationForecast:
+    return compute_forecast(station_id)
 
 
 # ---------------------------------------------------------------------------

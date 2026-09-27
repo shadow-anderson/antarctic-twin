@@ -67,3 +67,30 @@ class StationCurrent(BaseModel):
     weather: WeatherBlock
     energy: EnergyBlock
     logistics: LogisticsBlock
+
+
+class ForecastPoint(BaseModel):
+    day: int
+    days_remaining: float
+
+
+class ThresholdCrossing(BaseModel):
+    threshold_label: str      # "warning" or "critical"
+    threshold_days: float
+    projected_day: int | None   # None if never crossed within the 30-day window
+
+
+class ResourceForecast(BaseModel):
+    resource: str              # "diesel" or "food"
+    current_days_remaining: float
+    burn_rate_multiplier: float
+    status: str                # "nominal", "warning", or "critical"
+    daily_projection: list[ForecastPoint]
+    threshold_crossings: list[ThresholdCrossing]
+
+
+class StationForecast(BaseModel):
+    station_id: str
+    diesel: ResourceForecast
+    food: ResourceForecast
+
