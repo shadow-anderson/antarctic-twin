@@ -14,6 +14,7 @@ POST /link/toggle                     → toggle link connected/disconnected
 import json
 import math
 import os
+import random as _random
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Literal, Optional
@@ -42,32 +43,25 @@ STATIONS = {
 }
 
 # ---------------------------------------------------------------------------
-# Hardcoded placeholder energy / logistics blocks (one per station).
-# These are intentionally static until the simulation module is built.
+# Baseline nominal energy / logistics values (one per station).
+# These are unjittered base figures. Live values returned by
+# get_station_current() apply a time-seeded ±jitter on top of these.
 # ---------------------------------------------------------------------------
 
-_PLACEHOLDER: dict[str, dict] = {
+_BASE_ENERGY: dict[str, dict[str, float]] = {
     "maitri": {
-        "energy": EnergyBlock(
-            generation_kw=Metric(value=142, source="simulated"),
-            consumption_kw=Metric(value=119, source="simulated"),
-            diesel_pct=Metric(value=61, source="simulated"),
-        ),
-        "logistics": LogisticsBlock(
-            food_days_remaining=Metric(value=68, source="simulated"),
-            diesel_days_remaining=Metric(value=42, source="simulated"),
-        ),
+        "generation_kw": 142.0,
+        "consumption_kw": 119.0,
+        "diesel_pct": 61.0,
+        "food_days_remaining": 68.0,
+        "diesel_days_remaining": 42.0,
     },
     "bharati": {
-        "energy": EnergyBlock(
-            generation_kw=Metric(value=187, source="simulated"),
-            consumption_kw=Metric(value=154, source="simulated"),
-            diesel_pct=Metric(value=58, source="simulated"),
-        ),
-        "logistics": LogisticsBlock(
-            food_days_remaining=Metric(value=74, source="simulated"),
-            diesel_days_remaining=Metric(value=37, source="simulated"),
-        ),
+        "generation_kw": 187.0,
+        "consumption_kw": 154.0,
+        "diesel_pct": 58.0,
+        "food_days_remaining": 74.0,
+        "diesel_days_remaining": 37.0,
     },
 }
 
@@ -97,6 +91,20 @@ def _nullable(raw_value) -> float | None:
     return float(raw_value)
 
 
+def _jitter(base: float, pct: float, seed: int) -> float:
+    """Return base ± pct% using a deterministic seed that changes every 3 min."""
+    _random.seed(seed)
+    delta = base * pct / 100.0
+    return round(base + _random.uniform(-delta, delta), 1)
+
+
+def _time_seed(asset_id: str, station_id: str, slot: int | None = None) -> int:
+    """Seed that changes every 3 minutes — same within a 3-min window, different between stations."""
+    if slot is None:
+        slot = int(datetime.now(timezone.utc).timestamp()) // 180
+    return hash(f"{station_id}:{asset_id}:{slot}") & 0x7FFFFFFF
+
+
 # ---------------------------------------------------------------------------
 # Endpoint
 # ---------------------------------------------------------------------------
@@ -110,7 +118,7 @@ def _nullable(raw_value) -> float | None:
 def get_station_current(station_id: str) -> StationCurrent:
     """
     Return the most-recent row from the processed CSV for *station_id*,
-    merged with hardcoded energy/logistics placeholder values.
+    merged with time-jittered energy/logistics telemetry derived from base values.
 
     Raises 404 if the station_id is not recognised.
     Raises 503 if the processed CSV cannot be found, is empty, or has no
@@ -175,14 +183,38 @@ def get_station_current(station_id: str) -> StationCurrent:
         pressure_hpa= Metric(value=float(latest["ap"]),   source="real"),
     )
 
-    # 5. Assemble response
-    placeholder = _PLACEHOLDER[station_id]
+    # 5. Assemble response with time-jittered energy & logistics telemetry
+    base = _BASE_ENERGY[station_id]
+    energy = EnergyBlock(
+        generation_kw=Metric(
+            value=_jitter(base["generation_kw"], 4.0, _time_seed("generation_kw", station_id)),
+            source="simulated",
+        ),
+        consumption_kw=Metric(
+            value=_jitter(base["consumption_kw"], 4.0, _time_seed("consumption_kw", station_id)),
+            source="simulated",
+        ),
+        diesel_pct=Metric(
+            value=_jitter(base["diesel_pct"], 1.5, _time_seed("diesel_pct", station_id)),
+            source="simulated",
+        ),
+    )
+    logistics = LogisticsBlock(
+        food_days_remaining=Metric(
+            value=_jitter(base["food_days_remaining"], 1.0, _time_seed("food_days_remaining", station_id)),
+            source="simulated",
+        ),
+        diesel_days_remaining=Metric(
+            value=_jitter(base["diesel_days_remaining"], 1.0, _time_seed("diesel_days_remaining", station_id)),
+            source="simulated",
+        ),
+    )
     return StationCurrent(
         station_id=station_id,
         observation_time=observation_time_str,
         weather=weather,
-        energy=placeholder["energy"],
-        logistics=placeholder["logistics"],
+        energy=energy,
+        logistics=logistics,
     )
 
 
@@ -359,8 +391,8 @@ def compute_whatif(station_id: str, trigger: str) -> SimulateResult:
     raw_diesel_days = current.logistics.diesel_days_remaining.value
     cur_food_days = current.logistics.food_days_remaining.value
 
-    # Nominal capacity reference: Maitri 61% = 42 days; Bharati 58% = 37 days.
-    nominal_pct = 61.0 if station_id == "maitri" else 58.0
+    # Nominal capacity reference from baseline unjittered values
+    nominal_pct = _BASE_ENERGY[station_id]["diesel_pct"]
     cur_diesel_days = raw_diesel_days * (cur_diesel_pct / nominal_pct)
 
     # --- 2. Apply scenario multipliers ---
@@ -728,27 +760,6 @@ def get_mission_time() -> MissionTime:
         utc_time=now.strftime("%H:%M:%S UTC"),
         iso=now.isoformat(),
     )
-
-
-# ---------------------------------------------------------------------------
-# Asset hierarchy and telemetry catalogue — per-station, time-varying
-# ---------------------------------------------------------------------------
-
-import math as _math
-import random as _random
-
-
-def _jitter(base: float, pct: float, seed: int) -> float:
-    """Return base ± pct% using a deterministic seed that changes every 3 min."""
-    _random.seed(seed)
-    delta = base * pct / 100.0
-    return round(base + _random.uniform(-delta, delta), 1)
-
-
-def _time_seed(asset_id: str, station_id: str) -> int:
-    """Seed that changes every 3 minutes — same within a 3-min window, different between stations."""
-    slot = int(datetime.now(timezone.utc).timestamp()) // 180
-    return hash(f"{station_id}:{asset_id}:{slot}") & 0x7FFFFFFF
 
 
 # ---------------------------------------------------------------------------
