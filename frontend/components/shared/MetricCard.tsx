@@ -7,7 +7,7 @@ import { useLink } from "@/context/LinkContext";
 
 interface MetricCardProps {
   label: string;
-  value: number;
+  value: number | null;
   unit: string;
   source: DataSource;
   icon?: React.ReactNode;
@@ -27,10 +27,13 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 }) => {
   const { connected } = useLink();
 
-  // Format value to 1 decimal place if float, or raw if integer
-  const formattedValue = Number.isInteger(value)
-    ? value.toString()
-    : value.toFixed(1);
+  // Format value to 1 decimal place if float, or raw if integer. Show N/A for null.
+  const formattedValue =
+    value === null
+      ? "N/A"
+      : Number.isInteger(value)
+      ? value.toString()
+      : value.toFixed(1);
 
   const toneStyles = {
     ice: {
