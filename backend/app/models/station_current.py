@@ -18,18 +18,24 @@ class Metric(BaseModel):
 
 
 class NullableMetric(BaseModel):
-    """A telemetry value that can be None when the data source has a gap."""
+    """A telemetry value that can be None when the data source has a gap.
+    Retained for potential future use; not used for weather in the current
+    contract (weather rows are pre-filtered to guarantee non-null values).
+    """
 
     value: Optional[float]
     source: Literal["real", "simulated", "derived"]
 
 
 class WeatherBlock(BaseModel):
-    """Weather readings — values may be None when the latest CSV row has gaps."""
+    """Weather readings — all three values are guaranteed non-null.
+    The router selects the most-recent row where tempr, ap, AND ws
+    are simultaneously present, so no field here can ever be None.
+    """
 
-    temperature_c: NullableMetric
-    wind_speed_ms: NullableMetric
-    pressure_hpa: NullableMetric
+    temperature_c: Metric
+    wind_speed_ms: Metric
+    pressure_hpa: Metric
 
 
 class EnergyBlock(BaseModel):
@@ -45,7 +51,7 @@ class LogisticsBlock(BaseModel):
 
 class StationCurrent(BaseModel):
     station_id: str
-    timestamp: str  # ISO 8601 string — most recent row with full weather data
+    observation_time: str  # ISO 8601 — most recent row with all weather fields non-null
     weather: WeatherBlock
     energy: EnergyBlock
     logistics: LogisticsBlock

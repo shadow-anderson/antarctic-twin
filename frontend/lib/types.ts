@@ -12,11 +12,11 @@ export interface NullableMetric {
 
 export interface StationCurrent {
   station_id: string;
-  timestamp: string;
+  observation_time: string;
   weather: {
-    temperature_c: NullableMetric;
-    wind_speed_ms: NullableMetric;
-    pressure_hpa: NullableMetric;
+    temperature_c: Metric;
+    wind_speed_ms: Metric;
+    pressure_hpa: Metric;
   };
   energy: {
     generation_kw: Metric;
