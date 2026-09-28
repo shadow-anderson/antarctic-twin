@@ -64,6 +64,44 @@ module.exports = {
         dropdown: "0 10px 25px -5px rgba(15,27,42,0.1), 0 8px 10px -6px rgba(15,27,42,0.05)",
         goldBtn: "0 2px 6px rgba(201,138,44,0.35)",
       },
+      keyframes: {
+        /* ── pre-existing (moved from <style jsx>) ── */
+        fadeSlideUp: {
+          from: { opacity: '0', transform: 'translateY(16px)' },
+          to:   { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
+        },
+        /* ── spine / cascade animations ── */
+        'spine-draw': {
+          '0%':   { transform: 'scaleY(0)' },
+          '100%': { transform: 'scaleY(1)' },
+        },
+        'node-pop': {
+          '0%':   { transform: 'scale(0.6)', opacity: '0' },
+          '60%':  { transform: 'scale(1.12)', opacity: '1' },
+          '100%': { transform: 'scale(1)',    opacity: '1' },
+        },
+        'node-pulse': {
+          '0%, 100%': { boxShadow: '0 0 0 0px rgba(76,127,145,0.45)' },
+          '50%':      { boxShadow: '0 0 0 7px rgba(76,127,145,0)' },
+        },
+        'spine-sweep': {
+          '0%':   { top: '-15%' },
+          '100%': { top: '110%' },
+        },
+      },
+      animation: {
+        'fade-slide-up':   'fadeSlideUp 0.5s ease-out both',
+        'fade-slide-up-6': 'fadeSlideUp 0.6s ease-out both',
+        'fade-in':         'fadeIn 0.4s ease-out both',
+        'spine-draw':      'spine-draw 450ms ease-out both',
+        'node-pop':        'node-pop 350ms ease-out both',
+        'node-pulse':      'node-pulse 1.2s ease-in-out infinite',
+        'spine-sweep':     'spine-sweep 800ms ease-in-out forwards',
+      },
     },
   },
   plugins: [],

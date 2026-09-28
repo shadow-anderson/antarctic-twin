@@ -685,192 +685,222 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
           <div className="max-w-4xl mx-auto">
 
-            {scenario.impact_summary
-              .slice(0, impactVisible)
-              .map((step, idx) => {
+            {(() => {
+              const cascadeComplete =
+                impactVisible === scenario.impact_summary.length &&
+                impactVisible > 0 &&
+                impactTyped.length ===
+                  scenario.impact_summary[impactVisible - 1].length;
 
-                const isFirst = idx === 0;
+              return (
+                <div className="relative">
 
-                const isLastVisible =
-                  idx === impactVisible - 1;
-
-                const isFinal =
-                  idx ===
-                  scenario.impact_summary.length - 1;
-
-                const isTyping =
-                  typingImpactIndex === idx;
-
-                const displayedText =
-                  isTyping
-                    ? impactTyped
-                    : step;
-
-                return (
-                  <React.Fragment key={idx}>
-
-                    {/* STEP */}
-
+                  {/* Completion sweep overlay — travels top to bottom along spine column */}
+                  {cascadeComplete && (
                     <div
-                      ref={(el) => {
-                        impactRefs.current[idx] =
-                          el;
+                      className="absolute pointer-events-none overflow-hidden"
+                      style={{
+                        left: 0,
+                        width: '40px',
+                        top: 0,
+                        bottom: 0,
+                        zIndex: 20,
                       }}
-                      className="animate-[fadeSlideUp_0.5s_ease-out]"
                     >
-
                       <div
-                        className={`
-                          relative overflow-hidden
-                          rounded-[22px]
-                          border
-                          ${
-                            isFirst
-                              ? "bg-gradient-to-r from-[#F8EAEA] to-[#FBF5F5] border-[#E2C4C4]"
-                              : isFinal
-                              ? "bg-gradient-to-r from-[#E7F1EA] to-[#F5F9F6] border-[#C9DED0]"
-                              : "bg-gradient-to-r from-[#EEF5F6] to-[#F8FAFA] border-[#D1E1E4]"
-                          }
-                          shadow-[0_5px_16px_rgba(55,75,82,0.045)]
-                        `}
-                      >
+                        className="absolute w-full motion-reduce:hidden"
+                        style={{
+                          height: '64px',
+                          background:
+                            'linear-gradient(to bottom, transparent, #9FD3DC, transparent)',
+                          animation: 'spine-sweep 800ms ease-in-out forwards',
+                        }}
+                      />
+                    </div>
+                  )}
 
-                        <div
-                          className={`
-                            absolute left-0 top-0 bottom-0 w-1.5
-                            ${
-                              isFirst
-                                ? "bg-[#B65C5C]"
-                                : isFinal
-                                ? "bg-[#4F8A6B]"
-                                : "bg-[#4C7F91]"
-                            }
-                          `}
-                        />
+                  {scenario.impact_summary
+                    .slice(0, impactVisible)
+                    .map((step, idx) => {
 
-                        <div className="p-5 sm:p-6">
+                      const isFirst = idx === 0;
+                      const isLastVisible = idx === impactVisible - 1;
+                      const isFinal =
+                        idx === scenario.impact_summary.length - 1;
+                      const isTyping = typingImpactIndex === idx;
+                      const displayedText = isTyping ? impactTyped : step;
 
-                          <div className="flex items-start gap-4">
+                      /* Node fill color */
+                      const nodeColor = isFirst
+                        ? '#B65C5C'
+                        : isFinal
+                        ? '#4F8A6B'
+                        : '#4C7F91';
 
-                            <div
-                              className={`
-                                flex items-center justify-center
-                                shrink-0
-                                w-11 h-11
-                                rounded-2xl
-                                text-sm font-bold
-                                ${
-                                  isFirst
-                                    ? "bg-[#F0DADA] text-[#985353]"
-                                    : isFinal
-                                    ? "bg-[#DCEBE1] text-[#527861]"
-                                    : "bg-[#DCEBED] text-[#4D7782]"
-                                }
-                              `}
-                            >
-                              {String(idx + 1).padStart(
-                                2,
-                                "0"
-                              )}
-                            </div>
+                      /* Spine gradient destination — next stage color */
+                      const nextColor =
+                        idx + 1 === scenario.impact_summary.length - 1
+                          ? '#4F8A6B'
+                          : '#4C7F91';
 
-                            <div className="min-w-0 flex-1">
+                      /* Pulse ring while this stage is still being typed */
+                      const pulsingRing =
+                        isTyping && impactTyped.length < step.length;
 
-                              <div className="flex items-center gap-2 mb-2">
+                      /* Final-node glow after cascade finishes */
+                      const finalGlow =
+                        isFinal && cascadeComplete
+                          ? '0 0 0 4px rgba(79,138,107,0.35), 0 0 16px 4px rgba(79,138,107,0.2)'
+                          : undefined;
 
-                                <span
-                                  className={`
-                                    text-[9px]
-                                    font-bold
-                                    uppercase
-                                    tracking-[0.16em]
-                                    ${
-                                      isFirst
-                                        ? "text-[#9A5A5A]"
-                                        : isFinal
-                                        ? "text-[#5B7D68]"
-                                        : "text-[#597B85]"
-                                    }
-                                  `}
-                                >
-                                  {isFirst
-                                    ? "Initial Trigger"
-                                    : isFinal
-                                    ? "Final Impact"
-                                    : `Cascade Stage ${
-                                        idx + 1
-                                      }`}
-                                </span>
+                      return (
+                        <React.Fragment key={idx}>
 
-                                {/* TYPING DOT */}
+                          {/* Row: spine column + card */}
+                          <div
+                            ref={(el) => {
+                              impactRefs.current[idx] = el;
+                            }}
+                            className="flex gap-4 sm:gap-5 animate-node-pop"
+                          >
 
-                                {isTyping &&
-                                  impactTyped.length <
-                                    step.length && (
-                                    <span className="inline-block w-1.5 h-3.5 rounded-sm bg-[#4C7F91] animate-pulse" />
-                                  )}
+                            {/* Spine column */}
+                            <div className="flex flex-col items-center shrink-0 w-9 sm:w-10">
 
+                              {/* Node circle */}
+                              <div
+                                className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full ring-4 ring-[#F7FAFA] shrink-0 mt-4 sm:mt-5 text-white text-xs font-bold motion-reduce:animate-none"
+                                style={{
+                                  background: nodeColor,
+                                  boxShadow: pulsingRing
+                                    ? undefined
+                                    : finalGlow,
+                                  animation: pulsingRing
+                                    ? 'node-pop 350ms ease-out both, node-pulse 1.2s ease-in-out infinite'
+                                    : 'node-pop 350ms ease-out both',
+                                  transition: 'box-shadow 300ms ease',
+                                }}
+                              >
+                                {String(idx + 1).padStart(2, '0')}
                               </div>
 
-                              <p className="text-sm sm:text-[15px] font-semibold leading-6 text-[#405963]">
-                                {displayedText}
-                              </p>
+                              {/* Spine segment — only when a next stage exists */}
+                              {!isLastVisible && (
+                                <div
+                                  className="flex-1 w-[3px] rounded-full origin-top motion-reduce:animate-none"
+                                  style={{
+                                    background: `linear-gradient(to bottom, ${nodeColor}, ${nextColor})`,
+                                    animation: 'spine-draw 450ms ease-out both',
+                                  }}
+                                />
+                              )}
+
+                            </div>
+
+                            {/* Card */}
+                            <div className={`flex-1 min-w-0 ${isFinal ? 'pb-0' : 'pb-6'}`}>
+
+                              <div
+                                className={`
+                                  relative overflow-hidden
+                                  rounded-[22px]
+                                  border
+                                  ${
+                                    isFirst
+                                      ? "bg-gradient-to-r from-[#F8EAEA] to-[#FBF5F5] border-[#E2C4C4]"
+                                      : isFinal
+                                      ? "bg-gradient-to-r from-[#E7F1EA] to-[#F5F9F6] border-[#C9DED0]"
+                                      : "bg-gradient-to-r from-[#EEF5F6] to-[#F8FAFA] border-[#D1E1E4]"
+                                  }
+                                  shadow-[0_5px_16px_rgba(55,75,82,0.045)]
+                                  animate-fade-slide-up
+                                `}
+                              >
+
+                                {/* Left accent bar */}
+                                <div
+                                  className="absolute left-0 top-0 bottom-0 w-1.5"
+                                  style={{ background: nodeColor }}
+                                />
+
+                                <div className="p-5 sm:p-6 pl-7 sm:pl-8">
+
+                                  <div className="flex items-center gap-2 mb-2">
+
+                                    <span
+                                      className={`
+                                        text-[9px] font-bold uppercase tracking-[0.16em]
+                                        ${
+                                          isFirst
+                                            ? "text-[#9A5A5A]"
+                                            : isFinal
+                                            ? "text-[#5B7D68]"
+                                            : "text-[#597B85]"
+                                        }
+                                      `}
+                                    >
+                                      {isFirst
+                                        ? "Initial Trigger"
+                                        : isFinal
+                                        ? "Final Impact"
+                                        : `Cascade Stage ${idx + 1}`}
+                                    </span>
+
+                                    {/* Typing caret */}
+                                    {isTyping &&
+                                      impactTyped.length < step.length && (
+                                        <span className="inline-block w-1.5 h-3.5 rounded-sm bg-[#4C7F91] animate-pulse" />
+                                      )}
+
+                                  </div>
+
+                                  <p className="text-sm sm:text-[15px] font-semibold leading-6 text-[#405963]">
+                                    {displayedText}
+                                  </p>
+
+                                </div>
+
+                              </div>
 
                             </div>
 
                           </div>
 
-                        </div>
+                        </React.Fragment>
+                      );
+                    })}
 
-                      </div>
-
-                    </div>
-
-                    {!isLastVisible && (
-                      <div className="flex flex-col items-center py-3 animate-[fadeIn_0.4s_ease-out]">
-
-                        <div className="h-5 w-px bg-[#BFCFD3]" />
-
-                        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#E6EFF0] border border-[#C9DADD] text-[#5B8089]">
-                          <ArrowDown className="w-3.5 h-3.5" />
-                        </div>
-
-                        <div className="h-5 w-px bg-[#BFCFD3]" />
-
-                      </div>
-                    )}
-
-                  </React.Fragment>
-                );
-              })}
+                </div>
+              );
+            })()}
 
             {activeSection === "impact" &&
               impactVisible <
                 scenario.impact_summary.length && (
-                <div className="flex items-center justify-center gap-2 py-6">
+              <div className="flex items-center justify-center gap-2 py-6">
 
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce" />
 
-                  <span
-                    className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
-                    style={{
-                      animationDelay: "120ms",
-                    }}
-                  />
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
+                  style={{
+                    animationDelay: "120ms",
+                  }}
+                />
 
-                  <span
-                    className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
-                    style={{
-                      animationDelay: "240ms",
-                    }}
-                  />
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
+                  style={{
+                    animationDelay: "240ms",
+                  }}
+                />
 
-                  <span className="text-[9px] font-bold uppercase tracking-[0.15em] ml-1 text-[#819197]">
-                    Calculating cascade
-                  </span>
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em] ml-1 text-[#819197]">
+                  Calculating cascade
+                </span>
 
-                </div>
-              )}
+              </div>
+            )}
 
           </div>
 
@@ -882,7 +912,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {timelineVisible > 0 && (
-        <section className="rounded-[28px] border border-[#D9D4E3] bg-gradient-to-br from-[#F6F4F9] to-[#F8FAFA] shadow-[0_7px_24px_rgba(65,60,80,0.05)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
+        <section className="rounded-[28px] border border-[#D9D4E3] bg-gradient-to-br from-[#F6F4F9] to-[#F8FAFA] shadow-[0_7px_24px_rgba(65,60,80,0.05)] overflow-hidden animate-fade-slide-up-6">
 
           <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#E2DFE8]">
 
@@ -935,7 +965,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                           timelineRefs.current[idx] =
                             el;
                         }}
-                        className="flex items-start gap-4 animate-[fadeSlideUp_0.5s_ease-out]"
+                        className="flex items-start gap-4 animate-fade-slide-up"
                       >
 
                         <div className="flex flex-col items-center shrink-0">
@@ -1030,7 +1060,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {mitigationVisible > 0 && (
-        <section className="rounded-[28px] border border-[#CFE0D5] bg-gradient-to-br from-[#EEF6F1] via-[#F6F9F7] to-[#F3F7F5] shadow-[0_7px_24px_rgba(58,90,70,0.05)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
+        <section className="rounded-[28px] border border-[#CFE0D5] bg-gradient-to-br from-[#EEF6F1] via-[#F6F9F7] to-[#F3F7F5] shadow-[0_7px_24px_rgba(58,90,70,0.05)] overflow-hidden animate-fade-slide-up-6">
 
           <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#DCE9DF]">
 
@@ -1083,7 +1113,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                           mitigationRefs.current[idx] =
                             el;
                         }}
-                        className="flex items-start gap-4 animate-[fadeSlideUp_0.5s_ease-out]"
+                        className="flex items-start gap-4 animate-fade-slide-up"
                       >
 
                         <div className="flex items-center justify-center shrink-0 w-11 h-11 rounded-2xl bg-[#DDECE2] border border-[#CBE0D1] text-[#527861] font-bold text-xs">
@@ -1174,7 +1204,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       {activeSection === "complete" && (
         <div
           ref={completeRef}
-          className="rounded-[24px] border border-[#D1E1D6] bg-gradient-to-r from-[#EEF6F1] to-[#F7FAF8] p-5 sm:p-6 animate-[fadeSlideUp_0.8s_ease-out]"
+          className="rounded-[24px] border border-[#D1E1D6] bg-gradient-to-r from-[#EEF6F1] to-[#F7FAF8] p-5 sm:p-6 animate-fade-slide-up-6"
         >
 
           <div className="flex flex-col items-center text-center">
@@ -1229,34 +1259,6 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
         </div>
       )}
-
-      {/* ========================================================
-          ANIMATIONS
-      ======================================================== */}
-
-      <style jsx>{`
-        @keyframes fadeSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(16px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
 
     </div>
   );
