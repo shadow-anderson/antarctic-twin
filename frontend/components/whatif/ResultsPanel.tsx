@@ -546,9 +546,9 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           SIMULATION HEADER
       ======================================================== */}
 
-      <div className="relative overflow-hidden rounded-[28px] border border-[#C9DDE0] bg-gradient-to-br from-[#EAF4F5] via-[#F6F8F7] to-[#F5EFE2] shadow-[0_8px_28px_rgba(47,76,84,0.07)]">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-ops-panel shadow-[0_8px_28px_rgba(0,0,0,0.3)]">
 
-        <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-[#B9DDE0]/25 blur-3xl" />
+        <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-ops-teal/10 blur-3xl pointer-events-none" />
 
         <div className="relative p-6 sm:p-7">
 
@@ -556,12 +556,12 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
             <div className="flex items-start gap-4">
 
-              <div className="flex items-center justify-center shrink-0 w-12 h-12 rounded-2xl bg-[#17364A] text-white shadow-[0_7px_18px_rgba(23,54,74,0.16)]">
+              <div className="flex items-center justify-center shrink-0 w-12 h-12 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-[0_7px_18px_rgba(0,0,0,0.25)]">
 
                 {isPlaying ? (
                   <Activity className="w-6 h-6 animate-pulse" />
                 ) : (
-                  <ShieldCheck className="w-6 h-6" />
+                  <ShieldCheck className="w-6 h-6 text-ops-green" />
                 )}
 
               </div>
@@ -573,12 +573,12 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   <span
                     className={`w-2 h-2 rounded-full ${
                       isPlaying
-                        ? "bg-[#B98232] animate-pulse"
-                        : "bg-[#4F8A6B]"
+                        ? "bg-ops-amber animate-pulse"
+                        : "bg-ops-green"
                     }`}
                   />
 
-                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#5F7A80]">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-ops-text-3">
                     {isPlaying
                       ? "Simulation Running"
                       : "Simulation Complete"}
@@ -586,11 +586,11 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                 </div>
 
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#304C57]">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-ops-text">
                   {scenario.title}
                 </h2>
 
-                <p className="text-xs text-[#75868C] mt-1">
+                <p className="text-xs text-ops-text-2 mt-1">
                   {isPlaying
                     ? "Tracing the projected operational cascade..."
                     : "Projected operational cascade successfully generated."}
@@ -599,17 +599,17 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 self-start lg:self-auto px-3 py-2 rounded-xl bg-[#F5F8F7] border border-[#D6E2DE]">
+            <div className="flex items-center gap-2 self-start lg:self-auto px-3 py-2 rounded-xl bg-ops-card border border-white/10">
 
               <span
                 className={`w-2 h-2 rounded-full ${
                   isPlaying
-                    ? "bg-[#B98232] animate-pulse"
-                    : "bg-[#4F8A6B]"
+                    ? "bg-ops-amber animate-pulse"
+                    : "bg-ops-green"
                 }`}
               />
 
-              <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#607A6C]">
+              <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-2">
                 Polar Physics Model v2.4
               </span>
 
@@ -623,20 +623,20 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
             <div className="flex items-center justify-between mb-2">
 
-              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#75888E]">
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-ops-text-3">
                 Simulation Progress
               </span>
 
-              <span className="text-[10px] font-bold text-[#4C7F91] tabular-nums">
+              <span className="text-[10px] font-bold text-ops-teal tabular-nums">
                 {progress}%
               </span>
 
             </div>
 
-            <div className="w-full h-1.5 rounded-full bg-[#DCE7E8] overflow-hidden">
+            <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
 
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#4C7F91] via-[#5D8D8D] to-[#B98232] transition-all duration-700 ease-out"
+                className="h-full rounded-full bg-gradient-to-r from-ops-teal via-ops-ice to-ops-amber transition-all duration-700 ease-out"
                 style={{
                   width: `${progress}%`,
                 }}
@@ -653,7 +653,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           IMPACT CASCADE
       ======================================================== */}
 
-      <section className="rounded-[28px] border border-[#D7E1E3] bg-[#F7FAFA] shadow-[0_7px_25px_rgba(50,75,82,0.05)] overflow-hidden">
+      <section className="rounded-[28px] border border-[#D7E1E3] bg-[#F7FAFA] shadow-[0_12px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10 overflow-hidden">
 
         <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#DEE7E8]">
 
@@ -882,7 +882,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {timelineVisible > 0 && (
-        <section className="rounded-[28px] border border-[#D9D4E3] bg-gradient-to-br from-[#F6F4F9] to-[#F8FAFA] shadow-[0_7px_24px_rgba(65,60,80,0.05)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
+        <section className="rounded-[28px] border border-[#D9D4E3] bg-gradient-to-br from-[#F6F4F9] to-[#F8FAFA] shadow-[0_12px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10 overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
 
           <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#E2DFE8]">
 
@@ -1030,7 +1030,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {mitigationVisible > 0 && (
-        <section className="rounded-[28px] border border-[#CFE0D5] bg-gradient-to-br from-[#EEF6F1] via-[#F6F9F7] to-[#F3F7F5] shadow-[0_7px_24px_rgba(58,90,70,0.05)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
+        <section className="rounded-[28px] border border-[#CFE0D5] bg-gradient-to-br from-[#EEF6F1] via-[#F6F9F7] to-[#F3F7F5] shadow-[0_12px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10 overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
 
           <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#DCE9DF]">
 
@@ -1174,7 +1174,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       {activeSection === "complete" && (
         <div
           ref={completeRef}
-          className="rounded-[24px] border border-[#D1E1D6] bg-gradient-to-r from-[#EEF6F1] to-[#F7FAF8] p-5 sm:p-6 animate-[fadeSlideUp_0.8s_ease-out]"
+          className="rounded-[24px] border border-[#D1E1D6] bg-gradient-to-r from-[#EEF6F1] to-[#F7FAF8] p-5 sm:p-6 shadow-[0_12px_32px_rgba(0,0,0,0.25)] ring-1 ring-white/10 animate-[fadeSlideUp_0.8s_ease-out]"
         >
 
           <div className="flex flex-col items-center text-center">
