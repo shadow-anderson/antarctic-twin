@@ -29,12 +29,12 @@ const STATUS_PRIORITY: Record<ResourceStatus, number> = {
 };
 
 const STATUS_COLOR: Record<ResourceStatus, string> = {
-  nominal:  "#4F8A6B",
-  warning:  "#B98232",
-  critical: "#B65C5C",
+  nominal:  "#4FB58A",
+  warning:  "#D9A441",
+  critical: "#D4706F",
 };
 
-const LOADING_COLOR = "#B8C5CA";
+const LOADING_COLOR = "#6F8794";
 
 function worstStatus(a: ResourceStatus, b: ResourceStatus): ResourceStatus {
   return STATUS_PRIORITY[a] >= STATUS_PRIORITY[b] ? a : b;
@@ -203,10 +203,10 @@ export const AntarcticaMap: React.FC = () => {
   const latRings = [10, 20, 30];
 
   return (
-    <div className="relative overflow-hidden rounded-[24px] border border-[#D9E2E5] bg-white shadow-[0_4px_18px_rgba(40,60,70,0.07)]">
+    <div className="relative overflow-hidden rounded-[24px] border border-white/[0.08] bg-ops-panel shadow-[0_4px_18px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
       {/* Accent top bar — consistent with other section cards */}
-      <div className="h-1.5 bg-gradient-to-r from-[#287C80] via-[#477A91] to-[#B98232]" />
+      <div className="h-1.5 bg-gradient-to-r from-ops-teal via-ops-ice to-ops-amber" />
 
       <div className="p-6 lg:p-8">
 
@@ -215,7 +215,7 @@ export const AntarcticaMap: React.FC = () => {
         ----------------------------------------------- */}
         <div className="flex items-center gap-3 mb-6">
 
-          <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-[#DDECEE] text-[#287C80] flex-shrink-0">
+          <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-inner flex-shrink-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20" height="20"
@@ -234,10 +234,10 @@ export const AntarcticaMap: React.FC = () => {
           </div>
 
           <div>
-            <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#82939A]">
+            <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-ops-text-3">
               Station Map
             </p>
-            <h2 className="text-xl font-bold text-[#314654] mt-0.5">
+            <h2 className="text-xl font-bold text-ops-text mt-0.5">
               Antarctic Station Locations
             </h2>
           </div>
@@ -266,8 +266,8 @@ export const AntarcticaMap: React.FC = () => {
               <circle
                 cx={CENTER} cy={CENTER}
                 r={R_MAX + 12}
-                fill="#EBF2F5"
-                stroke="#C8D9DE"
+                fill="#0A1C29"
+                stroke="rgba(255,255,255,0.12)"
                 strokeWidth="1"
               />
 
@@ -280,7 +280,7 @@ export const AntarcticaMap: React.FC = () => {
                     cx={CENTER} cy={CENTER}
                     r={r}
                     fill="none"
-                    stroke="#C8D9DE"
+                    stroke="rgba(255,255,255,0.12)"
                     strokeWidth="0.6"
                     strokeDasharray="4 4"
                   />
@@ -292,7 +292,7 @@ export const AntarcticaMap: React.FC = () => {
                 <path
                   key={lon}
                   d={spokePath(lon)}
-                  stroke="#C8D9DE"
+                  stroke="rgba(255,255,255,0.10)"
                   strokeWidth="0.5"
                   strokeDasharray="3 5"
                 />
@@ -301,19 +301,19 @@ export const AntarcticaMap: React.FC = () => {
               {/* Continent silhouette */}
               <path
                 d={CONTINENT_PATH}
-                fill="#E7F0F1"
-                stroke="#C0D4D8"
+                fill="#16384C"
+                stroke="#2B5D7A"
                 strokeWidth="1.5"
                 strokeLinejoin="round"
               />
 
               {/* South Pole marker */}
-              <circle cx={CENTER} cy={CENTER} r={3} fill="#A8C2CA" />
+              <circle cx={CENTER} cy={CENTER} r={3} fill="#6FA8C7" />
               <text
                 x={CENTER} y={CENTER - 7}
                 textAnchor="middle"
                 fontSize="7"
-                fill="#7A9BA5"
+                fill="#9DB2BC"
                 fontFamily="Inter, sans-serif"
                 fontWeight="600"
               >
@@ -338,7 +338,7 @@ export const AntarcticaMap: React.FC = () => {
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fontSize="8"
-                    fill="#8DAAB3"
+                    fill="#9DB2BC"
                     fontFamily="Inter, sans-serif"
                     fontWeight="500"
                   >
@@ -373,7 +373,7 @@ export const AntarcticaMap: React.FC = () => {
                         cx={pin.x} cy={pin.y}
                         r={glowR}
                         fill={pin.color}
-                        opacity="0.18"
+                        opacity="0.25"
                       />
                     )}
 
@@ -385,7 +385,7 @@ export const AntarcticaMap: React.FC = () => {
                         fill="none"
                         stroke={pin.color}
                         strokeWidth="2"
-                        opacity="0.5"
+                        opacity="0.6"
                       />
                     )}
 
@@ -394,11 +394,11 @@ export const AntarcticaMap: React.FC = () => {
                       cx={pin.x} cy={pin.y}
                       r={pinR}
                       fill={pin.color}
-                      stroke="white"
+                      stroke="#0D2130"
                       strokeWidth="2.2"
                       style={{
                         transition: "r 0.2s ease",
-                        filter: `drop-shadow(0 2px 5px ${pin.color}66)`,
+                        filter: `drop-shadow(0 2px 5px ${pin.color}88)`,
                       }}
                     />
 
@@ -410,7 +410,7 @@ export const AntarcticaMap: React.FC = () => {
                       fontSize="9.5"
                       fontFamily="Inter, sans-serif"
                       fontWeight={pin.isSelected ? "700" : "600"}
-                      fill={pin.isSelected ? "#314654" : "#526673"}
+                      fill={pin.isSelected ? "#FFFFFF" : "#9DB2BC"}
                       style={{ pointerEvents: "none", userSelect: "none" }}
                     >
                       {pin.name}
@@ -427,9 +427,9 @@ export const AntarcticaMap: React.FC = () => {
           --------------------------------------------- */}
           <div className="flex-1 flex flex-col gap-4 w-full">
 
-            <p className="text-xs text-[#647582] leading-5">
+            <p className="text-xs text-ops-text-2 leading-5">
               Both Indian Antarctic research stations are projected using a{" "}
-              <span className="font-semibold text-[#405762]">
+              <span className="font-semibold text-ops-text">
                 polar azimuthal equidistant
               </span>{" "}
               projection centred on the South Pole. Pin colour reflects the
@@ -461,11 +461,11 @@ export const AntarcticaMap: React.FC = () => {
                   onClick={() => setSelectedStation(pin.id)}
                   className={`
                     w-full text-left p-4 rounded-2xl border transition-all duration-200
-                    focus:outline-none focus-visible:ring-2 focus-visible:ring-[#287C80]
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-ops-teal
                     ${
                       pin.isSelected
-                        ? "bg-[#EAF2F2] border-[#287C80]/40 shadow-[0_2px_10px_rgba(40,124,128,0.10)]"
-                        : "bg-white border-[#E4E9EF] hover:bg-[#F5FAFA] hover:border-[#C5D9DB]"
+                        ? "bg-ops-card border-ops-teal/40 shadow-[0_2px_12px_rgba(47,163,168,0.15)] ring-1 ring-ops-teal/30"
+                        : "bg-ops-card/60 border-white/[0.08] hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5"
                     }
                   `}
                 >
@@ -473,29 +473,29 @@ export const AntarcticaMap: React.FC = () => {
 
                     {/* Status colour swatch */}
                     <span
-                      className="mt-1 w-3 h-3 rounded-full flex-shrink-0 block"
+                      className="mt-1 w-3 h-3 rounded-full flex-shrink-0 block ring-1 ring-white/20"
                       style={{ backgroundColor: pin.color }}
                     />
 
                     <div className="flex-1 min-w-0">
 
                       <div className="flex items-center justify-between gap-2">
-                        <p className="font-bold text-[#263746] text-sm">
+                        <p className="font-bold text-ops-text text-sm">
                           {pin.name}
                         </p>
                         <span
                           className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0"
                           style={{
-                            backgroundColor: `${pin.color}22`,
+                            backgroundColor: `${pin.color}25`,
                             color: pin.color,
-                            border: `1px solid ${pin.color}44`,
+                            border: `1px solid ${pin.color}50`,
                           }}
                         >
                           {statusLabel}
                         </span>
                       </div>
 
-                      <p className="text-xs text-[#647582] mt-0.5">
+                      <p className="text-xs text-ops-text-3 mt-0.5">
                         {Math.abs(pin.lat).toFixed(2)}°S, {pin.lon.toFixed(2)}°E
                       </p>
 
@@ -509,7 +509,7 @@ export const AntarcticaMap: React.FC = () => {
                             ] as { label: string; status: ResourceStatus }[]
                           ).map(({ label, status }) => (
                             <div key={label} className="flex items-center gap-2">
-                              <span className="text-[10px] font-semibold text-[#82939A] w-10 flex-shrink-0">
+                              <span className="text-[10px] font-semibold text-ops-text-3 w-10 flex-shrink-0">
                                 {label}
                               </span>
                               <span
@@ -534,7 +534,7 @@ export const AntarcticaMap: React.FC = () => {
             })}
 
             {loadingForecasts && (
-              <p className="text-[11px] text-[#82939A] italic">
+              <p className="text-[11px] text-ops-text-3 italic">
                 Fetching resource forecasts…
               </p>
             )}
