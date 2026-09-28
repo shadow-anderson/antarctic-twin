@@ -34,16 +34,16 @@ const SOURCE_STYLES: Record<
   { dot: string; heading: string }
 > = {
   real: {
-    dot: "bg-[#4F806A]",
-    heading: "text-[#39735F]",
+    dot: "bg-ops-green",
+    heading: "text-ops-green",
   },
   simulated: {
-    dot: "bg-[#B98232]",
-    heading: "text-[#956E31]",
+    dot: "bg-ops-amber",
+    heading: "text-ops-amber",
   },
   derived: {
-    dot: "bg-[#756B91]",
-    heading: "text-[#69658A]",
+    dot: "bg-ops-violet",
+    heading: "text-ops-violet",
   },
 };
 
@@ -363,20 +363,20 @@ export const TopBar: React.FC<TopBarProps> = ({
                 ref={popoverRef}
                 role="dialog"
                 aria-label="Data provenance ledger"
-                className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-[#D5E1E3] bg-white shadow-[0_12px_40px_rgba(23,54,74,0.12)] z-50 overflow-hidden"
+                className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-white/10 bg-ops-panel shadow-[0_12px_40px_rgba(0,0,0,0.5)] z-50 overflow-hidden backdrop-blur-xl"
               >
                 {/* Popover Header */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E5ECEE] bg-[#F7FAFA]">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-ops-card/60">
                   <div className="flex items-center gap-2">
-                    <Database className="w-3.5 h-3.5 text-[#4C7891]" />
-                    <span className="text-xs font-bold text-[#304955] tracking-tight">
+                    <Database className="w-3.5 h-3.5 text-ops-accent" />
+                    <span className="text-xs font-bold text-ops-text tracking-tight">
                       Data Provenance Ledger
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsPopoverOpen(false)}
-                    className="p-1 rounded-lg hover:bg-[#E5ECEE] text-[#8A999E] transition-colors"
+                    className="p-1 rounded-lg hover:bg-white/10 text-ops-text-2 hover:text-ops-text transition-colors"
                     aria-label="Close ledger"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -384,7 +384,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </div>
 
                 {/* Popover Content */}
-                <div className="max-h-[70vh] overflow-y-auto divide-y divide-[#F0F5F5]">
+                <div className="max-h-[70vh] overflow-y-auto divide-y divide-white/5">
                   {(["real", "simulated", "derived"] as DataSource[]).map(
                     (src) => {
                       const group = itemsBySource[src];
@@ -414,10 +414,10 @@ export const TopBar: React.FC<TopBarProps> = ({
                                 key={item.key}
                                 className="flex items-start justify-between gap-3 text-[11px]"
                               >
-                                <span className="font-medium text-[#405963]">
+                                <span className="font-medium text-ops-text">
                                   {item.label}
                                 </span>
-                                <span className="text-right text-[10px] text-[#7A8C93] font-normal shrink-0 max-w-[55%]">
+                                <span className="text-right text-[10px] text-ops-text-2 font-normal shrink-0 max-w-[55%]">
                                   {item.origin}
                                 </span>
                               </li>
@@ -430,8 +430,8 @@ export const TopBar: React.FC<TopBarProps> = ({
                 </div>
 
                 {/* Popover Footer */}
-                <div className="px-5 py-2.5 border-t border-[#E5ECEE] bg-[#F7FAFA]">
-                  <span className="text-[9px] font-medium text-[#8A999E]">
+                <div className="px-5 py-2.5 border-t border-white/10 bg-ops-card/60">
+                  <span className="text-[9px] font-medium text-ops-text-3">
                     Station: {selectedStation === "maitri" ? "Maitri" : "Bharati"} · Verified provenance
                   </span>
                 </div>
