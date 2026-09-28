@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useStation } from "@/context/StationContext";
 import { useLink } from "@/context/LinkContext";
 import { StationCurrent, Anomaly, StationForecast } from "@/lib/types";
@@ -123,6 +124,31 @@ Communication is provided through dedicated satellite channels, enabling voice, 
     },
   };
 
+  // =========================================================
+  // HERO CONSTANTS
+  // Photo credit: confirm the actual source of these images
+  // and update the constant below if it is wrong.
+  // =========================================================
+
+  const PHOTO_CREDIT = "Image: Indian Antarctic Programme (NCPOR)";
+
+  /**
+   * objectPosition lets you tune the crop focus per station.
+   * Drop a replacement image at the same path and only change
+   * this constant — no other code change required.
+   */
+  const heroObjectPosition: Record<string, string> = {
+    maitri:  "center 45%",
+    bharati: "center 40%",
+  };
+
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+
+  // Reset fade whenever the station changes so the new image fades in too.
+  useEffect(() => {
+    setHeroImgLoaded(false);
+  }, [selectedStation]);
+
   const stationInfo =
     stationDescriptions[selectedStation];
 
@@ -222,20 +248,20 @@ Communication is provided through dedicated satellite channels, enabling voice, 
   if (loading || !currentData) {
     return (
       <div className="min-h-[420px] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-[#647582]">
+        <div className="flex flex-col items-center gap-4 text-ops-text-2">
 
           <div className="relative">
-            <div className="w-10 h-10 border-2 border-[#D8E5E6] rounded-full" />
+            <div className="w-10 h-10 border-2 border-white/10 rounded-full" />
 
-            <div className="absolute inset-0 w-10 h-10 border-2 border-[#287C80] border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 w-10 h-10 border-2 border-ops-teal border-t-transparent rounded-full animate-spin" />
           </div>
 
           <div className="text-center">
-            <p className="font-semibold text-[#405762]">
+            <p className="font-semibold text-ops-text">
               Connecting to Digital Twin
             </p>
 
-            <p className="text-xs text-[#82939A] mt-1">
+            <p className="text-xs text-ops-text-3 mt-1">
               Synchronizing {meta.name} telemetry...
             </p>
           </div>
@@ -253,22 +279,22 @@ Communication is provided through dedicated satellite channels, enabling voice, 
     return (
       <div className="min-h-[420px] flex items-center justify-center p-6">
 
-        <div className="max-w-md w-full rounded-3xl border border-[#E4D6D6] bg-[#FCF7F7] p-8 text-center shadow-sm">
+        <div className="max-w-md w-full rounded-3xl border border-ops-red/30 bg-ops-card p-8 text-center shadow-lg ring-1 ring-white/10">
 
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-[#F3E1E1] flex items-center justify-center">
-            <WifiOff className="w-5 h-5 text-[#B65C5C]" />
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-ops-red/20 flex items-center justify-center">
+            <WifiOff className="w-5 h-5 text-ops-red" />
           </div>
 
-          <h2 className="text-lg font-bold text-[#4B4141] mt-4">
+          <h2 className="text-lg font-bold text-white mt-4">
             Telemetry Unavailable
           </h2>
 
-          <p className="text-sm text-[#7D6E6E] mt-2 leading-6">
+          <p className="text-sm text-ops-text-2 mt-2 leading-6">
             Unable to retrieve station telemetry at the moment.
             Please verify the communication link and try again.
           </p>
 
-          <div className="mt-5 px-3 py-2 rounded-xl bg-[#F7ECEC] border border-[#EBDADA] text-[10px] font-bold uppercase tracking-wider text-[#A05D5D]">
+          <div className="mt-5 px-3 py-2 rounded-xl bg-ops-red/20 border border-ops-red/40 text-[10px] font-bold uppercase tracking-wider text-ops-red">
             No Cached Data Available
           </div>
 
@@ -289,40 +315,40 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {error && usingCachedData && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#F7EBD6] via-[#FAF2E5] to-[#F4E9D8] border border-[#E5D1AB] shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-ops-amber/15 via-ops-panel to-ops-panel border border-ops-amber/30 shadow-md ring-1 ring-white/5">
 
           <div className="flex items-center gap-3">
 
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#EBD6AF]">
-              <WifiOff className="w-5 h-5 text-[#9A6B25]" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-amber/20">
+              <WifiOff className="w-5 h-5 text-ops-amber" />
             </div>
 
             <div>
 
               <div className="flex items-center gap-2">
 
-                <span className="text-xs font-bold uppercase tracking-wider text-[#805C25]">
+                <span className="text-xs font-bold uppercase tracking-wider text-ops-amber">
                   Live Telemetry Unavailable
                 </span>
 
-                <span className="hidden sm:inline text-[#B28A50]">
+                <span className="hidden sm:inline text-ops-amber/50">
                   •
                 </span>
 
-                <span className="text-xs text-[#987849]">
+                <span className="text-xs text-ops-text-2">
                   Cached Station State
                 </span>
 
               </div>
 
-              <p className="text-xs text-[#987849] mt-1">
+              <p className="text-xs text-ops-text-3 mt-1">
                 {error}
               </p>
 
             </div>
           </div>
 
-          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-[#FBF6EC] border border-[#E1CAA0] text-[10px] font-bold uppercase tracking-wide text-[#956E31]">
+          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-ops-amber/20 border border-ops-amber/40 text-[10px] font-bold uppercase tracking-wide text-ops-amber">
             Cached Telemetry
           </span>
 
@@ -334,40 +360,40 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {!connected && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#F7EBD6] via-[#FAF2E5] to-[#F4E9D8] border border-[#E5D1AB] shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-ops-amber/15 via-ops-panel to-ops-panel border border-ops-amber/30 shadow-md ring-1 ring-white/5">
 
           <div className="flex items-center gap-3">
 
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#EBD6AF]">
-              <WifiOff className="w-5 h-5 text-[#9A6B25]" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-amber/20">
+              <WifiOff className="w-5 h-5 text-ops-amber" />
             </div>
 
             <div>
 
               <div className="flex items-center gap-2">
 
-                <span className="text-xs font-bold uppercase tracking-wider text-[#805C25]">
+                <span className="text-xs font-bold uppercase tracking-wider text-ops-amber">
                   Communication Link Degraded
                 </span>
 
-                <span className="hidden sm:inline text-[#B28A50]">
+                <span className="hidden sm:inline text-ops-amber/50">
                   •
                 </span>
 
-                <span className="text-xs text-[#987849]">
+                <span className="text-xs text-ops-text-2">
                   Polar Backhaul Stalled
                 </span>
 
               </div>
 
-              <p className="text-xs text-[#987849] mt-1">
+              <p className="text-xs text-ops-text-3 mt-1">
                 Displaying the last synchronized station state.
               </p>
 
             </div>
           </div>
 
-          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-[#FBF6EC] border border-[#E1CAA0] text-[10px] font-bold uppercase tracking-wide text-[#956E31]">
+          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-ops-amber/20 border border-ops-amber/40 text-[10px] font-bold uppercase tracking-wide text-ops-amber">
             Cached Telemetry
           </span>
 
@@ -379,19 +405,19 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {isRestoring && (
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[#E3F0EA] to-[#EEF5F1] border border-[#C8DED4] shadow-sm">
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-ops-green/15 via-ops-panel to-ops-panel border border-ops-green/30 shadow-md ring-1 ring-white/5">
 
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#D5E9DF]">
-            <CheckCircle2 className="w-5 h-5 text-[#3F8068]" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-green/20">
+            <CheckCircle2 className="w-5 h-5 text-ops-green" />
           </div>
 
           <div>
 
-            <span className="text-xs font-bold uppercase tracking-wider text-[#356E5A]">
+            <span className="text-xs font-bold uppercase tracking-wider text-ops-green">
               Link Restored
             </span>
 
-            <p className="text-xs text-[#6C857A] mt-1">
+            <p className="text-xs text-ops-text-2 mt-1">
               Synchronizing station telemetry state with polar ground station...
             </p>
 
@@ -401,132 +427,133 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       )}
 
       {/* =====================================================
-          STATION HERO
+          STATION HERO — full-bleed background image
       ===================================================== */}
 
-      <section className="relative overflow-hidden rounded-[28px] bg-[#233B48] shadow-[0_12px_35px_rgba(34,57,70,0.14)]">
+      <section
+        className="relative overflow-hidden rounded-[28px] bg-[#233B48] shadow-[0_12px_35px_rgba(34,57,70,0.14)] min-h-[440px] lg:min-h-[480px]"
+      >
 
-        {/* Background accent */}
+        {/* ── LAYER 0: background image (absolute, fills section) ─────── */}
 
-        <div className="absolute -top-32 -right-20 w-96 h-96 rounded-full bg-[#4D8990]/25 blur-3xl" />
+        <div className="absolute inset-0">
+          <Image
+            key={stationInfo.image}
+            src={stationInfo.image}
+            alt={`${meta.name} Research Station`}
+            fill
+            priority
+            sizes="100vw"
+            quality={85}
+            className={[
+              "object-cover motion-reduce:transition-none",
+              "transition-opacity  duration-700",
+              "transition-transform duration-[1200ms] ease-out",
+              heroImgLoaded
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-[1.03]",
+            ].join(" ")}
+            style={{ objectPosition: heroObjectPosition[selectedStation] ?? "center 45%" }}
+            onLoad={() => setHeroImgLoaded(true)}
+          />
+        </div>
 
-        <div className="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-[#B98232]/15 blur-3xl" />
+        {/* ── LAYER 1: horizontal gradient (left dark → right lighter) ── */}
+        {/*   Left edge: #0E2230 @ 95% → right: #0E2230 @ 40%            */}
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-[48%_52%] min-h-[390px]">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(14,34,48,0.95) 0%, rgba(14,34,48,0.70) 45%, rgba(14,34,48,0.40) 100%)",
+          }}
+        />
 
-          {/* =================================================
-              STATION IMAGE
-          ================================================= */}
+        {/* ── LAYER 2: vertical gradient (bottom dark → top lighter) ──── */}
+        {/*   Bottom: #0A1A26 @ 90% → top: #0A1A26 @ 35%                  */}
 
-          <div className="relative min-h-[300px] lg:min-h-[390px] overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(10,26,38,0.90) 0%, rgba(10,26,38,0.55) 35%, rgba(10,26,38,0.35) 100%)",
+          }}
+        />
 
-            <img
-              src={stationInfo.image}
-              alt={`${meta.name} Research Station`}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+        {/* ── LAYER 3: vignette (radial, corners only) ─────────────────── */}
 
-            {/* Image overlays */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 45%, rgba(6,16,24,0.55) 100%)",
+          }}
+        />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-[#152D39]/10 via-transparent to-[#233B48]/90 lg:to-[#233B48]" />
+        {/* ── LAYER 4: content (z-10) ────────────────────────────────── */}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#162D38]/75 via-transparent to-transparent" />
+        <div className="relative z-10 flex flex-col justify-between min-h-[440px] lg:min-h-[480px] p-6 sm:p-8 lg:p-10">
 
-            {/* Image label */}
+          {/* Top row: "Indian Antarctic Programme" chip */}
 
-            <div className="absolute left-5 top-5">
+          <div className="flex items-start justify-between">
 
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F7F4EA]/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.14em] text-[#536B73] shadow-sm">
-
-                <span className="w-1.5 h-1.5 rounded-full bg-[#B98232]" />
-
-                Indian Antarctic Programme
-
-              </span>
-
-            </div>
-
-            {/* Image bottom text */}
-
-            <div className="absolute bottom-5 left-5 right-5 lg:hidden">
-
-              <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[#DDE8E8]">
-                Station {meta.id}
-              </p>
-
-              <p className="text-xl font-bold text-white mt-1">
-                {meta.name}
-              </p>
-
-            </div>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F7F4EA]/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.14em] text-[#536B73] shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B98232]" />
+              Indian Antarctic Programme
+            </span>
 
           </div>
 
-          {/* =================================================
-              STATION DETAILS
-          ================================================= */}
+          {/* ── Main content column (max-w-2xl keeps text readable) ──── */}
 
-          <div className="relative flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-white">
+          <div className="max-w-2xl">
 
-            <div>
+            {/* Station ID pill row */}
 
-              {/* Station ID */}
+            <div className="flex flex-wrap items-center gap-2 mb-4">
 
-              <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="px-3 py-1 rounded-lg bg-[#DDEEEF]/15 border border-[#DDEEEF]/20 text-[10px] font-bold tracking-[0.12em] uppercase text-[#CDE2E4]">
+                Station ID: {meta.id}
+              </span>
 
-                <span className="px-3 py-1 rounded-lg bg-[#DDEEEF]/15 border border-[#DDEEEF]/20 text-[10px] font-bold tracking-[0.12em] uppercase text-[#CDE2E4]">
-                  Station ID: {meta.id}
-                </span>
+              <span className="px-3 py-1 rounded-lg bg-[#DCEBDD]/15 border border-[#DCEBDD]/20 text-[10px] font-semibold text-[#B9D6C9]">
+                ● Operational
+              </span>
 
-                <span className="px-3 py-1 rounded-lg bg-[#DCEBDD]/15 border border-[#DCEBDD]/20 text-[10px] font-semibold text-[#B9D6C9]">
-                  ● Operational
-                </span>
-
-                <SolarBadge
-                  lat={STATIONS.find((s) => s.id === selectedStation)?.lat ?? -70.76}
-                  lon={STATIONS.find((s) => s.id === selectedStation)?.lon ?? 11.73}
-                />
-
-              </div>
-
-              {/* Title */}
-
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-
-                {meta.name}
-
-                <span className="block text-[#9FC7C9] mt-1">
-                  Research Station
-                </span>
-
-              </h1>
-
-              {/* Location */}
-
-              <div className="flex flex-wrap items-center gap-2 mt-4 text-sm text-[#C5D6D9]">
-
-                <MapPin className="w-4 h-4 text-[#8EC0C2]" />
-
-                <span>{meta.coordinates}</span>
-
-                <span className="text-[#718D96]">
-                  •
-                </span>
-
-                <span>{meta.region}</span>
-
-              </div>
-
-              {/* Description */}
-
-              <p className="mt-5 max-w-xl text-sm leading-6 text-[#C5D2D5]">
-                {stationInfo.short}
-              </p>
+              <SolarBadge
+                lat={STATIONS.find((s) => s.id === selectedStation)?.lat ?? -70.76}
+                lon={STATIONS.find((s) => s.id === selectedStation)?.lon ?? 11.73}
+              />
 
             </div>
 
+            {/* Title */}
+
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+              {meta.name}
+              <span className="block text-[#9FC7C9] mt-1">
+                Research Station
+              </span>
+            </h1>
+
+            {/* Coordinates */}
+
+            <div className="flex flex-wrap items-center gap-2 mt-4 text-sm text-[#C5D6D9]">
+              <MapPin className="w-4 h-4 text-[#8EC0C2]" />
+              <span>{meta.coordinates}</span>
+              <span className="text-[#718D96]">•</span>
+              <span>{meta.region}</span>
+            </div>
+
+            {/* Description — white/90 gives ≥ 4.5:1 against the overlay */}
+
+            <p className="mt-5 text-sm leading-6 text-white/90">
+              {stationInfo.short}
+            </p>
+
             {/* =================================================
-                STATION STATS
+                STATION STATS (2 cols mobile / 4 cols sm+)
             ================================================= */}
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-7">
@@ -536,13 +563,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#8DBFC0]">
-
                   <Users className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Capacity
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -556,13 +580,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#D2B477]">
-
                   <Mountain className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Elevation
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -576,13 +597,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#A9C6D0]">
-
                   <CalendarDays className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     {stationInfo.establishedLabel}
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -591,18 +609,15 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
               </div>
 
-              {/* Satellite */}
+              {/* Satellite link */}
 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#B8D4C8]">
-
                   <Satellite className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Link
                   </span>
-
                 </div>
 
                 <p className="text-[11px] font-bold text-white mt-2">
@@ -616,7 +631,17 @@ Communication is provided through dedicated satellite channels, enabling voice, 
           </div>
 
         </div>
+
+        {/* ── Photo credit chip (bottom-right, z-10) ─────────────────── */}
+
+        <div className="absolute bottom-4 right-5 z-10">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-[9px] font-medium text-white/60 tracking-wide">
+            {PHOTO_CREDIT}
+          </span>
+        </div>
+
       </section>
+
 
       {/* =====================================================
           ANTARCTIC STATION MAP
@@ -628,11 +653,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
           STATION PROFILE
       ===================================================== */}
 
-      <section className="relative overflow-hidden rounded-[26px] border border-[#D7E2E3] bg-gradient-to-br from-[#FAFBF9] via-[#F5F8F6] to-[#EDF3F2] shadow-[0_5px_22px_rgba(40,60,70,0.06)]">
+      <section className="relative overflow-hidden rounded-[26px] border border-white/[0.08] bg-ops-panel shadow-[0_5px_22px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
         {/* Colored top line */}
 
-        <div className="h-1.5 bg-gradient-to-r from-[#287C80] via-[#477A91] to-[#B98232]" />
+        <div className="h-1.5 bg-gradient-to-r from-ops-teal via-ops-ice to-ops-amber" />
 
         <div className="p-6 lg:p-8">
 
@@ -642,17 +667,17 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             <div className="flex items-center gap-3">
 
-              <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-[#DDECEE] text-[#287C80]">
+              <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-inner">
                 <Building2 className="w-5 h-5" />
               </div>
 
               <div>
 
-                <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#82939A]">
+                <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-ops-text-3">
                   Station Profile
                 </p>
 
-                <h2 className="text-xl font-bold text-[#314654] mt-0.5">
+                <h2 className="text-xl font-bold text-ops-text mt-0.5">
                   Life & Operations at {meta.name}
                 </h2>
 
@@ -660,9 +685,9 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-[#71828A]">
+            <div className="flex items-center gap-2 text-xs text-ops-text-2">
 
-              <Radio className="w-3.5 h-3.5 text-[#287C80]" />
+              <Radio className="w-3.5 h-3.5 text-ops-teal" />
 
               <span>
                 {stationInfo.connectivity}
@@ -678,25 +703,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Location */}
 
-            <div className="group p-4 rounded-2xl bg-[#EAF2F2] border border-[#D5E3E4] hover:bg-[#E3EEEE] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#D5E7E8] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-teal/15 border border-ops-teal/30 flex items-center justify-center">
 
-                  <Mountain className="w-4 h-4 text-[#477A91]" />
+                  <Mountain className="w-4 h-4 text-ops-teal" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#9BAEB5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#83939A] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Location
               </p>
 
-              <p className="text-sm font-bold text-[#405762] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.location}
               </p>
 
@@ -704,25 +729,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Established */}
 
-            <div className="group p-4 rounded-2xl bg-[#F1EDF5] border border-[#E0D9E6] hover:bg-[#ECE7F1] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#E6E0EC] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-violet/15 border border-ops-violet/30 flex items-center justify-center">
 
-                  <CalendarDays className="w-4 h-4 text-[#756B91]" />
+                  <CalendarDays className="w-4 h-4 text-ops-violet" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#A9A1B5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#8A8498] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 {stationInfo.establishedLabel}
               </p>
 
-              <p className="text-sm font-bold text-[#514B63] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.established}
               </p>
 
@@ -730,25 +755,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Capacity */}
 
-            <div className="group p-4 rounded-2xl bg-[#F7F0E3] border border-[#E8DCC5] hover:bg-[#F4EBDD] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#EEE1C9] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-amber/15 border border-ops-amber/30 flex items-center justify-center">
 
-                  <Users className="w-4 h-4 text-[#A47735]" />
+                  <Users className="w-4 h-4 text-ops-amber" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#BDA77E]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#998466] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Total Capacity
               </p>
 
-              <p className="text-sm font-bold text-[#665438] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.capacity}
               </p>
 
@@ -756,25 +781,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Connectivity */}
 
-            <div className="group p-4 rounded-2xl bg-[#EAF2EC] border border-[#D5E3D9] hover:bg-[#E3EEE7] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#D9E9DF] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-green/15 border border-ops-green/30 flex items-center justify-center">
 
-                  <Satellite className="w-4 h-4 text-[#4F806A]" />
+                  <Satellite className="w-4 h-4 text-ops-green" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#9BB3A5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#82978A] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Connectivity
               </p>
 
-              <p className="text-sm font-bold text-[#456655] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 Satellite
               </p>
 
@@ -786,11 +811,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
           <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-5">
 
-            <div className="hidden lg:block w-1 rounded-full bg-gradient-to-b from-[#287C80] via-[#477A91] to-[#B98232]" />
+            <div className="hidden lg:block w-1 rounded-full bg-gradient-to-b from-ops-teal via-ops-ice to-ops-amber" />
 
             <div>
 
-              <p className="text-sm leading-7 text-[#5F7078] whitespace-pre-line">
+              <p className="text-sm leading-7 text-ops-text-2 whitespace-pre-line">
                 {stationInfo.full}
               </p>
 

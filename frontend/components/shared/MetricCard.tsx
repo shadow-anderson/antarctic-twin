@@ -149,7 +149,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         ${className}
       `}
     >
-      {/* Top Tone-tinted gradient */}
+      {/* Top Tone-tinted gradient at ~12% */}
       <div
         className={`absolute inset-x-0 top-0 h-28 bg-gradient-to-b ${currentTone.cardGradient} pointer-events-none`}
       />

@@ -8,44 +8,60 @@
    ========================================= */
 
 :root {
+  color-scheme: dark;
+
+  /* Ops Console Design Tokens */
+  --ops-bg: #0D2130;
+  --ops-panel: #132B3C;
+  --ops-card: #183548;
+  --ops-text: #E6EEF1;
+  --ops-text-2: #9DB2BC;
+  --ops-text-3: #6F8794;
+  --ops-teal: #2FA3A8;
+  --ops-amber: #D9A441;
+  --ops-green: #4FB58A;
+  --ops-red: #D4706F;
+  --ops-violet: #8F86B8;
+  --ops-ice: #6FA8C7;
+
   /* Page */
-  --bg-ice: #F1F5F6;
+  --bg-ice: #0D2130;
 
   /* Surfaces */
-  --surface-card: #F9FBFB;
-  --surface-soft: #EEF3F4;
-  --surface-hover: #E8EFF1;
+  --surface-card: #183548;
+  --surface-soft: #132B3C;
+  --surface-hover: #1F4259;
 
   /* Borders */
-  --border-card: #D9E2E5;
-  --border-soft: #E4EAEC;
+  --border-card: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.06);
 
   /* Main brand colors */
-  --polar-navy: #17364A;
-  --glacier-teal: #287C80;
-  --glacier-teal-light: #DCEEEF;
+  --polar-navy: #132B3C;
+  --glacier-teal: #2FA3A8;
+  --glacier-teal-light: rgba(47, 163, 168, 0.2);
 
   /* Accent */
-  --amber-gold: #B98232;
-  --amber-light: #F4E8D1;
+  --amber-gold: #D9A441;
+  --amber-light: rgba(217, 164, 65, 0.2);
 
   /* Text */
-  --text-primary: #263746;
-  --text-secondary: #647582;
-  --text-muted: #8A99A3;
+  --text-primary: #E6EEF1;
+  --text-secondary: #9DB2BC;
+  --text-muted: #6F8794;
 
   /* Status */
-  --success: #3F8068;
-  --success-light: #E1EEE9;
+  --success: #4FB58A;
+  --success-light: rgba(79, 181, 138, 0.2);
 
-  --warning: #B98232;
-  --warning-light: #F4E8D1;
+  --warning: #D9A441;
+  --warning-light: rgba(217, 164, 65, 0.2);
 
-  --danger: #B65C5C;
-  --danger-light: #F4E3E3;
+  --danger: #D4706F;
+  --danger-light: rgba(212, 112, 111, 0.2);
 
-  --info: #4C7891;
-  --info-light: #E2EDF2;
+  --info: #6FA8C7;
+  --info-light: rgba(111, 168, 199, 0.2);
 }
 
 /* =========================================
@@ -53,12 +69,13 @@
    ========================================= */
 
 html {
-  background-color: var(--bg-ice);
+  background-color: var(--ops-bg);
+  color-scheme: dark;
 }
 
 body {
-  background-color: var(--bg-ice);
-  color: var(--text-primary);
+  background-color: var(--ops-bg);
+  color: var(--ops-text);
 
   min-height: 100vh;
   margin: 0;
@@ -85,8 +102,8 @@ body {
    ========================================= */
 
 ::selection {
-  background: var(--glacier-teal-light);
-  color: var(--polar-navy);
+  background: var(--ops-teal);
+  color: #0D2130;
 }
 
 /* =========================================
@@ -99,16 +116,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #EAF0F2;
+  background: #0D2130;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C4D0D5;
+  background: #183548;
   border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #AABBC2;
+  background: #224760;
 }
 
 /* =========================================
@@ -127,7 +145,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--glacier-teal);
+  outline: 2px solid var(--ops-teal);
   outline-offset: 2px;
 }
 
