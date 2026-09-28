@@ -33,19 +33,19 @@ const StatusDot: React.FC<{ status?: AssetStatus }> = ({ status }) => {
 
   const colorMap: Record<string, string> = {
     healthy:
-      "bg-[#4F8A6B] shadow-[0_0_0_3px_rgba(79,138,107,0.12)]",
+      "bg-ops-green shadow-[0_0_0_3px_rgba(79,181,138,0.2)]",
 
     warning:
-      "bg-[#B98232] shadow-[0_0_0_3px_rgba(185,130,50,0.12)]",
+      "bg-ops-amber shadow-[0_0_0_3px_rgba(217,164,65,0.2)]",
 
     critical:
-      "bg-[#B65C5C] shadow-[0_0_0_3px_rgba(182,92,92,0.12)]",
+      "bg-ops-red shadow-[0_0_0_3px_rgba(212,112,111,0.2)]",
   };
 
   return (
     <span
       className={`w-2 h-2 rounded-full flex-shrink-0 ${
-        colorMap[status] || "bg-[#B8C5CA]"
+        colorMap[status] || "bg-ops-text-3"
       }`}
       title={`Status: ${status}`}
     />
@@ -91,16 +91,16 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
         }}
         className={`group relative flex items-center justify-between gap-3 py-2.5 pr-3 my-1 rounded-xl cursor-pointer transition-all duration-150 text-xs ${
           isSelected
-            ? "bg-gradient-to-r from-[#DDEDEF] to-[#EAF3F3] text-[#294B58] border border-[#BFD9DE] shadow-[0_3px_10px_rgba(63,110,122,0.08)]"
+            ? "bg-ops-card text-white border border-ops-teal/40 shadow-sm ring-1 ring-ops-teal/30"
             : hasChildren
-            ? "text-[#405B66] hover:bg-[#E5EEF0] font-semibold"
-            : "text-[#71838C] hover:text-[#405B66] hover:bg-[#E8F0F1]"
+            ? "text-ops-text-2 hover:bg-white/5 hover:text-ops-text font-semibold"
+            : "text-ops-text-3 hover:text-ops-text hover:bg-white/5"
         }`}
       >
 
         {/* Selected indicator */}
         {isSelected && (
-          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-[#4C8794]" />
+          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-ops-teal" />
         )}
 
         <div className="flex items-center gap-2.5 min-w-0">
@@ -118,8 +118,8 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
               }}
               className={`flex items-center justify-center w-5 h-5 rounded-md transition-colors ${
                 isSelected
-                  ? "text-[#4C8794] hover:bg-[#CFE3E7]"
-                  : "text-[#8A9BA3] hover:text-[#4C8794] hover:bg-[#DCE9EC]"
+                  ? "text-ops-teal hover:bg-white/10"
+                  : "text-ops-text-3 hover:text-ops-text hover:bg-white/5"
               }`}
             >
               {isOpen ? (
@@ -137,22 +137,22 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
             <span
               className={`flex items-center justify-center w-7 h-7 rounded-lg shrink-0 ${
                 isSelected
-                  ? "bg-[#CDE3E7] text-[#477D8A]"
-                  : "bg-[#E2ECEE] text-[#78919A] group-hover:bg-[#D8E7EA]"
+                  ? "bg-ops-teal/20 text-ops-teal"
+                  : "bg-white/5 text-ops-text-2 group-hover:bg-white/10"
               }`}
             >
               <Folder
                 className="w-4 h-4 stroke-[1.7]"
                 fill="currentColor"
-                fillOpacity={0.12}
+                fillOpacity={0.2}
               />
             </span>
           ) : (
             <span
               className={`flex items-center justify-center w-7 h-7 rounded-lg shrink-0 ${
                 isSelected
-                  ? "bg-[#CDE3E7] text-[#477D8A]"
-                  : "bg-[#E8EFF1] text-[#8AA0A8] group-hover:bg-[#DDE9EC]"
+                  ? "bg-ops-teal/20 text-ops-teal"
+                  : "bg-white/5 text-ops-text-3 group-hover:bg-white/10"
               }`}
             >
               <HardDrive className="w-3.5 h-3.5 stroke-[1.8]" />
@@ -163,7 +163,7 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
           <span
             className={`truncate tracking-normal ${
               isSelected
-                ? "font-bold"
+                ? "font-bold text-white"
                 : hasChildren
                 ? "font-semibold"
                 : ""
@@ -182,8 +182,8 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
             <span
               className={`min-w-[22px] px-1.5 py-0.5 text-center rounded-md text-[10px] font-bold ${
                 isSelected
-                  ? "bg-[#D0E5E9] text-[#527985]"
-                  : "bg-[#E1EAEC] text-[#8A9BA3]"
+                  ? "bg-ops-teal/20 text-ops-teal"
+                  : "bg-white/10 text-ops-text-3"
               }`}
             >
               {node.children?.length}
@@ -197,7 +197,7 @@ const TreeNodeItem: React.FC<TreeNodeItemProps> = ({
 
       {/* CHILDREN */}
       {hasChildren && isOpen && (
-        <div className="relative ml-5 my-1 pl-2 border-l border-[#D6E2E5]">
+        <div className="relative ml-5 my-1 pl-2 border-l border-white/10">
 
           {node.children!.map((child) => (
             <TreeNodeItem
@@ -227,12 +227,12 @@ export const AssetTree: React.FC<AssetTreeProps> = ({
   onToggleSidebar,
 }) => {
   return (
-    <div className="w-full h-full flex flex-col rounded-[22px] bg-[#F7FAFA] border border-[#DCE6E8] p-4 shadow-[0_4px_16px_rgba(50,75,85,0.04)]">
+    <div className="w-full h-full flex flex-col rounded-[22px] bg-ops-bg/80 border border-white/[0.08] p-4 shadow-inner">
 
       {/* ===================================================
           TREE HEADER
       =================================================== */}
-      <div className="flex items-center gap-3 pb-4 mb-3 border-b border-[#DEE8EA]">
+      <div className="flex items-center gap-3 pb-4 mb-3 border-b border-white/[0.08]">
 
         {/* ================================================
             HAMBURGER BUTTON
@@ -242,7 +242,7 @@ export const AssetTree: React.FC<AssetTreeProps> = ({
           onClick={onToggleSidebar}
           aria-label="Hide asset hierarchy"
           title="Hide asset hierarchy"
-          className="flex items-center justify-center w-9 h-9 shrink-0 rounded-xl bg-[#DCEBED] border border-[#BFD4D8] text-[#456F7B] shadow-sm hover:bg-[#CFE2E6] hover:text-[#315B67] transition-all duration-200 cursor-pointer"
+          className="flex items-center justify-center w-9 h-9 shrink-0 rounded-xl bg-ops-card border border-white/10 text-ops-teal shadow-sm hover:bg-ops-card/80 hover:text-white transition-all duration-200 cursor-pointer"
         >
           <Menu
             className="w-5 h-5"
@@ -253,7 +253,7 @@ export const AssetTree: React.FC<AssetTreeProps> = ({
         {/* ================================================
             ASSET ICON
         ================================================= */}
-        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#E1ECEF] text-[#56818D] shrink-0">
+        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-ops-card border border-white/10 text-ops-teal shrink-0">
           <HardDrive className="w-4 h-4" />
         </div>
 
@@ -262,11 +262,11 @@ export const AssetTree: React.FC<AssetTreeProps> = ({
         ================================================= */}
         <div className="min-w-0 flex-1">
 
-          <h3 className="text-sm font-bold tracking-tight text-[#405964]">
+          <h3 className="text-sm font-bold tracking-tight text-ops-text">
             Subsystem Asset Hierarchy
           </h3>
 
-          <p className="text-[11px] leading-5 text-[#87989F]">
+          <p className="text-[11px] leading-5 text-ops-text-3">
             Select an asset node to inspect live state
           </p>
 
@@ -275,7 +275,7 @@ export const AssetTree: React.FC<AssetTreeProps> = ({
         {/* ================================================
             DIGITAL TWIN BADGE
         ================================================= */}
-        <span className="shrink-0 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#E5EFF0] text-[#64838C] border border-[#D4E4E7]">
+        <span className="shrink-0 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-ops-card text-ops-text-3 border border-white/10">
           Digital Twin
         </span>
 
