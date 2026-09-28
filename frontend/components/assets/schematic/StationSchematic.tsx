@@ -59,6 +59,30 @@ const ASSET_DEFS: AssetPlacement[] = [
    INDIVIDUAL ASSET MESH COMPONENTS
    ═══════════════════════════════════════════ */
 
+function getAssetTopY(
+  shape: AssetPlacement["shape"],
+  scale?: [number, number, number]
+): number {
+  switch (shape) {
+    case "building":
+      return scale?.[1] ?? 1;
+    case "generator":
+      return 1.1; // exhaust stack reaches y=1.1
+    case "battery":
+      return 0.58;
+    case "pump":
+      return 0.4;
+    case "tank":
+      return 1.1;
+    case "cylinders":
+      return 0.34;
+    case "container":
+      return 0.5;
+    default:
+      return 1;
+  }
+}
+
 /** A single asset shape in the 3D scene */
 const AssetMesh: React.FC<{
   def: AssetPlacement;
@@ -90,6 +114,9 @@ const AssetMesh: React.FC<{
       ? [(def.scale?.[0] ?? 1) * 1.18, def.scale?.[1] ?? 1, (def.scale?.[2] ?? 1) * 1.18]
       : def.scale ?? [1, 1, 1];
 
+  const effectiveScale = def.id === "bld-main" ? bldScale : def.scale ?? [1, 1, 1];
+  const topY = getAssetTopY(def.shape, effectiveScale);
+
   const label =
     def.id === "water-pump"
       ? stationId === "maitri"
@@ -111,7 +138,7 @@ const AssetMesh: React.FC<{
       onPointerOut={(e) => { e.stopPropagation(); onPointerOut(); }}
       onClick={(e) => { e.stopPropagation(); onClick(); }}
     >
-      {/* ── Stilts for Maitri bld-main ── */}
+      {/* ── Stilts for Maitri bld-main (base at y=0, stilts extend down to ground) ── */}
       {stiltHeight > 0 && (
         <>
           {[[-0.8, 0, -0.5], [0.8, 0, -0.5], [-0.8, 0, 0.5], [0.8, 0, 0.5]].map((pos, i) => (
@@ -126,7 +153,7 @@ const AssetMesh: React.FC<{
       {/* ── Shape geometry ── */}
       <ShapeGeometry
         shape={def.shape}
-        scale={def.id === "bld-main" ? bldScale : def.scale ?? [1, 1, 1]}
+        scale={effectiveScale}
         color={baseCol}
         statusColor={color}
         emissiveIntensity={emissiveIntensity}
@@ -134,7 +161,7 @@ const AssetMesh: React.FC<{
       />
 
       {/* ── Beacon on top ── */}
-      <mesh position={[0, (def.scale?.[1] ?? 1) * 0.5 + 0.2, 0]}>
+      <mesh position={[0, topY + 0.12, 0]}>
         <sphereGeometry args={[0.08, 8, 8]} />
         <meshStandardMaterial
           color={STATUS_COLORS[status]}
@@ -147,7 +174,7 @@ const AssetMesh: React.FC<{
       {/* ── Hover / selected HTML label ── */}
       {(isHovered || isSelected) && (
         <Html
-          position={[0, (def.scale?.[1] ?? 1) * 0.5 + 0.5, 0]}
+          position={[0, topY + 0.38, 0]}
           center
           style={{ pointerEvents: "none" }}
         >
@@ -197,7 +224,7 @@ const ShapeGeometry: React.FC<{
   switch (shape) {
     case "building":
       return (
-        <mesh scale={scale}>
+        <mesh position={[0, scale[1] / 2, 0]} scale={scale}>
           <boxGeometry args={[1, 1, 1]} />
           {mat}
           {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
@@ -207,14 +234,14 @@ const ShapeGeometry: React.FC<{
     case "generator":
       return (
         <group scale={scale}>
-          {/* Main body */}
-          <mesh position={[0, 0, 0]}>
+          {/* Main body (height 0.6, base at y=0, center at y=0.3) */}
+          <mesh position={[0, 0.3, 0]}>
             <boxGeometry args={[0.8, 0.6, 0.5]} />
             {mat}
             {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
           </mesh>
-          {/* Exhaust stack */}
-          <mesh position={[0.2, 0.5, 0]}>
+          {/* Exhaust stack (height 0.5, sitting on body at y=0.6, center at 0.6 + 0.25 = 0.85) */}
+          <mesh position={[0.2, 0.85, 0]}>
             <cylinderGeometry args={[0.06, 0.08, 0.5, 8]} />
             {mat}
           </mesh>
@@ -224,12 +251,12 @@ const ShapeGeometry: React.FC<{
     case "battery":
       return (
         <group scale={scale}>
-          {/* 3 stacked flat boxes */}
-          {[0, 0.22, 0.44].map((yOff, i) => (
-            <mesh key={i} position={[0, yOff, 0]}>
+          {/* 3 stacked flat boxes: height 0.18 each, bases at 0, 0.20, 0.40 */}
+          {[0.09, 0.29, 0.49].map((yCenter, i) => (
+            <mesh key={i} position={[0, yCenter, 0]}>
               <boxGeometry args={[1.2, 0.18, 0.6]} />
               {mat}
-              {isSelected && i === 2 && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
+              {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
             </mesh>
           ))}
         </group>
@@ -238,14 +265,14 @@ const ShapeGeometry: React.FC<{
     case "pump":
       return (
         <group scale={scale}>
-          {/* Box housing */}
-          <mesh position={[0, 0, 0]}>
+          {/* Box housing (height 0.4, base at y=0, center at y=0.2) */}
+          <mesh position={[0, 0.2, 0]}>
             <boxGeometry args={[0.5, 0.4, 0.4]} />
             {mat}
             {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
           </mesh>
           {/* Horizontal pipe */}
-          <mesh position={[0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh position={[0.45, 0.2, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.06, 0.06, 0.7, 8]} />
             {mat}
           </mesh>
@@ -254,7 +281,7 @@ const ShapeGeometry: React.FC<{
 
     case "tank":
       return (
-        <mesh scale={scale}>
+        <mesh position={[0, 0.55, 0]} scale={scale}>
           <cylinderGeometry args={[0.35, 0.35, 1.1, 12]} />
           {mat}
           {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
@@ -267,20 +294,21 @@ const ShapeGeometry: React.FC<{
           {/* Two horizontal cylinders on cradles */}
           {[-0.25, 0.25].map((zOff, i) => (
             <group key={i}>
-              <mesh position={[0, 0.15, zOff]} rotation={[0, 0, Math.PI / 2]}>
-                <cylinderGeometry args={[0.14, 0.14, 0.9, 8]} />
+              {/* Cradle (height 0.06, base at y=0, center at y=0.03) */}
+              <mesh position={[0, 0.03, zOff]}>
+                <boxGeometry args={[0.7, 0.06, 0.12]} />
                 {mat}
               </mesh>
-              {/* Cradle */}
-              <mesh position={[0, -0.05, zOff]}>
-                <boxGeometry args={[0.7, 0.06, 0.12]} />
+              {/* Cylinder (radius 0.14, resting in cradle at y=0.06, center at 0.06 + 0.14 = 0.20) */}
+              <mesh position={[0, 0.2, zOff]} rotation={[0, 0, Math.PI / 2]}>
+                <cylinderGeometry args={[0.14, 0.14, 0.9, 8]} />
                 {mat}
               </mesh>
             </group>
           ))}
           {isSelected && (
-            <mesh position={[0, 0.15, 0]}>
-              <boxGeometry args={[1, 0.4, 0.7]} />
+            <mesh position={[0, 0.17, 0]}>
+              <boxGeometry args={[0.9, 0.34, 0.7]} />
               <meshBasicMaterial visible={false} />
               <Edges threshold={15} color="#ffffff" linewidth={1.5} />
             </mesh>
@@ -290,7 +318,7 @@ const ShapeGeometry: React.FC<{
 
     case "container":
       return (
-        <mesh scale={scale}>
+        <mesh position={[0, 0.25, 0]} scale={scale}>
           <boxGeometry args={[0.7, 0.5, 0.4]} />
           {mat}
           {isSelected && <Edges threshold={15} color="#ffffff" linewidth={1.5} />}
@@ -308,16 +336,16 @@ const ShapeGeometry: React.FC<{
 const GroundAndScenery: React.FC = () => {
   return (
     <group>
-      {/* ── Ground platform ── */}
-      <mesh position={[0.5, -0.15, 0.5]} receiveShadow>
+      {/* ── Ground platform (ice-white per spec) ── */}
+      <mesh position={[0.5, -0.06, 0.5]} receiveShadow>
         <boxGeometry args={[14, 0.12, 10]} />
-        <meshStandardMaterial color="#1B3A4D" flatShading />
+        <meshStandardMaterial color="#DCE7EE" roughness={0.85} flatShading />
       </mesh>
 
       {/* ── Faint grid on ground ── */}
       <gridHelper
-        args={[14, 28, "#1E4050", "#1E4050"]}
-        position={[0.5, -0.08, 0.5]}
+        args={[14, 28, "#A8C2D1", "#B8D0DE"]}
+        position={[0.5, 0.005, 0.5]}
       />
 
       {/* ── Low-poly cone ridges (scenery) ── */}
@@ -329,9 +357,9 @@ const GroundAndScenery: React.FC = () => {
         { pos: [-4.5, 0, 4.0] as [number, number, number], h: 0.55, r: 0.45 },
         { pos: [6.0, 0, -3.0] as [number, number, number], h: 0.65, r: 0.38 },
       ].map(({ pos, h, r }, i) => (
-        <mesh key={`ridge-${i}`} position={[pos[0], h / 2 - 0.1, pos[2]]}>
+        <mesh key={`ridge-${i}`} position={[pos[0], h / 2, pos[2]]}>
           <coneGeometry args={[r, h, 5]} />
-          <meshStandardMaterial color="#1B3A4D" flatShading />
+          <meshStandardMaterial color="#C2D8E6" flatShading />
         </mesh>
       ))}
     </group>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { AssetStatus } from "@/lib/types";
 import { SchematicFallback } from "./SchematicFallback";
@@ -64,6 +64,16 @@ export const SchematicLoader: React.FC<SchematicLoaderProps> = ({
   stationId,
   force2D = false,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <SchematicSkeleton />;
+  }
+
   const use2D = force2D || !hasWebGL();
 
   if (use2D) {
@@ -79,6 +89,7 @@ export const SchematicLoader: React.FC<SchematicLoaderProps> = ({
 
   return (
     <SchematicErrorBoundary
+      key={stationId}
       fallback={
         <SchematicFallback
           assets={assets}

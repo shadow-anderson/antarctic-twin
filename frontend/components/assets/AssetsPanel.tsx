@@ -50,7 +50,9 @@ export const AssetsPanel: React.FC = () => {
   type ViewMode = "hierarchy" | "schematic";
   const searchParams = useSearchParams();
   const force2D = searchParams.get("schematic") === "2d";
-  const [viewMode, setViewMode] = useState<ViewMode>("hierarchy");
+  const [viewMode, setViewMode] = useState<ViewMode>(
+    force2D ? "schematic" : "hierarchy"
+  );
 
   /* =========================================================
      FLATTEN TREE → flat asset list for schematic

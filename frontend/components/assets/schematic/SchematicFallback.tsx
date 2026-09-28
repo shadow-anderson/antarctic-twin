@@ -70,7 +70,7 @@ export const SchematicFallback: React.FC<SchematicFallbackProps> = ({
   const statusMap = new Map(assets.map((a) => [a.id, a.status]));
 
   const getWaterPumpLabel = () =>
-    stationId === "maitri" ? "Lake Water Pump" : "Sea Water Pump";
+    stationId === "maitri" ? "Lake Water Pump House" : "Sea Water Pump House";
 
   return (
     <div className="relative w-full" style={{ height: 420, background: "#0D2130" }}>
