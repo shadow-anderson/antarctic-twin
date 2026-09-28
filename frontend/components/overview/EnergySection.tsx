@@ -75,7 +75,6 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
 
       {/* Energy flow strip */}
       <div className="relative flex items-center gap-2 mt-5 mb-4">
-
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-ops-amber" />
           <span className="text-[10px] uppercase tracking-wider font-bold text-ops-amber">
@@ -91,13 +90,11 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
           </span>
           <span className="w-2 h-2 rounded-full bg-ops-teal" />
         </div>
-
       </div>
 
-      {/* Energy cards */}
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Energy cards — compact, denser grid */}
+      <div className="relative grid grid-cols-2 md:grid-cols-3 gap-3">
 
-        {/* GENERATION */}
         <MetricCard
           label="Power Generation"
           value={energy.generation_kw.value}
@@ -105,26 +102,27 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
           source={energy.generation_kw.source}
           icon={<Zap className="w-4 h-4 stroke-[1.8]" />}
           tone="amber"
+          variant="compact"
         />
 
-        {/* CONSUMPTION */}
         <MetricCard
-          label="Power Consumption"
+          label="Consumption"
           value={energy.consumption_kw.value}
           unit="kW"
           source={energy.consumption_kw.source}
           icon={<Activity className="w-4 h-4 stroke-[1.8]" />}
           tone="teal"
+          variant="compact"
         />
 
-        {/* FUEL */}
         <MetricCard
-          label="Diesel Fuel Level"
+          label="Diesel Level"
           value={energy.diesel_pct.value}
           unit="%"
           source={energy.diesel_pct.source}
           icon={<Fuel className="w-4 h-4 stroke-[1.8]" />}
           tone="mint"
+          variant="compact"
         />
 
       </div>
@@ -147,7 +145,6 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
         </span>
 
       </div>
-
     </section>
   );
 };

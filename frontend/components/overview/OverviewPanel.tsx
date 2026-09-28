@@ -4,16 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useStation } from "@/context/StationContext";
 import { useLink } from "@/context/LinkContext";
-import { StationCurrent, Anomaly } from "@/lib/types";
+import { StationCurrent, Anomaly, StationForecast } from "@/lib/types";
 import {
   getStationCurrent,
   getStationAnomalies,
+  getStationForecast,
 } from "@/lib/api";
 import { STATION_METADATA } from "@/lib/mockData";
 
 import { AnomalyBanner } from "../shared/AnomalyBanner";
 import { AntarcticaMap, STATIONS } from "../shared/AntarcticaMap";
 import { SolarBadge } from "../shared/SolarBadge";
+import { HeroMetricCard } from "../shared/HeroMetricCard";
+import { MetricCard } from "../shared/MetricCard";
 import { WeatherSection } from "./WeatherSection";
 import { EnergySection } from "./EnergySection";
 import { LogisticsSection } from "./LogisticsSection";
@@ -53,6 +56,11 @@ export const OverviewPanel: React.FC = () => {
 
   const [usingCachedData, setUsingCachedData] =
     useState<boolean>(false);
+
+  // Forecast state — fetched opportunistically alongside main data;
+  // failure is silent (does not block the page)
+  const [forecast, setForecast] =
+    useState<StationForecast | null>(null);
 
   /*
    * Stores the last successfully loaded telemetry.
@@ -155,6 +163,14 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       setLoading(true);
       setError(null);
       setUsingCachedData(false);
+
+      // Reset forecast when station changes
+      setForecast(null);
+
+      // Fire-and-forget forecast fetch — failure is silent
+      getStationForecast(selectedStation)
+        .then((f) => { if (isMounted) setForecast(f); })
+        .catch(() => { /* forecast unavailable; KPI caption simply omitted */ });
 
       try {
         const [current, anoms] = await Promise.all([
@@ -838,6 +854,67 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       <div className="space-y-7">
+
+        {/* ===================================================
+            KPI STRIP — Diesel hero + Food + Net Power
+        =================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+          {/* Hero: Diesel Autonomy (spans 2 cols on lg) */}
+          <HeroMetricCard
+            label="Diesel Autonomy"
+            value={currentData.logistics.diesel_days_remaining.value}
+            unit="days"
+            source={currentData.logistics.diesel_days_remaining.source}
+            daysMode
+            caption={(() => {
+              if (!forecast) return undefined;
+              const dieselCrossings = forecast.diesel.threshold_crossings;
+              const warnCrossing = dieselCrossings.find(
+                (c) => c.threshold_label === "warning" && c.projected_day !== null
+              );
+              const critCrossing = dieselCrossings.find(
+                (c) => c.threshold_label === "critical" && c.projected_day !== null
+              );
+              const nearest = critCrossing ?? warnCrossing;
+              if (nearest && nearest.projected_day !== null) {
+                return `${nearest.threshold_label === "critical" ? "Critical" : "Warning"} threshold projected in ${nearest.projected_day} days`;
+              }
+              return "No threshold crossing in 30 days";
+            })()}
+            className="lg:col-span-2"
+          />
+
+          {/* Right column: Food + Net Power stacked */}
+          <div className="flex flex-col gap-4">
+
+            <MetricCard
+              label="Food Reserve"
+              value={currentData.logistics.food_days_remaining.value}
+              unit="days"
+              source={currentData.logistics.food_days_remaining.source}
+              tone="mint"
+            />
+
+            <MetricCard
+              label="Net Power Balance"
+              value={
+                currentData.energy.generation_kw.value !== null &&
+                currentData.energy.consumption_kw.value !== null
+                  ? parseFloat(
+                      (currentData.energy.generation_kw.value -
+                        currentData.energy.consumption_kw.value).toFixed(1)
+                    )
+                  : null
+              }
+              unit="kW"
+              source="derived"
+              tone="amber"
+            />
+
+          </div>
+
+        </div>
 
         <WeatherSection
           weather={currentData.weather}

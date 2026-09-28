@@ -4,13 +4,11 @@ import React from "react";
 import { AssetDetail } from "@/lib/types";
 import { SourceBadge } from "../shared/SourceBadge";
 import {
-  Activity,
   Cpu,
   Clock,
   Thermometer,
   Zap,
   Gauge,
-  Info,
   ShieldCheck,
   Radio,
   CircleDot,
@@ -200,20 +198,18 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
         </div>
 
         {/* ===================================================
-            HEALTH + TELEMETRY
+            HERO SYSTEM HEALTH
         =================================================== */}
 
         <div className="mt-6">
 
           <div className="flex items-center justify-between mb-3">
-
             <div>
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-ops-text-3">
                 Live Instrumentation
               </p>
-
               <h3 className="text-sm font-bold text-ops-text mt-0.5">
-                Asset Telemetry
+                System Health &amp; Telemetry
               </h3>
             </div>
 
@@ -221,225 +217,155 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-ops-green animate-pulse" />
               Live
             </div>
-
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          {/* Hero health card */}
+          <div
+            className="relative overflow-hidden rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-5 mb-4 ring-1 ring-white/5"
+            style={{
+              boxShadow: `0 4px 20px ${status.soft}`,
+            }}
+          >
+            {/* Accent bar */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-1"
+              style={{ backgroundColor: status.accent }}
+            />
 
-            {/* HEALTH */}
-            <div className="relative overflow-hidden rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5 pl-3">
 
-              <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full border-[12px] border-white/5 pointer-events-none" />
-
-              <div className="relative flex items-start justify-between">
-
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
-                      System Health
-                    </p>
-                    <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
-                  </div>
-
-                  <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-3xl font-bold text-white tabular-nums">
-                      {asset.health_pct}
-                    </span>
-                    <span className="text-xs font-semibold text-ops-text-2">
-                      %
-                    </span>
-                  </div>
+              {/* Big number */}
+              <div className="shrink-0">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">System Health</p>
+                  <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                 </div>
-
-                <div className="w-9 h-9 rounded-xl bg-ops-green/15 text-ops-green flex items-center justify-center">
-                  <Activity className="w-4 h-4" />
+                <div className="flex items-baseline gap-1.5">
+                  <span
+                    className="text-6xl font-bold tabular-nums leading-none"
+                    style={{ color: status.accent }}
+                  >
+                    {asset.health_pct}
+                  </span>
+                  <span className="text-base font-semibold text-ops-text-2">%</span>
                 </div>
-
               </div>
 
-              <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-ops-green"
-                  style={{
-                    width: `${Math.min(
-                      Math.max(asset.health_pct, 0),
-                      100
-                    )}%`,
-                  }}
-                />
+              {/* Bar + Operational status */}
+              <div className="flex-1 min-w-0">
+                {/* Thick health bar */}
+                <div className="h-3 rounded-full bg-ops-panel border border-white/5 overflow-hidden mb-3 shadow-inner">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(Math.max(asset.health_pct, 0), 100)}%`,
+                      backgroundColor: status.accent,
+                    }}
+                  />
+                </div>
+
+                {/* Operational status inline */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-semibold ${status.bg} ${status.border} ${status.text}`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
+                    {status.label}
+                  </span>
+                  <span className="text-xs text-ops-text-2 leading-5">{asset.operational_status}</span>
+                </div>
               </div>
 
-              <p className="mt-2 text-[9px] font-medium text-ops-text-3">
-                Overall operational health
-              </p>
             </div>
-
-            {/* TEMPERATURE */}
-            {asset.temperature_c != null && (
-              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
-                        Temperature
-                      </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-white tabular-nums">
-                        {asset.temperature_c}
-                      </span>
-                      <span className="text-xs font-semibold text-ops-text-2">
-                        °C
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-ops-ice/15 text-ops-ice flex items-center justify-center">
-                    <Thermometer className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-white/10" />
-                  <span className="text-[9px] font-bold text-ops-text-3">
-                    CURRENT
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* VIBRATION */}
-            {asset.vibration_mms != null && (
-              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
-                        Vibration
-                      </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-white tabular-nums">
-                        {asset.vibration_mms}
-                      </span>
-                      <span className="text-[10px] font-semibold text-ops-text-2">
-                        mm/s
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-ops-amber/15 text-ops-amber flex items-center justify-center">
-                    <Gauge className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-white/10" />
-                  <span className="text-[9px] font-bold text-ops-text-3">
-                    RMS
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* EFFICIENCY */}
-            {asset.efficiency_pct != null && (
-              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
-                        Efficiency
-                      </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-white tabular-nums">
-                        {asset.efficiency_pct}
-                      </span>
-                      <span className="text-xs font-semibold text-ops-text-2">
-                        %
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-ops-teal/15 text-ops-teal flex items-center justify-center">
-                    <Zap className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-ops-teal"
-                      style={{
-                        width: `${Math.min(
-                          Math.max(asset.efficiency_pct, 0),
-                          100
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* RUNTIME */}
-            {asset.runtime_hours != null && (
-              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
-                        Runtime
-                      </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-white tabular-nums">
-                        {asset.runtime_hours.toLocaleString()}
-                      </span>
-                      <span className="text-xs font-semibold text-ops-text-2">
-                        h
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-ops-violet/15 text-ops-violet flex items-center justify-center">
-                    <Clock className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <p className="mt-5 text-[9px] font-semibold uppercase tracking-wider text-ops-text-3">
-                  Total operating time
-                </p>
-              </div>
-            )}
-
           </div>
+
+          {/* Compact telemetry table */}
+          {(asset.temperature_c != null ||
+            asset.vibration_mms != null ||
+            asset.efficiency_pct != null ||
+            asset.runtime_hours != null) && (
+            <div className="rounded-[18px] border border-white/[0.08] overflow-hidden bg-ops-card/90 ring-1 ring-white/5">
+
+              <div className="px-4 py-2.5 border-b border-white/[0.08] flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-ops-text-3">
+                  Sensor Readings
+                </span>
+                <SourceBadge source={asset.telemetry_source} origin="Seeded asset simulation" variant="dark" />
+              </div>
+
+              <div className="divide-y divide-white/[0.08]">
+
+                {asset.temperature_c != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Thermometer className="w-3.5 h-3.5 text-ops-ice shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Temperature</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.temperature_c}</span>
+                      <span className="text-[10px] text-ops-text-3">°C</span>
+                    </div>
+                  </div>
+                )}
+
+                {asset.vibration_mms != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Gauge className="w-3.5 h-3.5 text-ops-amber shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Vibration</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.vibration_mms}</span>
+                      <span className="text-[10px] text-ops-text-3">mm/s</span>
+                    </div>
+                  </div>
+                )}
+
+                {asset.efficiency_pct != null && (
+                  <div className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      <Zap className="w-3.5 h-3.5 text-ops-green shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Efficiency</span>
+                    </div>
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      {/* Real data bar — efficiency is a genuine 0-100% */}
+                      <div className="flex-1 h-1.5 rounded-full bg-ops-panel border border-white/5 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-ops-green"
+                          style={{ width: `${Math.min(Math.max(asset.efficiency_pct, 0), 100)}%` }}
+                        />
+                      </div>
+                      <div className="flex items-baseline gap-0.5 shrink-0">
+                        <span className="text-sm font-bold text-white tabular-nums">{asset.efficiency_pct}</span>
+                        <span className="text-[10px] text-ops-text-3">%</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {asset.runtime_hours != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Clock className="w-3.5 h-3.5 text-ops-violet shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Runtime Hours</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.runtime_hours.toLocaleString()}</span>
+                      <span className="text-[10px] text-ops-text-3">h</span>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* ===================================================
             OPERATIONAL CONDITION
         =================================================== */}
+
 
         <div className="mt-6">
 

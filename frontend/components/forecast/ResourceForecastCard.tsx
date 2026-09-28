@@ -127,7 +127,7 @@ export const ResourceForecastCard: React.FC<ResourceForecastCardProps> = ({
             Current Autonomous Reserve
           </span>
           <div className="flex items-baseline gap-2 mt-0.5">
-            <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight tabular-nums">
+            <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight tabular-nums">
               {forecast.current_days_remaining.toFixed(1)}
             </span>
             <span className="text-sm font-semibold text-ops-text-2">

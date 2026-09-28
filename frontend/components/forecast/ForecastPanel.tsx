@@ -11,11 +11,13 @@ import {
   TrendingDown,
   Loader2,
   AlertCircle,
+  AlertTriangle,
   Radio,
   Clock,
   RefreshCw,
   ShieldCheck,
   CalendarDays,
+  CheckCircle2,
 } from "lucide-react";
 
 export const ForecastPanel: React.FC = () => {
@@ -185,9 +187,95 @@ export const ForecastPanel: React.FC = () => {
           </button>
         </div>
       ) : forecast ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
-          <ResourceForecastCard forecast={forecast.diesel} />
-          <ResourceForecastCard forecast={forecast.food} />
+        <div className="space-y-6">
+
+          {/* =========================================================
+              HERO: TIME TO THRESHOLD STRIP
+          ========================================================= */}
+          {(() => {
+            // Find the nearest threshold crossing across diesel and food
+            const allCrossings: Array<{
+              resource: string;
+              label: string;
+              day: number;
+              type: "warning" | "critical";
+            }> = [];
+
+            for (const resourceKey of ["diesel", "food"] as const) {
+              for (const crossing of forecast[resourceKey].threshold_crossings) {
+                if (crossing.projected_day !== null) {
+                  allCrossings.push({
+                    resource: resourceKey === "diesel" ? "Diesel" : "Food",
+                    label: crossing.threshold_label,
+                    day: crossing.projected_day,
+                    type: crossing.threshold_label as "warning" | "critical",
+                  });
+                }
+              }
+            }
+
+            // Sort ascending — nearest first
+            allCrossings.sort((a, b) => a.day - b.day);
+            const nearest = allCrossings[0] ?? null;
+
+            if (!nearest) {
+              // Stable — no threshold crossing
+              return (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 sm:p-6 rounded-[24px] border border-ops-green/30 bg-ops-panel/90 backdrop-blur-sm shadow-[0_4px_20px_rgba(79,181,138,0.15)] ring-1 ring-white/5">
+                  <div className="flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] bg-ops-green/15 border border-ops-green/30 text-ops-green shadow-inner">
+                    <CheckCircle2 className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-ops-green mb-1">Threshold Status</div>
+                    <p className="text-xl font-bold text-white tracking-tight">
+                      Stable — no threshold crossing in 30 days
+                    </p>
+                    <p className="text-xs text-ops-text-2 mt-1">Both diesel and food reserves remain above warning levels throughout the forecast window.</p>
+                  </div>
+                </div>
+              );
+            }
+
+            const isCritical = nearest.type === "critical";
+            const colors = isCritical
+              ? { border: "border-ops-red/30", iconBg: "bg-ops-red/15 border border-ops-red/30 text-ops-red", numColor: "text-ops-red", labelBg: "bg-ops-red/15 border border-ops-red/30 text-ops-red", dot: "bg-ops-red", glow: "rgba(212,112,111,0.25)" }
+              : { border: "border-ops-amber/30", iconBg: "bg-ops-amber/15 border border-ops-amber/30 text-ops-amber", numColor: "text-ops-amber", labelBg: "bg-ops-amber/15 border border-ops-amber/30 text-ops-amber", dot: "bg-ops-amber", glow: "rgba(217,164,65,0.25)" };
+
+            return (
+              <div
+                style={{ boxShadow: `0 4px 20px ${colors.glow}` }}
+                className={`flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6 rounded-[24px] border ${colors.border} bg-ops-panel/90 backdrop-blur-sm ring-1 ring-white/5`}
+              >
+                {/* Icon */}
+                <div className={`flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] ${colors.iconBg} shadow-inner`}>
+                  {isCritical
+                    ? <AlertCircle className="w-7 h-7" />
+                    : <AlertTriangle className="w-7 h-7" />}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-ops-text-3 mb-1">Time to Threshold</div>
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className={`text-5xl sm:text-6xl font-bold tabular-nums leading-none ${colors.numColor}`}>
+                      {nearest.day}
+                    </span>
+                    <span className="text-sm font-semibold text-ops-text-2 mb-0.5">days</span>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wide ${colors.labelBg}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                      {nearest.resource} reaches {nearest.label.toUpperCase()} threshold
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ResourceForecastCard grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
+            <ResourceForecastCard forecast={forecast.diesel} />
+            <ResourceForecastCard forecast={forecast.food} />
+          </div>
         </div>
       ) : null}
     </div>

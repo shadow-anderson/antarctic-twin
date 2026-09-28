@@ -12,8 +12,9 @@ interface MetricCardProps {
   source: DataSource;
   icon?: React.ReactNode;
   className?: string;
-  trendSparkline?: number[];
   tone?: "ice" | "lavender" | "mint" | "amber" | "teal";
+  /** "standard" (default) = full-height card; "compact" = denser, smaller text, no icon chip */
+  variant?: "standard" | "compact";
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -24,10 +25,10 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   icon,
   className = "",
   tone = "teal",
+  variant = "standard",
 }) => {
   const { connected } = useLink();
 
-  // Format value to 1 decimal place if float, or raw if integer. Show N/A for null.
   const formattedValue =
     value === null
       ? "N/A"
@@ -41,7 +42,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       icon: "bg-[#6FA8C7]/15 text-[#6FA8C7] border border-[#6FA8C7]/30",
       accent: "#6FA8C7",
       glow: "rgba(111, 168, 199, 0.25)",
-      bar: "from-[#6FA8C7]/40 to-[#6FA8C7]",
     },
 
     lavender: {
@@ -49,7 +49,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       icon: "bg-[#8F86B8]/15 text-[#8F86B8] border border-[#8F86B8]/30",
       accent: "#8F86B8",
       glow: "rgba(143, 134, 184, 0.25)",
-      bar: "from-[#8F86B8]/40 to-[#8F86B8]",
     },
 
     mint: {
@@ -57,7 +56,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       icon: "bg-[#4FB58A]/15 text-[#4FB58A] border border-[#4FB58A]/30",
       accent: "#4FB58A",
       glow: "rgba(79, 181, 138, 0.25)",
-      bar: "from-[#4FB58A]/40 to-[#4FB58A]",
     },
 
     amber: {
@@ -65,7 +63,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       icon: "bg-[#D9A441]/15 text-[#D9A441] border border-[#D9A441]/30",
       accent: "#D9A441",
       glow: "rgba(217, 164, 65, 0.25)",
-      bar: "from-[#D9A441]/40 to-[#D9A441]",
     },
 
     teal: {
@@ -73,12 +70,65 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       icon: "bg-[#2FA3A8]/15 text-[#2FA3A8] border border-[#2FA3A8]/30",
       accent: "#2FA3A8",
       glow: "rgba(47, 163, 168, 0.25)",
-      bar: "from-[#2FA3A8]/40 to-[#2FA3A8]",
     },
   };
 
   const currentTone = toneStyles[tone];
 
+  /* ---- COMPACT VARIANT ---- */
+  if (variant === "compact") {
+    return (
+      <div
+        style={{ "--tone-glow": currentTone.glow } as React.CSSProperties}
+        className={`
+          relative flex flex-col justify-between
+          p-3 rounded-xl
+          bg-ops-card/90 backdrop-blur-sm
+          border border-white/[0.08] ring-1 ring-white/5
+          shadow-[0_2px_8px_rgba(0,0,0,0.20)]
+          transition-all duration-200
+          overflow-hidden
+          ${
+            connected
+              ? "hover:-translate-y-0.5 hover:shadow-[0_6px_16px_var(--tone-glow)] hover:border-white/20"
+              : "opacity-70"
+          }
+          ${className}
+        `}
+      >
+        {/* Subtle top gradient */}
+        <div
+          className={`absolute inset-x-0 top-0 h-16 bg-gradient-to-b ${currentTone.cardGradient} pointer-events-none`}
+        />
+
+        {/* Header row: label + stale + source */}
+        <div className="relative flex items-center justify-between gap-1 mb-1.5 min-w-0">
+          <span className="text-[10px] font-semibold tracking-wider uppercase text-ops-text-2 truncate">
+            {label}
+          </span>
+
+          <div className="flex items-center gap-1 shrink-0">
+            {!connected && (
+              <span className="px-1.5 py-0.5 rounded-full text-[9px] font-medium bg-ops-amber/15 text-ops-amber border border-ops-amber/30">
+                Stale
+              </span>
+            )}
+            <SourceBadge source={source} />
+          </div>
+        </div>
+
+        {/* Value */}
+        <div className="relative flex items-baseline gap-1">
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-white tabular-nums">
+            {formattedValue}
+          </span>
+          <span className="text-xs font-medium text-ops-text-2">{unit}</span>
+        </div>
+      </div>
+    );
+  }
+
+  /* ---- STANDARD VARIANT (default) ---- */
   return (
     <div
       style={{ "--tone-glow": currentTone.glow } as React.CSSProperties}
@@ -141,48 +191,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       </div>
 
       {/* Main Value */}
-      <div className="relative flex items-end justify-between mt-1 mb-1">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white tabular-nums">
-            {formattedValue}
-          </span>
+      <div className="relative flex items-baseline gap-1.5 mt-1">
+        <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white tabular-nums">
+          {formattedValue}
+        </span>
 
-          <span className="text-sm font-medium text-ops-text-2">
-            {unit}
-          </span>
-        </div>
-
-        {/* Decorative micro-sparkline */}
-        <div className="hidden sm:block opacity-70">
-          <svg
-            className="w-16 h-7 overflow-visible"
-            viewBox="0 0 64 28"
-            fill="none"
-          >
-            <path
-              d="M2 22 L16 18 L30 20 L44 10 L62 14"
-              stroke={currentTone.accent}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-            <circle
-              cx="62"
-              cy="14"
-              r="2.5"
-              fill={currentTone.accent}
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* Bottom Indicator */}
-      <div className="w-full h-1 bg-white/10 rounded-full mt-4 overflow-hidden">
-        <div
-          className={`h-full bg-gradient-to-r ${currentTone.bar} rounded-full`}
-          style={{ width: "68%" }}
-        />
+        <span className="text-sm font-medium text-ops-text-2">{unit}</span>
       </div>
     </div>
   );
