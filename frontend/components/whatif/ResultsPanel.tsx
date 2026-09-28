@@ -68,6 +68,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
      AUTO SCROLL REFS
   ============================================================ */
 
+  const startRef = useRef<HTMLDivElement | null>(null);
   const impactRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timelineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mitigationRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -133,17 +134,19 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
     }
 
     if (activeSection === "complete") {
-      element = completeRef.current;
+      element = startRef.current;
     }
 
     if (!element) return;
 
+    const isStart = element === startRef.current;
+
     const timer = setTimeout(() => {
       element?.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: isStart ? "start" : "center",
       });
-    }, 80);
+    }, isStart ? 350 : 80);
 
     return () => clearTimeout(timer);
   }, [
@@ -164,8 +167,15 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       activeSection === "impact" &&
       impactVisible > 0
     ) {
-      element =
-        impactRefs.current[impactVisible - 1];
+      const isLastStage =
+        impactVisible === scenario.impact_summary.length;
+      const isStageDone =
+        impactTyped.length ===
+        (scenario.impact_summary[impactVisible - 1]?.length ?? 0);
+
+      element = isLastStage && isStageDone
+        ? startRef.current
+        : impactRefs.current[impactVisible - 1];
     }
 
     if (
@@ -188,12 +198,14 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
     if (!element) return;
 
+    const isStart = element === startRef.current;
+
     const timer = setTimeout(() => {
       element?.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: isStart ? "start" : "center",
       });
-    }, 120);
+    }, isStart ? 350 : 120);
 
     return () => clearTimeout(timer);
   }, [
@@ -540,7 +552,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
   ============================================================ */
 
   return (
-    <div className="w-full space-y-7">
+    <div ref={startRef} className="w-full space-y-7">
 
       {/* ========================================================
           SIMULATION HEADER
