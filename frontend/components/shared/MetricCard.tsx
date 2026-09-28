@@ -37,38 +37,43 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
   const toneStyles = {
     ice: {
-      card: "from-[#F1F7F9] to-[#E8F1F4] border-[#D6E5E9]",
-      icon: "bg-[#DDECEF] text-[#4C7891]",
-      accent: "#4C7891",
-      bar: "from-[#9CBAC8] to-[#4C7891]",
+      cardGradient: "from-[#6FA8C7]/[0.12] to-transparent",
+      icon: "bg-[#6FA8C7]/15 text-[#6FA8C7] border border-[#6FA8C7]/30",
+      accent: "#6FA8C7",
+      glow: "rgba(111, 168, 199, 0.25)",
+      bar: "from-[#6FA8C7]/40 to-[#6FA8C7]",
     },
 
     lavender: {
-      card: "from-[#F3F1F7] to-[#ECEAF2] border-[#DEDAE7]",
-      icon: "bg-[#E7E3EF] text-[#756B91]",
-      accent: "#756B91",
-      bar: "from-[#B7AEC9] to-[#756B91]",
+      cardGradient: "from-[#8F86B8]/[0.12] to-transparent",
+      icon: "bg-[#8F86B8]/15 text-[#8F86B8] border border-[#8F86B8]/30",
+      accent: "#8F86B8",
+      glow: "rgba(143, 134, 184, 0.25)",
+      bar: "from-[#8F86B8]/40 to-[#8F86B8]",
     },
 
     mint: {
-      card: "from-[#F0F6F2] to-[#E7F0EA] border-[#D5E4DA]",
-      icon: "bg-[#DFECE4] text-[#4F806A]",
-      accent: "#4F806A",
-      bar: "from-[#9CBCAA] to-[#4F806A]",
+      cardGradient: "from-[#4FB58A]/[0.12] to-transparent",
+      icon: "bg-[#4FB58A]/15 text-[#4FB58A] border border-[#4FB58A]/30",
+      accent: "#4FB58A",
+      glow: "rgba(79, 181, 138, 0.25)",
+      bar: "from-[#4FB58A]/40 to-[#4FB58A]",
     },
 
     amber: {
-      card: "from-[#F8F3E9] to-[#F2EBDD] border-[#E7DCC5]",
-      icon: "bg-[#EEE3CF] text-[#A47735]",
-      accent: "#A47735",
-      bar: "from-[#D2B477] to-[#A47735]",
+      cardGradient: "from-[#D9A441]/[0.12] to-transparent",
+      icon: "bg-[#D9A441]/15 text-[#D9A441] border border-[#D9A441]/30",
+      accent: "#D9A441",
+      glow: "rgba(217, 164, 65, 0.25)",
+      bar: "from-[#D9A441]/40 to-[#D9A441]",
     },
 
     teal: {
-      card: "from-[#EEF6F6] to-[#E6F0F0] border-[#D5E4E4]",
-      icon: "bg-[#DCEBEC] text-[#287C80]",
-      accent: "#287C80",
-      bar: "from-[#8DBFC0] to-[#287C80]",
+      cardGradient: "from-[#2FA3A8]/[0.12] to-transparent",
+      icon: "bg-[#2FA3A8]/15 text-[#2FA3A8] border border-[#2FA3A8]/30",
+      accent: "#2FA3A8",
+      glow: "rgba(47, 163, 168, 0.25)",
+      bar: "from-[#2FA3A8]/40 to-[#2FA3A8]",
     },
   };
 
@@ -76,31 +81,37 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
   return (
     <div
+      style={{ "--tone-glow": currentTone.glow } as React.CSSProperties}
       className={`
         relative flex flex-col justify-between
         p-5 rounded-2xl
-        bg-gradient-to-br ${currentTone.card}
-        border
-        shadow-[0_3px_12px_rgba(40,60,70,0.05)]
+        bg-ops-card/90 backdrop-blur-sm
+        border border-white/[0.08] ring-1 ring-white/5
+        shadow-[0_4px_16px_rgba(0,0,0,0.25)]
         transition-all duration-200
         overflow-hidden
         ${
           connected
-            ? "hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(40,60,70,0.08)]"
+            ? "hover:-translate-y-1 hover:shadow-[0_10px_25px_var(--tone-glow)] hover:border-white/20"
             : "opacity-70"
         }
         ${className}
       `}
     >
+      {/* Top Tone-tinted gradient at ~12% */}
+      <div
+        className={`absolute inset-x-0 top-0 h-28 bg-gradient-to-b ${currentTone.cardGradient} pointer-events-none`}
+      />
+
       {/* Very subtle decorative glow */}
       <div
-        className="absolute -right-8 -top-8 w-24 h-24 rounded-full opacity-30 blur-2xl pointer-events-none"
+        className="absolute -right-8 -top-8 w-24 h-24 rounded-full opacity-20 blur-2xl pointer-events-none"
         style={{ backgroundColor: currentTone.accent }}
       />
 
       {/* Top Header */}
       <div className="relative flex items-center justify-between gap-2 mb-4 min-w-0">
-        <div className="flex items-center gap-2.5 text-[#526673]">
+        <div className="flex items-center gap-2.5 text-ops-text-2">
           {icon && (
             <span
               className={`
@@ -113,30 +124,30 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             </span>
           )}
 
-          <span className="text-[11px] font-semibold tracking-wider uppercase">
+          <span className="text-[11px] font-semibold tracking-wider uppercase text-ops-text-2">
             {label}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
           {!connected && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#F7EDDB] text-[#A47735] border border-[#E8D7B8]">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-ops-amber/15 text-ops-amber border border-ops-amber/30">
               Stale
             </span>
           )}
 
-          <SourceBadge source={source} />
+          <SourceBadge source={source} variant="dark" />
         </div>
       </div>
 
       {/* Main Value */}
       <div className="relative flex items-end justify-between mt-1 mb-1">
         <div className="flex items-baseline gap-1.5">
-          <span className="text-3xl sm:text-4xl font-bold tracking-tight text-[#263746] tabular-nums">
+          <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white tabular-nums">
             {formattedValue}
           </span>
 
-          <span className="text-sm font-medium text-[#687984]">
+          <span className="text-sm font-medium text-ops-text-2">
             {unit}
           </span>
         </div>
@@ -167,7 +178,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       </div>
 
       {/* Bottom Indicator */}
-      <div className="w-full h-1 bg-[#DCE4E6] rounded-full mt-4 overflow-hidden">
+      <div className="w-full h-1 bg-white/10 rounded-full mt-4 overflow-hidden">
         <div
           className={`h-full bg-gradient-to-r ${currentTone.bar} rounded-full`}
           style={{ width: "68%" }}

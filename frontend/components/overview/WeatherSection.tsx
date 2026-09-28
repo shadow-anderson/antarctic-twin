@@ -58,7 +58,6 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
           source={weather.temperature_c.source}
           icon={<Thermometer className="w-4 h-4 stroke-[1.8]" />}
           tone="ice"
-          className="!bg-gradient-to-br !from-[#E2F1F5] !via-[#EAF5F6] !to-[#DDECEF]"
         />
 
         {/* PRESSURE */}
@@ -69,7 +68,6 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
           source={weather.pressure_hpa.source}
           icon={<Gauge className="w-4 h-4 stroke-[1.8]" />}
           tone="lavender"
-          className="!bg-gradient-to-br !from-[#ECE8F3] !via-[#F1EEF5] !to-[#E6E1EF]"
         />
 
         {/* WIND */}
@@ -80,7 +78,6 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
           source={weather.wind_speed_ms.source}
           icon={<Wind className="w-4 h-4 stroke-[1.8]" />}
           tone="mint"
-          className="!bg-gradient-to-br !from-[#E3F1E9] !via-[#EAF4ED] !to-[#DCECE3]"
         />
 
       </div>

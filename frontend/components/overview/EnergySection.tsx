@@ -95,7 +95,6 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
           source={energy.generation_kw.source}
           icon={<Zap className="w-4 h-4 stroke-[1.8]" />}
           tone="amber"
-          className="!bg-gradient-to-br !from-[#F8EACD] !via-[#FAF0DC] !to-[#F1E3C8] !border-[#E7D5B1]"
         />
 
         {/* CONSUMPTION */}
@@ -106,7 +105,6 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
           source={energy.consumption_kw.source}
           icon={<Activity className="w-4 h-4 stroke-[1.8]" />}
           tone="teal"
-          className="!bg-gradient-to-br !from-[#DCEDEF] !via-[#E7F2F2] !to-[#D9E9EA] !border-[#C9DDDE]"
         />
 
         {/* FUEL */}
@@ -117,7 +115,6 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
           source={energy.diesel_pct.source}
           icon={<Fuel className="w-4 h-4 stroke-[1.8]" />}
           tone="mint"
-          className="!bg-gradient-to-br !from-[#DDEDE2] !via-[#E8F2EB] !to-[#D9E9DF] !border-[#C9DDD0]"
         />
 
       </div>
