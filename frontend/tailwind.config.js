@@ -45,6 +45,20 @@ module.exports = {
           DEFAULT: "#6366A8",
           light: "#F0F1FA",
         },
+        ops: {
+          bg: "#0D2130",
+          panel: "#132B3C",
+          card: "#183548",
+          text: "#E6EEF1",
+          "text-2": "#9DB2BC",
+          "text-3": "#6F8794",
+          teal: "#2FA3A8",
+          amber: "#D9A441",
+          green: "#4FB58A",
+          red: "#D4706F",
+          violet: "#8F86B8",
+          ice: "#6FA8C7",
+        },
       },
       fontFamily: {
         sans: [

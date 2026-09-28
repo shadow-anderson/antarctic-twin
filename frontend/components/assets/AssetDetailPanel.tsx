@@ -29,27 +29,27 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
   if (!asset) {
     return (
-      <div className="relative w-full min-h-[520px] overflow-hidden rounded-[28px] border border-[#D8E3E5] bg-[#F7FAFA] flex items-center justify-center">
+      <div className="relative w-full min-h-[520px] overflow-hidden rounded-[28px] border border-white/[0.08] bg-ops-panel flex items-center justify-center ring-1 ring-white/5">
         {/* Decorative background */}
-        <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-[#DCEEEF] opacity-50 blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-[#E9E4F1] opacity-50 blur-3xl" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-ops-teal/5 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 rounded-full bg-ops-violet/5 blur-3xl" />
 
         <div className="relative text-center max-w-sm px-8">
-          <div className="mx-auto w-20 h-20 rounded-[24px] bg-[#E5EFF0] border border-[#D1E0E2] flex items-center justify-center text-[#4E7C87] shadow-sm">
+          <div className="mx-auto w-20 h-20 rounded-[24px] bg-ops-card border border-white/10 flex items-center justify-center text-ops-teal shadow-inner">
             <Cpu className="w-9 h-9 stroke-[1.5]" />
           </div>
 
           <div className="mt-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E9F1F2] border border-[#D7E5E7] text-[9px] font-bold uppercase tracking-[0.16em] text-[#66818A]">
-              <CircleDot className="w-3 h-3" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ops-card border border-white/10 text-[9px] font-bold uppercase tracking-[0.16em] text-ops-text-2">
+              <CircleDot className="w-3 h-3 text-ops-teal" />
               Asset Intelligence
             </div>
 
-            <h3 className="mt-4 text-xl font-bold tracking-tight text-[#334E59]">
+            <h3 className="mt-4 text-xl font-bold tracking-tight text-ops-text">
               No Asset Selected
             </h3>
 
-            <p className="mt-2 text-sm leading-6 text-[#7B8D94]">
+            <p className="mt-2 text-sm leading-6 text-ops-text-3">
               Select an asset from the hierarchy to open its digital twin,
               telemetry, operational state and technical information.
             </p>
@@ -68,35 +68,35 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
       case "critical":
         return {
           label: "Critical",
-          text: "text-[#A65050]",
-          bg: "bg-[#F8E7E7]",
-          border: "border-[#E8C7C7]",
-          dot: "bg-[#B65C5C]",
-          accent: "#B65C5C",
-          soft: "#F2DADA",
+          text: "text-ops-red",
+          bg: "bg-ops-red/15",
+          border: "border-ops-red/30",
+          dot: "bg-ops-red",
+          accent: "#D4706F",
+          soft: "rgba(212,112,111,0.2)",
         };
 
       case "warning":
         return {
           label: "Warning",
-          text: "text-[#936C2B]",
-          bg: "bg-[#F6ECD9]",
-          border: "border-[#E5D2AA]",
-          dot: "bg-[#B98232]",
-          accent: "#B98232",
-          soft: "#EFE0BD",
+          text: "text-ops-amber",
+          bg: "bg-ops-amber/15",
+          border: "border-ops-amber/30",
+          dot: "bg-ops-amber",
+          accent: "#D9A441",
+          soft: "rgba(217,164,65,0.2)",
         };
 
       case "healthy":
       default:
         return {
           label: "Healthy",
-          text: "text-[#4D7C65]",
-          bg: "bg-[#E5F0EA]",
-          border: "border-[#C9DED3]",
-          dot: "bg-[#4F8A6B]",
-          accent: "#4F8A6B",
-          soft: "#D9E9DF",
+          text: "text-ops-green",
+          bg: "bg-ops-green/15",
+          border: "border-ops-green/30",
+          dot: "bg-ops-green",
+          accent: "#4FB58A",
+          soft: "rgba(79,181,138,0.2)",
         };
     }
   };
@@ -104,13 +104,13 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
   const status = getStatus();
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[28px] border border-[#D7E2E4] bg-[#F8FAFA] shadow-[0_12px_40px_rgba(42,67,77,0.06)]">
+    <div className="relative w-full overflow-hidden rounded-[28px] border border-white/[0.08] bg-ops-panel shadow-[0_12px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
       {/* =====================================================
           TOP DECORATIVE BAND
       ===================================================== */}
 
-      <div className="h-1.5 w-full bg-gradient-to-r from-[#5E8D97] via-[#7CA5AC] to-[#A89ABF]" />
+      <div className="h-1.5 w-full bg-gradient-to-r from-ops-teal via-ops-ice to-ops-violet" />
 
       <div className="p-5 sm:p-7">
 
@@ -118,11 +118,11 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             ASSET IDENTITY HEADER
         =================================================== */}
 
-        <div className="relative overflow-hidden rounded-[24px] bg-[#EDF4F4] border border-[#D6E4E6] p-5 sm:p-6">
+        <div className="relative overflow-hidden rounded-[24px] bg-ops-card/80 border border-white/10 p-5 sm:p-6 ring-1 ring-white/5">
 
           {/* decorative circles */}
-          <div className="absolute -right-16 -top-20 w-48 h-48 rounded-full border-[28px] border-[#DCEBED] opacity-70" />
-          <div className="absolute right-10 -bottom-20 w-32 h-32 rounded-full border-[18px] border-[#E3ECEE] opacity-70" />
+          <div className="absolute -right-16 -top-20 w-48 h-48 rounded-full border-[28px] border-white/5 opacity-40 pointer-events-none" />
+          <div className="absolute right-10 -bottom-20 w-32 h-32 rounded-full border-[18px] border-white/5 opacity-40 pointer-events-none" />
 
           <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
 
@@ -130,12 +130,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             <div className="flex items-start gap-4 min-w-0">
 
               <div className="relative shrink-0">
-                <div className="w-16 h-16 rounded-[20px] bg-[#DCEBED] border border-[#C9DDE0] flex items-center justify-center text-[#4E7C87]">
+                <div className="w-16 h-16 rounded-[20px] bg-ops-panel border border-white/10 flex items-center justify-center text-ops-teal shadow-inner">
                   <Cpu className="w-8 h-8 stroke-[1.5]" />
                 </div>
 
                 <span
-                  className={`absolute -right-1.5 -bottom-1.5 w-5 h-5 rounded-full border-[3px] border-[#EDF4F4] ${status.dot}`}
+                  className={`absolute -right-1.5 -bottom-1.5 w-5 h-5 rounded-full border-[3px] border-ops-panel ${status.dot}`}
                 />
               </div>
 
@@ -143,27 +143,27 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
                 <div className="flex flex-wrap items-center gap-2 mb-2">
 
-                  <span className="px-2.5 py-1 rounded-md bg-[#DCEBED] text-[#557C86] text-[9px] font-bold uppercase tracking-[0.14em]">
+                  <span className="px-2.5 py-1 rounded-md bg-ops-teal/15 text-ops-teal border border-ops-teal/30 text-[9px] font-bold uppercase tracking-[0.14em]">
                     {asset.category}
                   </span>
 
-                  <span className="text-[10px] text-[#82949A] font-medium">
+                  <span className="text-[10px] text-ops-text-3 font-medium">
                     Asset ID · {asset.id}
                   </span>
 
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#314B56] truncate">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white truncate">
                   {asset.name}
                 </h2>
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-[#758991]">
-                  <span className="flex items-center gap-1.5">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-[11px] text-ops-text-3">
+                  <span className="flex items-center gap-1.5 text-ops-teal">
                     <Radio className="w-3.5 h-3.5" />
                     Digital Twin Connected
                   </span>
 
-                  <span className="hidden sm:block w-1 h-1 rounded-full bg-[#A9B8BC]" />
+                  <span className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
 
                   <span>
                     Live asset telemetry
@@ -175,7 +175,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             {/* Status */}
             <div className="relative shrink-0 flex flex-col items-start lg:items-end gap-2">
 
-              <span className="text-[9px] uppercase tracking-[0.16em] font-bold text-[#8A9BA0]">
+              <span className="text-[9px] uppercase tracking-[0.16em] font-bold text-ops-text-3">
                 Current Condition
               </span>
 
@@ -193,7 +193,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 </span>
               </div>
 
-              <SourceBadge source={asset.telemetry_source} origin="Seeded asset simulation" />
+              <SourceBadge source={asset.telemetry_source} origin="Seeded asset simulation" variant="dark" />
 
             </div>
           </div>
@@ -208,17 +208,17 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
           <div className="flex items-center justify-between mb-3">
 
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#82949A]">
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-ops-text-3">
                 Live Instrumentation
               </p>
 
-              <h3 className="text-sm font-bold text-[#425B64] mt-0.5">
+              <h3 className="text-sm font-bold text-ops-text mt-0.5">
                 Asset Telemetry
               </h3>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-bold text-[#5B847D]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#5B8A70] animate-pulse" />
+            <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-bold text-ops-green">
+              <span className="w-1.5 h-1.5 rounded-full bg-ops-green animate-pulse" />
               Live
             </div>
 
@@ -227,39 +227,39 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
 
             {/* HEALTH */}
-            <div className="relative overflow-hidden rounded-[20px] bg-[#E9F1EC] border border-[#D2E1D8] p-4">
+            <div className="relative overflow-hidden rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
 
-              <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full border-[12px] border-[#DDEAE1]" />
+              <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full border-[12px] border-white/5 pointer-events-none" />
 
               <div className="relative flex items-start justify-between">
 
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72887D]">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
                       System Health
                     </p>
-                    <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                    <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                   </div>
 
                   <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-3xl font-bold text-[#3F5F50] tabular-nums">
+                    <span className="text-3xl font-bold text-white tabular-nums">
                       {asset.health_pct}
                     </span>
-                    <span className="text-xs font-semibold text-[#789087]">
+                    <span className="text-xs font-semibold text-ops-text-2">
                       %
                     </span>
                   </div>
                 </div>
 
-                <div className="w-9 h-9 rounded-xl bg-[#DCEAE1] flex items-center justify-center text-[#56806B]">
+                <div className="w-9 h-9 rounded-xl bg-ops-green/15 text-ops-green flex items-center justify-center">
                   <Activity className="w-4 h-4" />
                 </div>
 
               </div>
 
-              <div className="mt-4 h-2 rounded-full bg-[#D7E4DB] overflow-hidden">
+              <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-[#5B8A70]"
+                  className="h-full rounded-full bg-ops-green"
                   style={{
                     width: `${Math.min(
                       Math.max(asset.health_pct, 0),
@@ -269,44 +269,44 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 />
               </div>
 
-              <p className="mt-2 text-[9px] font-medium text-[#7B9086]">
+              <p className="mt-2 text-[9px] font-medium text-ops-text-3">
                 Overall operational health
               </p>
             </div>
 
             {/* TEMPERATURE */}
             {asset.temperature_c != null && (
-              <div className="rounded-[20px] bg-[#E7F0F3] border border-[#D1E1E5] p-4">
+              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
 
                 <div className="flex items-start justify-between">
 
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#71868E]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
                         Temperature
                       </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                     </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#405C65] tabular-nums">
+                      <span className="text-3xl font-bold text-white tabular-nums">
                         {asset.temperature_c}
                       </span>
-                      <span className="text-xs font-semibold text-[#7C9097]">
+                      <span className="text-xs font-semibold text-ops-text-2">
                         °C
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-9 h-9 rounded-xl bg-[#D8E8EC] flex items-center justify-center text-[#568392]">
+                  <div className="w-9 h-9 rounded-xl bg-ops-ice/15 text-ops-ice flex items-center justify-center">
                     <Thermometer className="w-4 h-4" />
                   </div>
 
                 </div>
 
                 <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#D5E3E7]" />
-                  <span className="text-[9px] font-bold text-[#83959A]">
+                  <div className="h-1.5 flex-1 rounded-full bg-white/10" />
+                  <span className="text-[9px] font-bold text-ops-text-3">
                     CURRENT
                   </span>
                 </div>
@@ -315,37 +315,37 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
             {/* VIBRATION */}
             {asset.vibration_mms != null && (
-              <div className="rounded-[20px] bg-[#F5EDDD] border border-[#E7D9BB] p-4">
+              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
 
                 <div className="flex items-start justify-between">
 
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#8B7B60]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
                         Vibration
                       </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                     </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#665B49] tabular-nums">
+                      <span className="text-3xl font-bold text-white tabular-nums">
                         {asset.vibration_mms}
                       </span>
-                      <span className="text-[10px] font-semibold text-[#8E816B]">
+                      <span className="text-[10px] font-semibold text-ops-text-2">
                         mm/s
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-9 h-9 rounded-xl bg-[#EEE2CA] flex items-center justify-center text-[#9A783E]">
+                  <div className="w-9 h-9 rounded-xl bg-ops-amber/15 text-ops-amber flex items-center justify-center">
                     <Gauge className="w-4 h-4" />
                   </div>
 
                 </div>
 
                 <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#E9DDBF]" />
-                  <span className="text-[9px] font-bold text-[#8C7C62]">
+                  <div className="h-1.5 flex-1 rounded-full bg-white/10" />
+                  <span className="text-[9px] font-bold text-ops-text-3">
                     RMS
                   </span>
                 </div>
@@ -354,38 +354,38 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
             {/* EFFICIENCY */}
             {asset.efficiency_pct != null && (
-              <div className="rounded-[20px] bg-[#E8EEF0] border border-[#D2DEE1] p-4">
+              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
 
                 <div className="flex items-start justify-between">
 
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#687D84]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
                         Efficiency
                       </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                     </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#405B62] tabular-nums">
+                      <span className="text-3xl font-bold text-white tabular-nums">
                         {asset.efficiency_pct}
                       </span>
-                      <span className="text-xs font-semibold text-[#7D9095]">
+                      <span className="text-xs font-semibold text-ops-text-2">
                         %
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-9 h-9 rounded-xl bg-[#DCE7E9] flex items-center justify-center text-[#51818A]">
+                  <div className="w-9 h-9 rounded-xl bg-ops-teal/15 text-ops-teal flex items-center justify-center">
                     <Zap className="w-4 h-4" />
                   </div>
 
                 </div>
 
                 <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#D8E3E5] overflow-hidden">
+                  <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[#5C8991]"
+                      className="h-full rounded-full bg-ops-teal"
                       style={{
                         width: `${Math.min(
                           Math.max(asset.efficiency_pct, 0),
@@ -400,35 +400,35 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
             {/* RUNTIME */}
             {asset.runtime_hours != null && (
-              <div className="rounded-[20px] bg-[#ECE9F2] border border-[#DDD7E7] p-4">
+              <div className="rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-4 ring-1 ring-white/5">
 
                 <div className="flex items-start justify-between">
 
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#786F87]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3">
                         Runtime
                       </p>
-                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" variant="dark" />
                     </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#59536A] tabular-nums">
+                      <span className="text-3xl font-bold text-white tabular-nums">
                         {asset.runtime_hours.toLocaleString()}
                       </span>
-                      <span className="text-xs font-semibold text-[#827B91]">
+                      <span className="text-xs font-semibold text-ops-text-2">
                         h
                       </span>
                     </div>
                   </div>
 
-                  <div className="w-9 h-9 rounded-xl bg-[#E2DDEC] flex items-center justify-center text-[#786E94]">
+                  <div className="w-9 h-9 rounded-xl bg-ops-violet/15 text-ops-violet flex items-center justify-center">
                     <Clock className="w-4 h-4" />
                   </div>
 
                 </div>
 
-                <p className="mt-5 text-[9px] font-semibold uppercase tracking-wider text-[#81798E]">
+                <p className="mt-5 text-[9px] font-semibold uppercase tracking-wider text-ops-text-3">
                   Total operating time
                 </p>
               </div>
@@ -473,7 +473,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                     Operational Condition
                   </p>
 
-                  <p className="mt-1.5 text-sm font-semibold text-[#465D65] leading-5">
+                  <p className="mt-1.5 text-sm font-semibold text-white leading-5">
                     {asset.operational_status}
                   </p>
                 </div>
@@ -481,7 +481,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-[9px] uppercase tracking-wider font-bold text-[#8A999E]">
+                <span className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3">
                   Status
                 </span>
 
@@ -504,22 +504,22 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             <div className="flex items-end justify-between mb-3">
 
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#84959A]">
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-ops-text-3">
                   Engineering Data
                 </p>
 
-                <h3 className="text-sm font-bold text-[#425B64] mt-0.5">
+                <h3 className="text-sm font-bold text-ops-text mt-0.5">
                   Technical Attributes
                 </h3>
               </div>
 
-              <span className="hidden sm:block text-[9px] uppercase tracking-wider font-semibold text-[#9AA7AA]">
+              <span className="hidden sm:block text-[9px] uppercase tracking-wider font-semibold text-ops-text-3">
                 {asset.specs.length} parameters
               </span>
 
             </div>
 
-            <div className="rounded-[22px] border border-[#D9E3E5] overflow-hidden bg-[#F1F5F5]">
+            <div className="rounded-[22px] border border-white/[0.08] overflow-hidden bg-ops-card/60 ring-1 ring-white/5">
 
               <div className="grid grid-cols-1 sm:grid-cols-2">
 
@@ -528,8 +528,8 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                     key={i}
                     className={`
                       group flex items-center justify-between gap-5 px-4 py-3.5
-                      border-[#DCE5E6]
-                      hover:bg-[#E9F0F1]
+                      border-white/[0.08]
+                      hover:bg-white/5
                       transition-colors
                       ${
                         i % 2 === 0
@@ -546,15 +546,15 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
                     <div className="flex items-center gap-2.5 min-w-0">
 
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#89A8AF] shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-ops-teal/60 shrink-0" />
 
-                      <span className="text-xs text-[#73858B] font-medium truncate">
+                      <span className="text-xs text-ops-text-2 font-medium truncate">
                         {spec.label}
                       </span>
 
                     </div>
 
-                    <span className="text-xs text-[#425A62] font-bold text-right shrink-0">
+                    <span className="text-xs text-ops-text font-bold text-right shrink-0">
                       {spec.value}
                     </span>
 
@@ -570,19 +570,19 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             FOOTER
         =================================================== */}
 
-        <div className="mt-6 pt-4 border-t border-[#DDE6E8] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
 
-          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-[#84959B]">
+          <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-ops-text-3">
 
-            <span className="flex items-center justify-center w-5 h-5 rounded-md bg-[#E6EEF0]">
-              <Clock className="w-3 h-3 text-[#64828A]" />
+            <span className="flex items-center justify-center w-5 h-5 rounded-md bg-ops-card border border-white/10 text-ops-teal">
+              <Clock className="w-3 h-3 text-ops-teal" />
             </span>
 
             Last Field Inspection
 
           </div>
 
-          <span className="text-xs font-bold text-[#536B73]">
+          <span className="text-xs font-bold text-ops-text">
             {asset.last_inspected}
           </span>
 

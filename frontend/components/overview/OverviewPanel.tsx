@@ -232,20 +232,20 @@ Communication is provided through dedicated satellite channels, enabling voice, 
   if (loading || !currentData) {
     return (
       <div className="min-h-[420px] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-[#647582]">
+        <div className="flex flex-col items-center gap-4 text-ops-text-2">
 
           <div className="relative">
-            <div className="w-10 h-10 border-2 border-[#D8E5E6] rounded-full" />
+            <div className="w-10 h-10 border-2 border-white/10 rounded-full" />
 
-            <div className="absolute inset-0 w-10 h-10 border-2 border-[#287C80] border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 w-10 h-10 border-2 border-ops-teal border-t-transparent rounded-full animate-spin" />
           </div>
 
           <div className="text-center">
-            <p className="font-semibold text-[#405762]">
+            <p className="font-semibold text-ops-text">
               Connecting to Digital Twin
             </p>
 
-            <p className="text-xs text-[#82939A] mt-1">
+            <p className="text-xs text-ops-text-3 mt-1">
               Synchronizing {meta.name} telemetry...
             </p>
           </div>
@@ -263,22 +263,22 @@ Communication is provided through dedicated satellite channels, enabling voice, 
     return (
       <div className="min-h-[420px] flex items-center justify-center p-6">
 
-        <div className="max-w-md w-full rounded-3xl border border-[#E4D6D6] bg-[#FCF7F7] p-8 text-center shadow-sm">
+        <div className="max-w-md w-full rounded-3xl border border-ops-red/30 bg-ops-card p-8 text-center shadow-lg ring-1 ring-white/10">
 
-          <div className="mx-auto w-12 h-12 rounded-2xl bg-[#F3E1E1] flex items-center justify-center">
-            <WifiOff className="w-5 h-5 text-[#B65C5C]" />
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-ops-red/20 flex items-center justify-center">
+            <WifiOff className="w-5 h-5 text-ops-red" />
           </div>
 
-          <h2 className="text-lg font-bold text-[#4B4141] mt-4">
+          <h2 className="text-lg font-bold text-white mt-4">
             Telemetry Unavailable
           </h2>
 
-          <p className="text-sm text-[#7D6E6E] mt-2 leading-6">
+          <p className="text-sm text-ops-text-2 mt-2 leading-6">
             Unable to retrieve station telemetry at the moment.
             Please verify the communication link and try again.
           </p>
 
-          <div className="mt-5 px-3 py-2 rounded-xl bg-[#F7ECEC] border border-[#EBDADA] text-[10px] font-bold uppercase tracking-wider text-[#A05D5D]">
+          <div className="mt-5 px-3 py-2 rounded-xl bg-ops-red/20 border border-ops-red/40 text-[10px] font-bold uppercase tracking-wider text-ops-red">
             No Cached Data Available
           </div>
 
@@ -299,40 +299,40 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {error && usingCachedData && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#F7EBD6] via-[#FAF2E5] to-[#F4E9D8] border border-[#E5D1AB] shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-ops-amber/15 via-ops-panel to-ops-panel border border-ops-amber/30 shadow-md ring-1 ring-white/5">
 
           <div className="flex items-center gap-3">
 
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#EBD6AF]">
-              <WifiOff className="w-5 h-5 text-[#9A6B25]" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-amber/20">
+              <WifiOff className="w-5 h-5 text-ops-amber" />
             </div>
 
             <div>
 
               <div className="flex items-center gap-2">
 
-                <span className="text-xs font-bold uppercase tracking-wider text-[#805C25]">
+                <span className="text-xs font-bold uppercase tracking-wider text-ops-amber">
                   Live Telemetry Unavailable
                 </span>
 
-                <span className="hidden sm:inline text-[#B28A50]">
+                <span className="hidden sm:inline text-ops-amber/50">
                   •
                 </span>
 
-                <span className="text-xs text-[#987849]">
+                <span className="text-xs text-ops-text-2">
                   Cached Station State
                 </span>
 
               </div>
 
-              <p className="text-xs text-[#987849] mt-1">
+              <p className="text-xs text-ops-text-3 mt-1">
                 {error}
               </p>
 
             </div>
           </div>
 
-          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-[#FBF6EC] border border-[#E1CAA0] text-[10px] font-bold uppercase tracking-wide text-[#956E31]">
+          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-ops-amber/20 border border-ops-amber/40 text-[10px] font-bold uppercase tracking-wide text-ops-amber">
             Cached Telemetry
           </span>
 
@@ -344,40 +344,40 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {!connected && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#F7EBD6] via-[#FAF2E5] to-[#F4E9D8] border border-[#E5D1AB] shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-ops-amber/15 via-ops-panel to-ops-panel border border-ops-amber/30 shadow-md ring-1 ring-white/5">
 
           <div className="flex items-center gap-3">
 
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#EBD6AF]">
-              <WifiOff className="w-5 h-5 text-[#9A6B25]" />
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-amber/20">
+              <WifiOff className="w-5 h-5 text-ops-amber" />
             </div>
 
             <div>
 
               <div className="flex items-center gap-2">
 
-                <span className="text-xs font-bold uppercase tracking-wider text-[#805C25]">
+                <span className="text-xs font-bold uppercase tracking-wider text-ops-amber">
                   Communication Link Degraded
                 </span>
 
-                <span className="hidden sm:inline text-[#B28A50]">
+                <span className="hidden sm:inline text-ops-amber/50">
                   •
                 </span>
 
-                <span className="text-xs text-[#987849]">
+                <span className="text-xs text-ops-text-2">
                   Polar Backhaul Stalled
                 </span>
 
               </div>
 
-              <p className="text-xs text-[#987849] mt-1">
+              <p className="text-xs text-ops-text-3 mt-1">
                 Displaying the last synchronized station state.
               </p>
 
             </div>
           </div>
 
-          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-[#FBF6EC] border border-[#E1CAA0] text-[10px] font-bold uppercase tracking-wide text-[#956E31]">
+          <span className="self-start md:self-auto px-3 py-1.5 rounded-lg bg-ops-amber/20 border border-ops-amber/40 text-[10px] font-bold uppercase tracking-wide text-ops-amber">
             Cached Telemetry
           </span>
 
@@ -389,19 +389,19 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       ===================================================== */}
 
       {isRestoring && (
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[#E3F0EA] to-[#EEF5F1] border border-[#C8DED4] shadow-sm">
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-ops-green/15 via-ops-panel to-ops-panel border border-ops-green/30 shadow-md ring-1 ring-white/5">
 
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#D5E9DF]">
-            <CheckCircle2 className="w-5 h-5 text-[#3F8068]" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-green/20">
+            <CheckCircle2 className="w-5 h-5 text-ops-green" />
           </div>
 
           <div>
 
-            <span className="text-xs font-bold uppercase tracking-wider text-[#356E5A]">
+            <span className="text-xs font-bold uppercase tracking-wider text-ops-green">
               Link Restored
             </span>
 
-            <p className="text-xs text-[#6C857A] mt-1">
+            <p className="text-xs text-ops-text-2 mt-1">
               Synchronizing station telemetry state with polar ground station...
             </p>
 
@@ -641,11 +641,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
           STATION PROFILE
       ===================================================== */}
 
-      <section className="relative overflow-hidden rounded-[26px] border border-[#D7E2E3] bg-gradient-to-br from-[#FAFBF9] via-[#F5F8F6] to-[#EDF3F2] shadow-[0_5px_22px_rgba(40,60,70,0.06)]">
+      <section className="relative overflow-hidden rounded-[26px] border border-white/[0.08] bg-ops-panel shadow-[0_5px_22px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
         {/* Colored top line */}
 
-        <div className="h-1.5 bg-gradient-to-r from-[#287C80] via-[#477A91] to-[#B98232]" />
+        <div className="h-1.5 bg-gradient-to-r from-ops-teal via-ops-ice to-ops-amber" />
 
         <div className="p-6 lg:p-8">
 
@@ -655,17 +655,17 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             <div className="flex items-center gap-3">
 
-              <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-[#DDECEE] text-[#287C80]">
+              <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-inner">
                 <Building2 className="w-5 h-5" />
               </div>
 
               <div>
 
-                <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-[#82939A]">
+                <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-ops-text-3">
                   Station Profile
                 </p>
 
-                <h2 className="text-xl font-bold text-[#314654] mt-0.5">
+                <h2 className="text-xl font-bold text-ops-text mt-0.5">
                   Life & Operations at {meta.name}
                 </h2>
 
@@ -673,9 +673,9 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-[#71828A]">
+            <div className="flex items-center gap-2 text-xs text-ops-text-2">
 
-              <Radio className="w-3.5 h-3.5 text-[#287C80]" />
+              <Radio className="w-3.5 h-3.5 text-ops-teal" />
 
               <span>
                 {stationInfo.connectivity}
@@ -691,25 +691,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Location */}
 
-            <div className="group p-4 rounded-2xl bg-[#EAF2F2] border border-[#D5E3E4] hover:bg-[#E3EEEE] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#D5E7E8] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-teal/15 border border-ops-teal/30 flex items-center justify-center">
 
-                  <Mountain className="w-4 h-4 text-[#477A91]" />
+                  <Mountain className="w-4 h-4 text-ops-teal" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#9BAEB5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#83939A] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Location
               </p>
 
-              <p className="text-sm font-bold text-[#405762] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.location}
               </p>
 
@@ -717,25 +717,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Established */}
 
-            <div className="group p-4 rounded-2xl bg-[#F1EDF5] border border-[#E0D9E6] hover:bg-[#ECE7F1] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#E6E0EC] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-violet/15 border border-ops-violet/30 flex items-center justify-center">
 
-                  <CalendarDays className="w-4 h-4 text-[#756B91]" />
+                  <CalendarDays className="w-4 h-4 text-ops-violet" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#A9A1B5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#8A8498] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 {stationInfo.establishedLabel}
               </p>
 
-              <p className="text-sm font-bold text-[#514B63] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.established}
               </p>
 
@@ -743,25 +743,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Capacity */}
 
-            <div className="group p-4 rounded-2xl bg-[#F7F0E3] border border-[#E8DCC5] hover:bg-[#F4EBDD] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#EEE1C9] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-amber/15 border border-ops-amber/30 flex items-center justify-center">
 
-                  <Users className="w-4 h-4 text-[#A47735]" />
+                  <Users className="w-4 h-4 text-ops-amber" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#BDA77E]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#998466] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Total Capacity
               </p>
 
-              <p className="text-sm font-bold text-[#665438] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 {stationInfo.capacity}
               </p>
 
@@ -769,25 +769,25 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             {/* Connectivity */}
 
-            <div className="group p-4 rounded-2xl bg-[#EAF2EC] border border-[#D5E3D9] hover:bg-[#E3EEE7] transition-colors">
+            <div className="group p-4 rounded-2xl bg-ops-card/80 border border-white/10 hover:bg-ops-card hover:border-white/20 ring-1 ring-white/5 transition-all">
 
               <div className="flex items-center justify-between">
 
-                <div className="w-9 h-9 rounded-xl bg-[#D9E9DF] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-ops-green/15 border border-ops-green/30 flex items-center justify-center">
 
-                  <Satellite className="w-4 h-4 text-[#4F806A]" />
+                  <Satellite className="w-4 h-4 text-ops-green" />
 
                 </div>
 
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#9BB3A5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-ops-text-3 group-hover:text-ops-text-2 transition-colors" />
 
               </div>
 
-              <p className="text-[9px] uppercase tracking-wider font-bold text-[#82978A] mt-4">
+              <p className="text-[9px] uppercase tracking-wider font-bold text-ops-text-3 mt-4">
                 Connectivity
               </p>
 
-              <p className="text-sm font-bold text-[#456655] mt-1">
+              <p className="text-sm font-bold text-ops-text mt-1">
                 Satellite
               </p>
 
@@ -799,11 +799,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
           <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-5">
 
-            <div className="hidden lg:block w-1 rounded-full bg-gradient-to-b from-[#287C80] via-[#477A91] to-[#B98232]" />
+            <div className="hidden lg:block w-1 rounded-full bg-gradient-to-b from-ops-teal via-ops-ice to-ops-amber" />
 
             <div>
 
-              <p className="text-sm leading-7 text-[#5F7078] whitespace-pre-line">
+              <p className="text-sm leading-7 text-ops-text-2 whitespace-pre-line">
                 {stationInfo.full}
               </p>
 

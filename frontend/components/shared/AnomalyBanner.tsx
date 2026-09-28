@@ -43,44 +43,44 @@ export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
       case "high":
         return {
           container:
-            "bg-gradient-to-r from-[#F9E4E4] via-[#FBEAEA] to-[#F6E1E4]",
-          border: "border-[#E7C3C7]",
-          accent: "bg-[#C96868]",
-          iconBg: "bg-[#F2D0D3]",
-          iconColor: "text-[#B4515A]",
-          title: "text-[#8F3942]",
-          description: "text-[#71464B]",
-          badge: "bg-[#C96868] text-white",
-          meta: "text-[#967075]",
+            "bg-gradient-to-r from-[#D4706F]/15 via-ops-panel to-ops-panel",
+          border: "border-[#D4706F]/30",
+          accent: "bg-[#D4706F]",
+          iconBg: "bg-[#D4706F]/20",
+          iconColor: "text-[#D4706F]",
+          title: "text-[#D4706F]",
+          description: "text-ops-text",
+          badge: "bg-[#D4706F]/20 text-[#D4706F] border border-[#D4706F]/40",
+          meta: "text-ops-text-2",
         };
 
       case "medium":
         return {
           container:
-            "bg-gradient-to-r from-[#FAF0DC] via-[#FBF3E3] to-[#F5EBD7]",
-          border: "border-[#E8D7B8]",
-          accent: "bg-[#C28A3D]",
-          iconBg: "bg-[#F1DFC0]",
-          iconColor: "text-[#AA742C]",
-          title: "text-[#805C26]",
-          description: "text-[#705635]",
-          badge: "bg-[#D09A48] text-white",
-          meta: "text-[#948064]",
+            "bg-gradient-to-r from-[#D9A441]/15 via-ops-panel to-ops-panel",
+          border: "border-[#D9A441]/30",
+          accent: "bg-[#D9A441]",
+          iconBg: "bg-[#D9A441]/20",
+          iconColor: "text-[#D9A441]",
+          title: "text-[#D9A441]",
+          description: "text-ops-text",
+          badge: "bg-[#D9A441]/20 text-[#D9A441] border border-[#D9A441]/40",
+          meta: "text-ops-text-2",
         };
 
       case "low":
       default:
         return {
           container:
-            "bg-gradient-to-r from-[#E2F0F0] via-[#E9F4F3] to-[#E3EFED]",
-          border: "border-[#C9DEDC]",
-          accent: "bg-[#4F8B88]",
-          iconBg: "bg-[#D3E8E6]",
-          iconColor: "text-[#3D7775]",
-          title: "text-[#376B69]",
-          description: "text-[#496563]",
-          badge: "bg-[#5D9692] text-white",
-          meta: "text-[#708987]",
+            "bg-gradient-to-r from-[#2FA3A8]/15 via-ops-panel to-ops-panel",
+          border: "border-[#2FA3A8]/30",
+          accent: "bg-[#2FA3A8]",
+          iconBg: "bg-[#2FA3A8]/20",
+          iconColor: "text-[#2FA3A8]",
+          title: "text-[#2FA3A8]",
+          description: "text-ops-text",
+          badge: "bg-[#2FA3A8]/20 text-[#2FA3A8] border border-[#2FA3A8]/40",
+          meta: "text-ops-text-2",
         };
     }
   };
@@ -99,7 +99,7 @@ export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
         return (
           <div
             key={`${anomaly.variable}-${index}`}
-            className={`relative overflow-hidden flex items-center justify-between gap-4 p-4 lg:px-5 lg:py-4 rounded-2xl border shadow-[0_5px_18px_rgba(70,70,60,0.06)] transition-all duration-200 ${style.container} ${style.border}`}
+            className={`relative overflow-hidden flex items-center justify-between gap-4 p-4 lg:px-5 lg:py-4 rounded-2xl border shadow-[0_4px_16px_rgba(0,0,0,0.25)] ring-1 ring-white/5 transition-all duration-200 ${style.container} ${style.border}`}
           >
             {/* Severity accent */}
             <div
@@ -161,15 +161,15 @@ export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
                 <p
                   className={`text-sm mt-1 leading-relaxed ${style.description}`}
                 >
-                  <span className="font-bold">
+                  <span className="font-bold text-white">
                     {formatVariableName(anomaly.variable)}
                   </span>{" "}
                   is significantly above baseline{" "}
-                  <span className="font-semibold">
+                  <span className="font-semibold text-white">
                     ({anomaly.value.toFixed(1)}
                   </span>{" "}
                   vs baseline mean{" "}
-                  <span className="font-semibold">
+                  <span className="font-semibold text-ops-text-2">
                     {anomaly.baseline_mean.toFixed(1)} ±{" "}
                     {anomaly.baseline_stddev.toFixed(1)})
                   </span>
@@ -199,7 +199,7 @@ export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
 
               <button
                 onClick={() => handleDismiss(index)}
-                className={`p-1.5 rounded-lg ${style.iconColor} hover:bg-black/5 transition-colors`}
+                className={`p-1.5 rounded-lg text-ops-text-3 hover:text-ops-text hover:bg-white/10 transition-colors`}
                 title="Dismiss anomaly"
                 aria-label="Dismiss anomaly"
               >

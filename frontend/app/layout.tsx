@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#F7F9FB] text-[#0F1B2A] antialiased font-sans">
+      <body className="bg-ops-bg text-ops-text antialiased font-sans">
         <StationProvider>
           <LinkProvider>{children}</LinkProvider>
         </StationProvider>

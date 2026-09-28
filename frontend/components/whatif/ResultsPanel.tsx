@@ -559,9 +559,9 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           SIMULATION HEADER
       ======================================================== */}
 
-      <div className="relative overflow-hidden rounded-[28px] border border-[#C9DDE0] bg-gradient-to-br from-[#EAF4F5] via-[#F6F8F7] to-[#F5EFE2] shadow-[0_8px_28px_rgba(47,76,84,0.07)]">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-ops-panel shadow-[0_8px_28px_rgba(0,0,0,0.3)]">
 
-        <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-[#B9DDE0]/25 blur-3xl" />
+        <div className="absolute -right-16 -top-20 w-64 h-64 rounded-full bg-ops-teal/10 blur-3xl pointer-events-none" />
 
         <div className="relative p-6 sm:p-7">
 
@@ -569,12 +569,12 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
             <div className="flex items-start gap-4">
 
-              <div className="flex items-center justify-center shrink-0 w-12 h-12 rounded-2xl bg-[#17364A] text-white shadow-[0_7px_18px_rgba(23,54,74,0.16)]">
+              <div className="flex items-center justify-center shrink-0 w-12 h-12 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-[0_7px_18px_rgba(0,0,0,0.25)]">
 
                 {isPlaying ? (
                   <Activity className="w-6 h-6 animate-pulse" />
                 ) : (
-                  <ShieldCheck className="w-6 h-6" />
+                  <ShieldCheck className="w-6 h-6 text-ops-green" />
                 )}
 
               </div>
@@ -586,12 +586,12 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   <span
                     className={`w-2 h-2 rounded-full ${
                       isPlaying
-                        ? "bg-[#B98232] animate-pulse"
-                        : "bg-[#4F8A6B]"
+                        ? "bg-ops-amber animate-pulse"
+                        : "bg-ops-green"
                     }`}
                   />
 
-                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#5F7A80]">
+                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-ops-text-3">
                     {isPlaying
                       ? "Simulation Running"
                       : "Simulation Complete"}
@@ -599,11 +599,11 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                 </div>
 
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#304C57]">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-ops-text">
                   {scenario.title}
                 </h2>
 
-                <p className="text-xs text-[#75868C] mt-1">
+                <p className="text-xs text-ops-text-2 mt-1">
                   {isPlaying
                     ? "Tracing the projected operational cascade..."
                     : "Projected operational cascade successfully generated."}
@@ -612,17 +612,17 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 self-start lg:self-auto px-3 py-2 rounded-xl bg-[#F5F8F7] border border-[#D6E2DE]">
+            <div className="flex items-center gap-2 self-start lg:self-auto px-3 py-2 rounded-xl bg-ops-card border border-white/10">
 
               <span
                 className={`w-2 h-2 rounded-full ${
                   isPlaying
-                    ? "bg-[#B98232] animate-pulse"
-                    : "bg-[#4F8A6B]"
+                    ? "bg-ops-amber animate-pulse"
+                    : "bg-ops-green"
                 }`}
               />
 
-              <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#607A6C]">
+              <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-2">
                 Scenario Engine · rule-based
               </span>
 
@@ -636,20 +636,20 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
             <div className="flex items-center justify-between mb-2">
 
-              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#75888E]">
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-ops-text-3">
                 Simulation Progress
               </span>
 
-              <span className="text-[10px] font-bold text-[#4C7F91] tabular-nums">
+              <span className="text-[10px] font-bold text-ops-teal tabular-nums">
                 {progress}%
               </span>
 
             </div>
 
-            <div className="w-full h-1.5 rounded-full bg-[#DCE7E8] overflow-hidden">
+            <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
 
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#4C7F91] via-[#5D8D8D] to-[#B98232] transition-all duration-700 ease-out"
+                className="h-full rounded-full bg-gradient-to-r from-ops-teal via-ops-ice to-ops-amber transition-all duration-700 ease-out"
                 style={{
                   width: `${progress}%`,
                 }}
@@ -666,29 +666,29 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           IMPACT CASCADE
       ======================================================== */}
 
-      <section className="rounded-[28px] border border-[#D7E1E3] bg-[#F7FAFA] shadow-[0_7px_25px_rgba(50,75,82,0.05)] overflow-hidden">
+      <section className="rounded-[28px] border border-white/10 bg-ops-panel shadow-[0_7px_25px_rgba(0,0,0,0.25)] overflow-hidden">
 
-        <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#DEE7E8]">
+        <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-white/10">
 
           <div className="flex items-center gap-3">
 
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#F2E5CF] text-[#9A7438]">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-amber/15 text-ops-amber border border-ops-amber/25">
               <AlertCircle className="w-5 h-5" />
             </div>
 
             <div>
 
-              <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-[#405963]">
+              <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-ops-text">
                 Impact Cascade
               </h3>
 
               <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                <p className="text-[11px] text-[#89989D]">
+                <p className="text-[11px] text-ops-text-2">
                   {activeSection === "impact"
                     ? "Tracing disruption propagation..."
                     : "Cascade sequence generated"}
                 </p>
-                <span className="text-[10px] text-[#89989D] italic">
+                <span className="text-[10px] text-ops-text-3 italic">
                   · Scenario definition
                 </span>
               </div>
@@ -730,7 +730,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                         style={{
                           height: '64px',
                           background:
-                            'linear-gradient(to bottom, transparent, #9FD3DC, transparent)',
+                            'linear-gradient(to bottom, transparent, #2FA3A8, transparent)',
                           animation: 'spine-sweep 800ms ease-in-out forwards',
                         }}
                       />
@@ -740,7 +740,6 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   {scenario.impact_summary
                     .slice(0, impactVisible)
                     .map((step, idx) => {
-
                       const isFirst = idx === 0;
                       const isLastVisible = idx === impactVisible - 1;
                       const isFinal =
@@ -750,16 +749,16 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                       /* Node fill color */
                       const nodeColor = isFirst
-                        ? '#B65C5C'
+                        ? '#D4706F'
                         : isFinal
-                        ? '#4F8A6B'
-                        : '#4C7F91';
+                        ? '#4FB58A'
+                        : '#2FA3A8';
 
                       /* Spine gradient destination — next stage color */
                       const nextColor =
                         idx + 1 === scenario.impact_summary.length - 1
-                          ? '#4F8A6B'
-                          : '#4C7F91';
+                          ? '#4FB58A'
+                          : '#2FA3A8';
 
                       /* Pulse ring while this stage is still being typed */
                       const pulsingRing =
@@ -768,7 +767,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                       /* Final-node glow after cascade finishes */
                       const finalGlow =
                         isFinal && cascadeComplete
-                          ? '0 0 0 4px rgba(79,138,107,0.35), 0 0 16px 4px rgba(79,138,107,0.2)'
+                          ? '0 0 0 4px rgba(79,181,138,0.35), 0 0 16px 4px rgba(79,181,138,0.2)'
                           : undefined;
 
                       return (
@@ -787,7 +786,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                               {/* Node circle */}
                               <div
-                                className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full ring-4 ring-[#F7FAFA] shrink-0 mt-4 sm:mt-5 text-white text-xs font-bold motion-reduce:animate-none"
+                                className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full ring-4 ring-ops-panel shrink-0 mt-4 sm:mt-5 text-white text-xs font-bold motion-reduce:animate-none"
                                 style={{
                                   background: nodeColor,
                                   boxShadow: pulsingRing
@@ -825,12 +824,11 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                                   border
                                   ${
                                     isFirst
-                                      ? "bg-gradient-to-r from-[#F8EAEA] to-[#FBF5F5] border-[#E2C4C4]"
+                                      ? "bg-ops-card/90 border-ops-red/30 shadow-[0_5px_16px_rgba(212,112,111,0.08)]"
                                       : isFinal
-                                      ? "bg-gradient-to-r from-[#E7F1EA] to-[#F5F9F6] border-[#C9DED0]"
-                                      : "bg-gradient-to-r from-[#EEF5F6] to-[#F8FAFA] border-[#D1E1E4]"
+                                      ? "bg-ops-card/90 border-ops-green/30 shadow-[0_5px_16px_rgba(79,181,138,0.08)]"
+                                      : "bg-ops-card/90 border-white/10 shadow-[0_5px_16px_rgba(0,0,0,0.2)]"
                                   }
-                                  shadow-[0_5px_16px_rgba(55,75,82,0.045)]
                                   animate-fade-slide-up
                                 `}
                               >
@@ -850,10 +848,10 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                                         text-[9px] font-bold uppercase tracking-[0.16em]
                                         ${
                                           isFirst
-                                            ? "text-[#9A5A5A]"
+                                            ? "text-ops-red"
                                             : isFinal
-                                            ? "text-[#5B7D68]"
-                                            : "text-[#597B85]"
+                                            ? "text-ops-green"
+                                            : "text-ops-teal"
                                         }
                                       `}
                                     >
@@ -867,12 +865,12 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                                     {/* Typing caret */}
                                     {isTyping &&
                                       impactTyped.length < step.length && (
-                                        <span className="inline-block w-1.5 h-3.5 rounded-sm bg-[#4C7F91] animate-pulse" />
+                                        <span className="inline-block w-1.5 h-3.5 rounded-sm bg-ops-teal animate-pulse" />
                                       )}
 
                                   </div>
 
-                                  <p className="text-sm sm:text-[15px] font-semibold leading-6 text-[#405963]">
+                                  <p className="text-sm sm:text-[15px] font-semibold leading-6 text-ops-text">
                                     {displayedText}
                                   </p>
 
@@ -897,23 +895,23 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 scenario.impact_summary.length && (
               <div className="flex items-center justify-center gap-2 py-6">
 
-                <span className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce" />
+                <span className="w-1.5 h-1.5 rounded-full bg-ops-teal animate-bounce" />
 
                 <span
-                  className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-ops-teal animate-bounce"
                   style={{
                     animationDelay: "120ms",
                   }}
                 />
 
                 <span
-                  className="w-1.5 h-1.5 rounded-full bg-[#4C7F91] animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-ops-teal animate-bounce"
                   style={{
                     animationDelay: "240ms",
                   }}
                 />
 
-                <span className="text-[9px] font-bold uppercase tracking-[0.15em] ml-1 text-[#819197]">
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em] ml-1 text-ops-text-3">
                   Calculating cascade
                 </span>
 
@@ -930,23 +928,23 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {timelineVisible > 0 && (
-        <section className="rounded-[28px] border border-[#D9D4E3] bg-gradient-to-br from-[#F6F4F9] to-[#F8FAFA] shadow-[0_7px_24px_rgba(65,60,80,0.05)] overflow-hidden animate-fade-slide-up-6">
+        <section className="rounded-[28px] border border-white/10 bg-ops-panel shadow-[0_7px_24px_rgba(0,0,0,0.25)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
 
-          <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#E2DFE8]">
+          <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-white/10">
 
             <div className="flex items-center gap-3">
 
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#E9E4F1] text-[#776A98]">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-violet/15 text-ops-violet border border-ops-violet/25">
                 <Calendar className="w-5 h-5" />
               </div>
 
               <div>
 
-                <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-[#514C62]">
+                <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-ops-text">
                   Event Timeline
                 </h3>
 
-                <p className="text-[11px] text-[#8B8795] mt-0.5">
+                <p className="text-[11px] text-ops-text-2 mt-0.5">
                   Projected sequence of operational events
                 </p>
 
@@ -995,7 +993,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                         <div className="flex flex-col items-center shrink-0">
 
-                          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#17364A] text-white shadow-[0_5px_14px_rgba(23,54,74,0.15)]">
+                          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-ops-card border border-white/10 text-ops-violet shadow-[0_5px_14px_rgba(0,0,0,0.25)]">
 
                             <span className="text-[10px] font-bold">
                               D{entry.day}
@@ -1005,26 +1003,26 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                         </div>
 
-                        <div className="flex-1 rounded-2xl bg-[#FBFCFC] border border-[#DCE4E6] p-4 shadow-sm">
+                        <div className="flex-1 rounded-2xl bg-ops-card/90 border border-white/10 p-4 shadow-sm">
 
                           <div className="flex items-center gap-2 mb-1">
 
-                            <Clock className="w-3.5 h-3.5 text-[#718890]" />
+                            <Clock className="w-3.5 h-3.5 text-ops-text-3" />
 
-                            <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#7C8E94]">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-ops-text-3">
                               Day {entry.day}
                             </span>
 
                           </div>
 
-                          <p className="text-xs sm:text-sm font-medium leading-6 text-[#4B626B]">
+                          <p className="text-xs sm:text-sm font-medium leading-6 text-ops-text">
 
                             {displayedText}
 
                             {isTyping &&
                               timelineTyped.length <
                                 entry.event.length && (
-                                <span className="inline-block w-1.5 h-3.5 ml-0.5 rounded-sm bg-[#776A98] animate-pulse align-middle" />
+                                <span className="inline-block w-1.5 h-3.5 ml-0.5 rounded-sm bg-ops-violet animate-pulse align-middle" />
                               )}
 
                           </p>
@@ -1034,7 +1032,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                       </div>
 
                       {!isLast && (
-                        <div className="ml-[23px] h-8 border-l-2 border-dashed border-[#CBD8DB]" />
+                        <div className="ml-[23px] h-8 border-l-2 border-dashed border-white/15" />
                       )}
 
                     </React.Fragment>
@@ -1046,23 +1044,23 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   result.timeline.length && (
                   <div className="flex items-center justify-center gap-2 py-5">
 
-                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#8B8795]">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-ops-text-3">
                       Advancing timeline
                     </span>
 
                     <span className="flex gap-1">
 
-                      <span className="w-1 h-1 rounded-full bg-[#776A98] animate-bounce" />
+                      <span className="w-1 h-1 rounded-full bg-ops-violet animate-bounce" />
 
                       <span
-                        className="w-1 h-1 rounded-full bg-[#776A98] animate-bounce"
+                        className="w-1 h-1 rounded-full bg-ops-violet animate-bounce"
                         style={{
                           animationDelay: "120ms",
                         }}
                       />
 
                       <span
-                        className="w-1 h-1 rounded-full bg-[#776A98] animate-bounce"
+                        className="w-1 h-1 rounded-full bg-ops-violet animate-bounce"
                         style={{
                           animationDelay: "240ms",
                         }}
@@ -1085,23 +1083,23 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       ======================================================== */}
 
       {mitigationVisible > 0 && (
-        <section className="rounded-[28px] border border-[#CFE0D5] bg-gradient-to-br from-[#EEF6F1] via-[#F6F9F7] to-[#F3F7F5] shadow-[0_7px_24px_rgba(58,90,70,0.05)] overflow-hidden animate-fade-slide-up-6">
+        <section className="rounded-[28px] border border-white/10 bg-ops-panel shadow-[0_7px_24px_rgba(0,0,0,0.25)] overflow-hidden animate-[fadeSlideUp_0.6s_ease-out]">
 
-          <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-[#DCE9DF]">
+          <div className="px-6 sm:px-7 pt-6 pb-5 border-b border-white/10">
 
             <div className="flex items-center gap-3">
 
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#DCEBE1] text-[#527A62]">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-ops-green/15 text-ops-green border border-ops-green/25">
                 <CheckSquare className="w-5 h-5" />
               </div>
 
               <div>
 
-                <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-[#496657]">
+                <h3 className="text-sm font-bold uppercase tracking-[0.13em] text-ops-text">
                   Recommended Mitigation
                 </h3>
 
-                <p className="text-[11px] text-[#82938A] mt-0.5">
+                <p className="text-[11px] text-ops-text-2 mt-0.5">
                   Response actions derived from the simulated scenario
                 </p>
 
@@ -1148,30 +1146,30 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                         className="flex items-start gap-4 animate-fade-slide-up"
                       >
 
-                        <div className="flex items-center justify-center shrink-0 w-11 h-11 rounded-2xl bg-[#DDECE2] border border-[#CBE0D1] text-[#527861] font-bold text-xs">
+                        <div className="flex items-center justify-center shrink-0 w-11 h-11 rounded-2xl bg-ops-green/15 border border-ops-green/30 text-ops-green font-bold text-xs">
                           {idx + 1}
                         </div>
 
-                        <div className="flex-1 p-4 rounded-2xl bg-[#FBFDFC] border border-[#D7E4DA] shadow-sm">
+                        <div className="flex-1 p-4 rounded-2xl bg-ops-card/90 border border-white/10 shadow-sm">
 
                           <div className="flex items-center gap-2 mb-1">
 
-                            <ShieldCheck className="w-3.5 h-3.5 text-[#5A8068]" />
+                            <ShieldCheck className="w-3.5 h-3.5 text-ops-green" />
 
-                            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#71877A]">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-ops-green">
                               Action {idx + 1}
                             </span>
 
                           </div>
 
-                          <p className="text-xs sm:text-sm font-medium leading-6 text-[#4B6254]">
+                          <p className="text-xs sm:text-sm font-medium leading-6 text-ops-text">
 
                             {displayedText}
 
                             {isTyping &&
                               mitigationTyped.length <
                                 rec.length && (
-                                <span className="inline-block w-1.5 h-3.5 ml-0.5 rounded-sm bg-[#5A8068] animate-pulse align-middle" />
+                                <span className="inline-block w-1.5 h-3.5 ml-0.5 rounded-sm bg-ops-green animate-pulse align-middle" />
                               )}
 
                           </p>
@@ -1182,7 +1180,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
 
                       {!isLast && (
                         <div className="flex justify-center py-2">
-                          <ArrowDown className="w-4 h-4 text-[#91A89A]" />
+                          <ArrowDown className="w-4 h-4 text-ops-text-3" />
                         </div>
                       )}
 
@@ -1195,23 +1193,23 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   result.recommendations.length && (
                   <div className="flex items-center justify-center gap-2 py-5">
 
-                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#71877A]">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-ops-text-3">
                       Generating response actions
                     </span>
 
                     <span className="flex gap-1">
 
-                      <span className="w-1 h-1 rounded-full bg-[#5A8068] animate-bounce" />
+                      <span className="w-1 h-1 rounded-full bg-ops-green animate-bounce" />
 
                       <span
-                        className="w-1 h-1 rounded-full bg-[#5A8068] animate-bounce"
+                        className="w-1 h-1 rounded-full bg-ops-green animate-bounce"
                         style={{
                           animationDelay: "120ms",
                         }}
                       />
 
                       <span
-                        className="w-1 h-1 rounded-full bg-[#5A8068] animate-bounce"
+                        className="w-1 h-1 rounded-full bg-ops-green animate-bounce"
                         style={{
                           animationDelay: "240ms",
                         }}
@@ -1236,20 +1234,20 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
       {activeSection === "complete" && (
         <div
           ref={completeRef}
-          className="rounded-[24px] border border-[#D1E1D6] bg-gradient-to-r from-[#EEF6F1] to-[#F7FAF8] p-5 sm:p-6 animate-fade-slide-up-6"
+          className="rounded-[24px] border border-ops-green/30 bg-ops-panel p-5 sm:p-6 shadow-[0_12px_32px_rgba(0,0,0,0.35)] animate-[fadeSlideUp_0.8s_ease-out]"
         >
 
           <div className="flex flex-col items-center text-center">
 
-            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#DDECE2] text-[#527861] mb-3">
+            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-ops-green/15 border border-ops-green/30 text-ops-green mb-3">
               <Sparkles className="w-6 h-6" />
             </div>
 
-            <h3 className="text-sm font-bold uppercase tracking-[0.15em] text-[#4F6F5A]">
+            <h3 className="text-sm font-bold uppercase tracking-[0.15em] text-ops-green">
               Simulation Complete
             </h3>
 
-            <p className="text-xs text-[#75877B] mt-1">
+            <p className="text-xs text-ops-text-2 mt-1">
               Full impact, timeline, and mitigation sequence has been projected.
             </p>
 
@@ -1258,31 +1256,31 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
               <FlowPill
                 icon={<Zap className="w-3.5 h-3.5" />}
                 label="Trigger"
-                className="bg-[#F0DEDE] border-[#E3C7C7] text-[#965858]"
+                className="bg-ops-red/15 border-ops-red/30 text-ops-red"
               />
 
-              <ArrowRight className="w-4 h-4 text-[#9BA9AD] rotate-90 md:rotate-0" />
+              <ArrowRight className="w-4 h-4 text-ops-text-3 rotate-90 md:rotate-0" />
 
               <FlowPill
                 icon={<Activity className="w-3.5 h-3.5" />}
                 label="Cascade"
-                className="bg-[#E2EEF0] border-[#CDDEE1] text-[#527681]"
+                className="bg-ops-teal/15 border-ops-teal/30 text-ops-teal"
               />
 
-              <ArrowRight className="w-4 h-4 text-[#9BA9AD] rotate-90 md:rotate-0" />
+              <ArrowRight className="w-4 h-4 text-ops-text-3 rotate-90 md:rotate-0" />
 
               <FlowPill
                 icon={<Clock className="w-3.5 h-3.5" />}
                 label="Timeline"
-                className="bg-[#E9E4F0] border-[#D9D1E4] text-[#70648D]"
+                className="bg-ops-violet/15 border-ops-violet/30 text-ops-violet"
               />
 
-              <ArrowRight className="w-4 h-4 text-[#9BA9AD] rotate-90 md:rotate-0" />
+              <ArrowRight className="w-4 h-4 text-ops-text-3 rotate-90 md:rotate-0" />
 
               <FlowPill
                 icon={<ShieldCheck className="w-3.5 h-3.5" />}
                 label="Mitigation"
-                className="bg-[#DDECE2] border-[#CBE0D1] text-[#557963]"
+                className="bg-ops-green/15 border-ops-green/30 text-ops-green"
               />
 
             </div>

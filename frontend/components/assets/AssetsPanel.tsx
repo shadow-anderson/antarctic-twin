@@ -153,17 +153,17 @@ export const AssetsPanel: React.FC = () => {
   ========================================================= */
   if (loading) {
     return (
-      <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-[#D8E3E5] bg-gradient-to-br from-[#F1F6F7] to-[#E8F0F2]">
-        <div className="flex flex-col items-center gap-4 text-[#657984]">
+      <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-white/[0.08] bg-ops-panel ring-1 ring-white/5">
+        <div className="flex flex-col items-center gap-4 text-ops-text-2">
 
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#DCEBED]">
-            <Network className="w-5 h-5 text-[#4B7F91] animate-pulse" />
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-inner">
+            <Network className="w-5 h-5 text-ops-teal animate-pulse" />
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 border-2 border-[#4B7F91] border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-ops-teal border-t-transparent rounded-full animate-spin" />
 
-            <span className="font-medium text-sm">
+            <span className="font-medium text-sm text-ops-text">
               Loading Asset Subsystem Hierarchy...
             </span>
           </div>
@@ -178,19 +178,19 @@ export const AssetsPanel: React.FC = () => {
   ========================================================= */
   if (error) {
     return (
-      <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-[#E8C7C7] bg-gradient-to-br from-[#FBF3F3] to-[#F5ECEC]">
-        <div className="flex flex-col items-center gap-4 text-[#7A4A4A] text-center px-8">
+      <div className="min-h-[500px] flex items-center justify-center rounded-[28px] border border-ops-red/30 bg-ops-panel ring-1 ring-white/5">
+        <div className="flex flex-col items-center gap-4 text-center px-8">
 
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#F2DADA]">
-            <AlertTriangle className="w-5 h-5 text-[#B65C5C]" />
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-ops-red/20 text-ops-red">
+            <AlertTriangle className="w-5 h-5 text-ops-red" />
           </div>
 
           <div>
-            <p className="font-semibold text-sm mb-1">
+            <p className="font-semibold text-sm mb-1 text-white">
               Failed to load asset data
             </p>
 
-            <p className="text-xs text-[#9A6A6A] max-w-sm">
+            <p className="text-xs text-ops-text-2 max-w-sm">
               {error}
             </p>
           </div>
@@ -198,7 +198,7 @@ export const AssetsPanel: React.FC = () => {
           <button
             type="button"
             onClick={handleRetry}
-            className="px-4 py-2 rounded-xl bg-[#E8C7C7] hover:bg-[#DEB8B8] text-[#7A4A4A] text-xs font-bold uppercase tracking-wider transition-colors"
+            className="px-4 py-2 rounded-xl bg-ops-red/20 hover:bg-ops-red/30 text-ops-red border border-ops-red/40 text-xs font-bold uppercase tracking-wider transition-colors"
           >
             Retry
           </button>
@@ -214,19 +214,22 @@ export const AssetsPanel: React.FC = () => {
       {/* =====================================================
           MAIN HEADER
       ===================================================== */}
-      <div className="relative overflow-hidden rounded-[28px] border border-[#D5E1E3] bg-gradient-to-br from-[#EEF5F6] via-[#F3F6F5] to-[#E9F0F2] p-6 lg:p-7 shadow-[0_7px_26px_rgba(45,65,75,0.06)]">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-ops-panel p-6 lg:p-7 shadow-[0_7px_26px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
+
+        {/* Thin accent top line */}
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-ops-teal via-ops-ice to-ops-violet" />
 
         {/* Decorative background */}
-        <div className="absolute -top-24 -right-16 w-64 h-64 rounded-full bg-[#8FBFC8]/15 blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -right-16 w-64 h-64 rounded-full bg-ops-teal/5 blur-3xl pointer-events-none" />
 
-        <div className="absolute -bottom-28 left-1/3 w-60 h-60 rounded-full bg-[#B9ADD0]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-28 left-1/3 w-60 h-60 rounded-full bg-ops-violet/5 blur-3xl pointer-events-none" />
 
         <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5">
 
           {/* Title */}
           <div className="flex items-start gap-4">
 
-            <div className="flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl bg-[#DCEBED] text-[#477C8D]">
+            <div className="flex items-center justify-center w-12 h-12 shrink-0 rounded-2xl bg-ops-card border border-white/10 text-ops-teal shadow-inner">
               <HardDrive className="w-6 h-6 stroke-[1.7]" />
             </div>
 
@@ -234,17 +237,17 @@ export const AssetsPanel: React.FC = () => {
 
               <div className="flex flex-wrap items-center gap-2 mb-1">
 
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#304955]">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-ops-text">
                   Subsystem Asset Digital Twin
                 </h2>
 
-                <span className="px-2.5 py-1 rounded-full bg-[#E5EDF0] border border-[#D4E1E4] text-[9px] font-bold uppercase tracking-[0.12em] text-[#66808A]">
+                <span className="px-2.5 py-1 rounded-full bg-ops-card border border-white/10 text-[9px] font-bold uppercase tracking-[0.12em] text-ops-text-2">
                   Asset Registry
                 </span>
 
               </div>
 
-              <p className="text-xs sm:text-sm text-[#71838C] max-w-2xl">
+              <p className="text-xs sm:text-sm text-ops-text-3 max-w-2xl">
                 Inspect physical station components, mechanical state, and
                 operational health.
               </p>
@@ -263,16 +266,16 @@ export const AssetsPanel: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2">
 
             {/* Tracked */}
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#F4F1EA] border border-[#E6DDCB]">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-ops-card border border-white/10">
 
-              <HardDrive className="w-4 h-4 text-[#A17A3E]" />
+              <HardDrive className="w-4 h-4 text-ops-amber" />
 
               <div>
-                <span className="block text-[9px] uppercase tracking-wider font-bold text-[#8C806B]">
+                <span className="block text-[9px] uppercase tracking-wider font-bold text-ops-text-3">
                   Tracked
                 </span>
 
-                <span className="block text-xs font-bold text-[#665B49]">
+                <span className="block text-xs font-bold text-ops-text">
                   13 Nodes
                 </span>
               </div>
@@ -280,17 +283,17 @@ export const AssetsPanel: React.FC = () => {
             </div>
 
             {/* Monitoring */}
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#E5F0EA] border border-[#D1E1D7]">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-ops-card border border-white/10">
 
-              <Activity className="w-4 h-4 text-[#4E8067]" />
+              <Activity className="w-4 h-4 text-ops-green" />
 
               <div>
-                <span className="block text-[9px] uppercase tracking-wider font-bold text-[#71867B]">
+                <span className="block text-[9px] uppercase tracking-wider font-bold text-ops-text-3">
                   Status
                 </span>
 
-                <span className="flex items-center gap-1.5 text-xs font-bold text-[#52705F]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#4F8A6B]" />
+                <span className="flex items-center gap-1.5 text-xs font-bold text-ops-green">
+                  <span className="w-1.5 h-1.5 rounded-full bg-ops-green" />
                   Monitoring
                 </span>
               </div>
@@ -316,7 +319,7 @@ export const AssetsPanel: React.FC = () => {
         {showHierarchy && (
           <div className="lg:col-span-5 xl:col-span-4 min-h-[480px]">
 
-            <div className="h-full rounded-[26px] border border-[#D8E2E4] bg-gradient-to-br from-[#F3F7F7] to-[#EDF3F4] p-1.5 shadow-[0_6px_22px_rgba(45,65,75,0.05)]">
+            <div className="h-full rounded-[26px] border border-white/[0.08] bg-ops-panel p-1.5 shadow-[0_6px_22px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
               <AssetTree
                 nodes={treeData}
@@ -350,7 +353,7 @@ export const AssetsPanel: React.FC = () => {
               onClick={() => setShowHierarchy(true)}
               aria-label="Show asset hierarchy"
               title="Show asset hierarchy"
-              className="absolute -left-3 top-5 z-30 flex items-center justify-center w-9 h-9 rounded-xl bg-[#DCEBED] border border-[#BFD4D8] text-[#456F7B] shadow-[0_3px_10px_rgba(45,65,75,0.15)] hover:bg-[#CFE2E6] hover:text-[#315B67] transition-all duration-200 cursor-pointer"
+              className="absolute -left-3 top-5 z-30 flex items-center justify-center w-9 h-9 rounded-xl bg-ops-card border border-white/10 text-ops-teal shadow-[0_3px_10px_rgba(0,0,0,0.3)] hover:bg-ops-card/80 hover:text-white transition-all duration-200 cursor-pointer"
             >
               <Menu
                 className="w-5 h-5"
@@ -359,23 +362,23 @@ export const AssetsPanel: React.FC = () => {
             </button>
           )}
 
-          <div className="h-full rounded-[26px] border border-[#DCD8E5] bg-gradient-to-br from-[#F5F3F8] via-[#F3F5F6] to-[#EDF2F3] p-1.5 shadow-[0_6px_22px_rgba(60,55,75,0.05)]">
+          <div className="h-full rounded-[26px] border border-white/[0.08] bg-ops-panel p-1.5 shadow-[0_6px_22px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
 
             {/* Details header */}
             <div className="flex items-center justify-between gap-3 px-4 pt-3 pb-2">
 
               <div className="flex items-center gap-2">
 
-                <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-[#E8E1F0] text-[#75689B]">
+                <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-ops-card border border-white/10 text-ops-violet">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#4B5962]">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-ops-text">
                     Asset Diagnostics
                   </h3>
 
-                  <p className="text-[10px] text-[#899399]">
+                  <p className="text-[10px] text-ops-text-3">
                     Selected component details
                   </p>
                 </div>
@@ -383,8 +386,8 @@ export const AssetsPanel: React.FC = () => {
               </div>
 
               {/* Live Registry */}
-              <span className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E7F0EA] border border-[#D4E2D9] text-[9px] font-bold uppercase tracking-wider text-[#5F786A]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#52856A]" />
+              <span className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-ops-green/15 border border-ops-green/30 text-[9px] font-bold uppercase tracking-wider text-ops-green">
+                <span className="w-1.5 h-1.5 rounded-full bg-ops-green" />
                 Live Registry
               </span>
 

@@ -206,7 +206,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#F7FAFA]/95 backdrop-blur-md border-b border-[#D9E2E5] px-4 lg:px-8 py-3 shadow-[0_1px_8px_rgba(23,54,74,0.05)]">
+    <header className="sticky top-0 z-40 w-full bg-ops-panel/90 backdrop-blur-md border-b border-white/[0.08] px-4 lg:px-8 py-3 shadow-[0_1px_8px_rgba(0,0,0,0.3)]">
       <div className="max-w-[1500px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-6">
 
         {/* =====================================================
@@ -219,7 +219,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center gap-3">
 
             {/* Logo */}
-            <div className="w-10 h-10 rounded-xl bg-[#E7F0F1] border border-[#D0E0E2] flex items-center justify-center text-[#287C80]">
+            <div className="w-10 h-10 rounded-xl bg-ops-card border border-white/10 flex items-center justify-center text-ops-teal shadow-inner">
               <RadioTower className="w-[19px] h-[19px] stroke-[1.8]" />
             </div>
 
@@ -227,29 +227,29 @@ export const TopBar: React.FC<TopBarProps> = ({
             <div>
               <div className="flex items-center gap-2">
 
-                <span className="text-[13px] sm:text-sm font-bold tracking-tight text-[#263746]">
+                <span className="text-[13px] sm:text-sm font-bold tracking-tight text-ops-text">
                   Antarctic Remote Operations
                 </span>
 
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold tracking-wide bg-[#E3EFF0] text-[#287C80] border border-[#CFE1E3]">
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold tracking-wide bg-ops-teal/15 text-ops-teal border border-ops-teal/30">
                   POLAR TWIN
                 </span>
 
               </div>
 
-              <p className="text-[11px] text-[#71818B] font-medium mt-0.5">
+              <p className="text-[11px] text-ops-text-3 font-medium mt-0.5">
                 Research Command Center
               </p>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="h-7 w-px bg-[#D9E2E5] hidden md:block" />
+          <div className="h-7 w-px bg-white/10 hidden md:block" />
 
           {/* Station */}
           <div className="flex items-center gap-2">
 
-            <span className="text-[11px] font-semibold text-[#71818B] hidden sm:inline">
+            <span className="text-[11px] font-semibold text-ops-text-3 hidden sm:inline">
               Station
             </span>
 
@@ -262,7 +262,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             CENTER — NAVIGATION
         ===================================================== */}
 
-        <nav className="flex items-center p-1 rounded-xl bg-[#EAF0F1] border border-[#DCE5E7]">
+        <nav className="flex items-center p-1 rounded-xl bg-ops-bg/80 border border-white/10">
 
           {/* Overview */}
           <button
@@ -270,8 +270,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => onTabChange("overview")}
             className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
               activeTab === "overview"
-                ? "bg-[#17364A] text-white shadow-[0_2px_6px_rgba(23,54,74,0.15)]"
-                : "text-[#647582] hover:text-[#263746] hover:bg-[#F5F8F8]"
+                ? "bg-ops-card text-white shadow-sm ring-1 ring-white/10"
+                : "text-ops-text-2 hover:text-ops-text hover:bg-white/5"
             }`}
           >
             <LayoutDashboard className="w-3.5 h-3.5 stroke-[2]" />
@@ -284,8 +284,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => onTabChange("assets")}
             className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
               activeTab === "assets"
-                ? "bg-[#17364A] text-white shadow-[0_2px_6px_rgba(23,54,74,0.15)]"
-                : "text-[#647582] hover:text-[#263746] hover:bg-[#F5F8F8]"
+                ? "bg-ops-card text-white shadow-sm ring-1 ring-white/10"
+                : "text-ops-text-2 hover:text-ops-text hover:bg-white/5"
             }`}
           >
             <Layers className="w-3.5 h-3.5 stroke-[2]" />
@@ -298,8 +298,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => onTabChange("whatif")}
             className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
               activeTab === "whatif"
-                ? "bg-[#17364A] text-white shadow-[0_2px_6px_rgba(23,54,74,0.15)]"
-                : "text-[#647582] hover:text-[#263746] hover:bg-[#F5F8F8]"
+                ? "bg-ops-card text-white shadow-sm ring-1 ring-white/10"
+                : "text-ops-text-2 hover:text-ops-text hover:bg-white/5"
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 stroke-[2]" />
@@ -312,8 +312,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={() => onTabChange("forecast")}
             className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
               activeTab === "forecast"
-                ? "bg-[#17364A] text-white shadow-[0_2px_6px_rgba(23,54,74,0.15)]"
-                : "text-[#647582] hover:text-[#263746] hover:bg-[#F5F8F8]"
+                ? "bg-ops-card text-white shadow-sm ring-1 ring-white/10"
+                : "text-ops-text-2 hover:text-ops-text hover:bg-white/5"
             }`}
           >
             <TrendingDown className="w-3.5 h-3.5 stroke-[2]" />
@@ -442,11 +442,11 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* UTC Mission Time */}
           <div className="hidden xl:flex flex-col text-right pr-1">
 
-            <span className="text-[9px] font-semibold text-[#87959D] uppercase tracking-[0.12em]">
+            <span className="text-[9px] font-semibold text-ops-text-3 uppercase tracking-[0.12em]">
               UTC Mission Time
             </span>
 
-            <span className="text-xs font-semibold text-[#3D5260] tabular-nums mt-0.5">
+            <span className="text-xs font-semibold text-ops-text tabular-nums mt-0.5">
               {utcTime}
             </span>
 

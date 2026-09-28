@@ -11,7 +11,7 @@ export default function TwinConsolePage() {
   const [activeTab, setActiveTab] = useState<ConsoleTab>("overview");
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F9FB] text-[#0F1B2A]">
+    <div className="min-h-screen flex flex-col bg-ops-bg text-ops-text">
       {/* Top Operations Bar */}
       <TopBar activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -24,26 +24,26 @@ export default function TwinConsolePage() {
       </main>
 
       {/* Enterprise Polar Footer */}
-      <footer className="w-full border-t border-[#E4E9EF] bg-white py-5 px-6 sm:px-8 mt-auto shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5B6B7D]">
+      <footer className="w-full border-t border-white/[0.08] bg-ops-panel/80 py-5 px-6 sm:px-8 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ops-text-2">
           <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#0E7C86]" />
-            <span className="font-semibold text-[#0B2942]">
+            <span className="w-2 h-2 rounded-full bg-ops-teal" />
+            <span className="font-semibold text-ops-text">
               Indian Antarctic Programme · Scientific Digital Twin
             </span>
           </div>
 
-          <div className="flex items-center gap-5 text-xs font-medium">
+          <div className="flex items-center gap-5 text-xs font-medium text-ops-text-2">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#1E9E6D]" />
+              <span className="w-2 h-2 rounded-full bg-ops-green" />
               <span>Real: NCPOR/IMD AWS archive</span>
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#D4922A]" />
+              <span className="w-2 h-2 rounded-full bg-ops-amber" />
               <span>Simulated: seeded microgrid &amp; logistics model</span>
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#6366A8]" />
+              <span className="w-2 h-2 rounded-full bg-ops-violet" />
               <span>Derived: computed from real + simulated inputs</span>
             </span>
           </div>
