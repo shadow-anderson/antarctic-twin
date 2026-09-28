@@ -11,7 +11,8 @@ import {
 import { STATION_METADATA } from "@/lib/mockData";
 
 import { AnomalyBanner } from "../shared/AnomalyBanner";
-import { AntarcticaMap } from "../shared/AntarcticaMap";
+import { AntarcticaMap, STATIONS } from "../shared/AntarcticaMap";
+import { SolarBadge } from "../shared/SolarBadge";
 import { WeatherSection } from "./WeatherSection";
 import { EnergySection } from "./EnergySection";
 import { LogisticsSection } from "./LogisticsSection";
@@ -464,6 +465,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
                 <span className="px-3 py-1 rounded-lg bg-[#DCEBDD]/15 border border-[#DCEBDD]/20 text-[10px] font-semibold text-[#B9D6C9]">
                   ● Operational
                 </span>
+
+                <SolarBadge
+                  lat={STATIONS.find((s) => s.id === selectedStation)?.lat ?? -70.76}
+                  lon={STATIONS.find((s) => s.id === selectedStation)?.lon ?? 11.73}
+                />
 
               </div>
 

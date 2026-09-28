@@ -10,7 +10,7 @@ import { StationForecast } from "@/lib/types";
    Exact coordinates from backend/app/api/stations.py STATIONS dict
 ========================================================= */
 
-const STATIONS = [
+export const STATIONS = [
   { id: "maitri" as const, name: "Maitri",  lat: -70.76, lon: 11.73 },
   { id: "bharati" as const, name: "Bharati", lat: -69.41, lon: 76.19 },
 ];
