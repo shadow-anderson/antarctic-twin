@@ -257,6 +257,10 @@ class SimulateRequest(BaseModel):
 class SimulateResult(BaseModel):
     timeline: List[TimelineEvent]
     recommendations: List[str]
+    # Optional verdict fields added in feat/hierarchy.
+    # Absent (None) when not computable; frontend degrades gracefully.
+    urgency: Optional[Literal["urgent", "warning", "monitor"]] = None
+    days_until_critical: Optional[int] = None
 
 
 class LinkStatusResponse(BaseModel):
@@ -539,9 +543,33 @@ def compute_whatif(station_id: str, trigger: str) -> SimulateResult:
                 "Reroute power to maintain primary satellite communication radomes and life support",
             ]
 
+    # --- 6. Compute urgency verdict ---
+    if trigger == "resupply_delay":
+        delay_days = params["resupply_delay_days"]
+        first_out = min(cur_diesel_days, cur_food_days)
+        shortfall_days = max(0, delay_days - first_out)
+        # urgency based on how soon reserves run out
+        if first_out <= 3:
+            urgency_val: Optional[Literal["urgent", "warning", "monitor"]] = "urgent"
+        elif first_out <= 7:
+            urgency_val = "warning"
+        else:
+            urgency_val = "monitor" if first_out < delay_days else "monitor"
+        days_until_crit = round(first_out) if first_out < delay_days else None
+    else:
+        if days_until_critical <= 3:
+            urgency_val = "urgent"
+        elif days_until_critical <= 7:
+            urgency_val = "warning"
+        else:
+            urgency_val = "monitor"
+        days_until_crit = days_until_critical
+
     return SimulateResult(
         timeline=timeline,
         recommendations=recs,
+        urgency=urgency_val,
+        days_until_critical=days_until_crit,
     )
 
 

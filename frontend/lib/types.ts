@@ -41,6 +41,9 @@ export interface Anomaly {
 export interface WhatIfResult {
   timeline: { day: number; event: string }[];
   recommendations: string[];
+  /** Optional verdict fields from feat/hierarchy backend. Absent on older deployments. */
+  urgency?: "urgent" | "warning" | "monitor";
+  days_until_critical?: number | null;
 }
 
 export interface LinkStatus {
