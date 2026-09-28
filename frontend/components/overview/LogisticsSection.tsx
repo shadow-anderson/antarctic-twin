@@ -84,6 +84,7 @@ export const LogisticsSection: React.FC<LogisticsSectionProps> = ({
           unit="days"
           source={logistics.food_days_remaining.source}
           icon={<Package className="w-4 h-4 stroke-[1.8]" />}
+          variant="compact"
           className="!bg-gradient-to-br !from-[#EAE3F3] !via-[#F0EBF5] !to-[#E5DFEF] !border-[#DCD3E8]"
         />
 
@@ -94,6 +95,7 @@ export const LogisticsSection: React.FC<LogisticsSectionProps> = ({
           unit="days"
           source={logistics.diesel_days_remaining.source}
           icon={<Truck className="w-4 h-4 stroke-[1.8]" />}
+          variant="compact"
           className="!bg-gradient-to-br !from-[#DDEEF3] !via-[#E7F2F5] !to-[#D9E9EF] !border-[#C9DEE5]"
         />
 

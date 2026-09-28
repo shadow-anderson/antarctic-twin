@@ -31,7 +31,7 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
 
           <div>
             <h3 className="text-base font-bold tracking-tight text-[#304955]">
-              Atmospheric & Environmental Telemetry
+              Atmospheric &amp; Environmental Telemetry
             </h3>
 
             <p className="text-[11px] text-[#71848D] mt-0.5">
@@ -47,10 +47,9 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
 
       </div>
 
-      {/* Weather cards */}
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+      {/* Weather cards — compact, denser grid */}
+      <div className="relative grid grid-cols-2 md:grid-cols-3 gap-3 mt-5">
 
-        {/* TEMPERATURE */}
         <MetricCard
           label="Temperature"
           value={weather.temperature_c.value}
@@ -58,21 +57,19 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
           source={weather.temperature_c.source}
           icon={<Thermometer className="w-4 h-4 stroke-[1.8]" />}
           tone="ice"
-          className="!bg-gradient-to-br !from-[#E2F1F5] !via-[#EAF5F6] !to-[#DDECEF]"
+          variant="compact"
         />
 
-        {/* PRESSURE */}
         <MetricCard
-          label="Atmospheric Pressure"
+          label="Atm Pressure"
           value={weather.pressure_hpa.value}
           unit="hPa"
           source={weather.pressure_hpa.source}
           icon={<Gauge className="w-4 h-4 stroke-[1.8]" />}
           tone="lavender"
-          className="!bg-gradient-to-br !from-[#ECE8F3] !via-[#F1EEF5] !to-[#E6E1EF]"
+          variant="compact"
         />
 
-        {/* WIND */}
         <MetricCard
           label="Wind Velocity"
           value={weather.wind_speed_ms.value}
@@ -80,7 +77,7 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
           source={weather.wind_speed_ms.source}
           icon={<Wind className="w-4 h-4 stroke-[1.8]" />}
           tone="mint"
-          className="!bg-gradient-to-br !from-[#E3F1E9] !via-[#EAF4ED] !to-[#DCECE3]"
+          variant="compact"
         />
 
       </div>
