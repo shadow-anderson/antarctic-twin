@@ -36,15 +36,15 @@ export default function TwinConsolePage() {
           <div className="flex items-center gap-5 text-xs font-medium">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#1E9E6D]" />
-              <span>Real: WMO / IMD AWS Feed</span>
+              <span>Real: NCPOR/IMD AWS archive</span>
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#D4922A]" />
-              <span>Simulated: Physics Microgrid</span>
+              <span>Simulated: seeded microgrid &amp; logistics model</span>
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#6366A8]" />
-              <span>Derived: Autonomous Calculus</span>
+              <span>Derived: computed from real + simulated inputs</span>
             </span>
           </div>
         </div>

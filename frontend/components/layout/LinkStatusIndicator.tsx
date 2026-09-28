@@ -3,6 +3,7 @@
 import React from "react";
 import { useLink } from "@/context/LinkContext";
 import { Wifi, WifiOff, RefreshCw } from "lucide-react";
+import { SourceBadge } from "../shared/SourceBadge";
 
 export const LinkStatusIndicator: React.FC = () => {
   const { connected, lastSynced, isRestoring, toggle } = useLink();
@@ -11,7 +12,7 @@ export const LinkStatusIndicator: React.FC = () => {
     <button
       onClick={toggle}
       disabled={isRestoring}
-      title="Click to toggle communication link degradation demo"
+      title="Simulated link demo — click to toggle communication link degradation"
       className={`group relative flex items-center gap-3 px-3.5 py-2 rounded-xl border transition-all duration-200 text-left cursor-pointer select-none ${
         isRestoring
           ? "bg-[#E3EFF0] border-[#C7DDE0] text-[#287C80]"
@@ -64,11 +65,18 @@ export const LinkStatusIndicator: React.FC = () => {
 
           </div>
 
-          <span className="text-[10px] text-[#87959D] mt-1 font-normal">
-            {isRestoring
-              ? "Syncing telemetry..."
-              : `Synced: ${lastSynced}`}
-          </span>
+          <div className="flex items-center gap-1.5 mt-1">
+            <SourceBadge
+              source="simulated"
+              size="xs"
+              origin="Simulated demo control"
+            />
+            <span className="text-[10px] text-[#87959D] font-normal">
+              {isRestoring
+                ? "Syncing telemetry..."
+                : `Synced: ${lastSynced}`}
+            </span>
+          </div>
 
         </div>
       </div>

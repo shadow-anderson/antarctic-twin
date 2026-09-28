@@ -14,7 +14,7 @@ const LinkContext = createContext<LinkContextType | undefined>(undefined);
 
 export const LinkProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [connected, setConnected] = useState<boolean>(true);
-  const [lastSynced, setLastSynced] = useState<string>("14:32 UTC");
+  const [lastSynced, setLastSynced] = useState<string>("--:-- UTC");
   const [isRestoring, setIsRestoring] = useState<boolean>(false);
 
   useEffect(() => {

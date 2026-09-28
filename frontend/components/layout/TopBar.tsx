@@ -24,7 +24,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   activeTab,
   onTabChange,
 }) => {
-  const [utcTime, setUtcTime] = useState<string>("14:32:00 UTC");
+  const [utcTime, setUtcTime] = useState<string>("--:--:-- UTC");
 
   useEffect(() => {
     let isMounted = true;
