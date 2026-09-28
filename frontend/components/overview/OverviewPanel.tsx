@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useStation } from "@/context/StationContext";
 import { useLink } from "@/context/LinkContext";
 import { StationCurrent, Anomaly } from "@/lib/types";
@@ -114,6 +115,31 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       connectivity: "Dedicated satellite",
     },
   };
+
+  // =========================================================
+  // HERO CONSTANTS
+  // Photo credit: confirm the actual source of these images
+  // and update the constant below if it is wrong.
+  // =========================================================
+
+  const PHOTO_CREDIT = "Image: Indian Antarctic Programme (NCPOR)";
+
+  /**
+   * objectPosition lets you tune the crop focus per station.
+   * Drop a replacement image at the same path and only change
+   * this constant — no other code change required.
+   */
+  const heroObjectPosition: Record<string, string> = {
+    maitri:  "center 45%",
+    bharati: "center 40%",
+  };
+
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+
+  // Reset fade whenever the station changes so the new image fades in too.
+  useEffect(() => {
+    setHeroImgLoaded(false);
+  }, [selectedStation]);
 
   const stationInfo =
     stationDescriptions[selectedStation];
@@ -385,132 +411,133 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       )}
 
       {/* =====================================================
-          STATION HERO
+          STATION HERO — full-bleed background image
       ===================================================== */}
 
-      <section className="relative overflow-hidden rounded-[28px] bg-[#233B48] shadow-[0_12px_35px_rgba(34,57,70,0.14)]">
+      <section
+        className="relative overflow-hidden rounded-[28px] bg-[#233B48] shadow-[0_12px_35px_rgba(34,57,70,0.14)] min-h-[440px] lg:min-h-[480px]"
+      >
 
-        {/* Background accent */}
+        {/* ── LAYER 0: background image (absolute, fills section) ─────── */}
 
-        <div className="absolute -top-32 -right-20 w-96 h-96 rounded-full bg-[#4D8990]/25 blur-3xl" />
+        <div className="absolute inset-0">
+          <Image
+            key={stationInfo.image}
+            src={stationInfo.image}
+            alt={`${meta.name} Research Station`}
+            fill
+            priority
+            sizes="100vw"
+            quality={85}
+            className={[
+              "object-cover motion-reduce:transition-none",
+              "transition-opacity  duration-700",
+              "transition-transform duration-[1200ms] ease-out",
+              heroImgLoaded
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-[1.03]",
+            ].join(" ")}
+            style={{ objectPosition: heroObjectPosition[selectedStation] ?? "center 45%" }}
+            onLoad={() => setHeroImgLoaded(true)}
+          />
+        </div>
 
-        <div className="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-[#B98232]/15 blur-3xl" />
+        {/* ── LAYER 1: horizontal gradient (left dark → right lighter) ── */}
+        {/*   Left edge: #0E2230 @ 95% → right: #0E2230 @ 40%            */}
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-[48%_52%] min-h-[390px]">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(14,34,48,0.95) 0%, rgba(14,34,48,0.70) 45%, rgba(14,34,48,0.40) 100%)",
+          }}
+        />
 
-          {/* =================================================
-              STATION IMAGE
-          ================================================= */}
+        {/* ── LAYER 2: vertical gradient (bottom dark → top lighter) ──── */}
+        {/*   Bottom: #0A1A26 @ 90% → top: #0A1A26 @ 35%                  */}
 
-          <div className="relative min-h-[300px] lg:min-h-[390px] overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(10,26,38,0.90) 0%, rgba(10,26,38,0.55) 35%, rgba(10,26,38,0.35) 100%)",
+          }}
+        />
 
-            <img
-              src={stationInfo.image}
-              alt={`${meta.name} Research Station`}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+        {/* ── LAYER 3: vignette (radial, corners only) ─────────────────── */}
 
-            {/* Image overlays */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 45%, rgba(6,16,24,0.55) 100%)",
+          }}
+        />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-[#152D39]/10 via-transparent to-[#233B48]/90 lg:to-[#233B48]" />
+        {/* ── LAYER 4: content (z-10) ────────────────────────────────── */}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#162D38]/75 via-transparent to-transparent" />
+        <div className="relative z-10 flex flex-col justify-between min-h-[440px] lg:min-h-[480px] p-6 sm:p-8 lg:p-10">
 
-            {/* Image label */}
+          {/* Top row: "Indian Antarctic Programme" chip */}
 
-            <div className="absolute left-5 top-5">
+          <div className="flex items-start justify-between">
 
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F7F4EA]/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.14em] text-[#536B73] shadow-sm">
-
-                <span className="w-1.5 h-1.5 rounded-full bg-[#B98232]" />
-
-                Indian Antarctic Programme
-
-              </span>
-
-            </div>
-
-            {/* Image bottom text */}
-
-            <div className="absolute bottom-5 left-5 right-5 lg:hidden">
-
-              <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[#DDE8E8]">
-                Station {meta.id}
-              </p>
-
-              <p className="text-xl font-bold text-white mt-1">
-                {meta.name}
-              </p>
-
-            </div>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F7F4EA]/90 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.14em] text-[#536B73] shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#B98232]" />
+              Indian Antarctic Programme
+            </span>
 
           </div>
 
-          {/* =================================================
-              STATION DETAILS
-          ================================================= */}
+          {/* ── Main content column (max-w-2xl keeps text readable) ──── */}
 
-          <div className="relative flex flex-col justify-between p-6 sm:p-8 lg:p-9 text-white">
+          <div className="max-w-2xl">
 
-            <div>
+            {/* Station ID pill row */}
 
-              {/* Station ID */}
+            <div className="flex flex-wrap items-center gap-2 mb-4">
 
-              <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="px-3 py-1 rounded-lg bg-[#DDEEEF]/15 border border-[#DDEEEF]/20 text-[10px] font-bold tracking-[0.12em] uppercase text-[#CDE2E4]">
+                Station ID: {meta.id}
+              </span>
 
-                <span className="px-3 py-1 rounded-lg bg-[#DDEEEF]/15 border border-[#DDEEEF]/20 text-[10px] font-bold tracking-[0.12em] uppercase text-[#CDE2E4]">
-                  Station ID: {meta.id}
-                </span>
+              <span className="px-3 py-1 rounded-lg bg-[#DCEBDD]/15 border border-[#DCEBDD]/20 text-[10px] font-semibold text-[#B9D6C9]">
+                ● Operational
+              </span>
 
-                <span className="px-3 py-1 rounded-lg bg-[#DCEBDD]/15 border border-[#DCEBDD]/20 text-[10px] font-semibold text-[#B9D6C9]">
-                  ● Operational
-                </span>
-
-                <SolarBadge
-                  lat={STATIONS.find((s) => s.id === selectedStation)?.lat ?? -70.76}
-                  lon={STATIONS.find((s) => s.id === selectedStation)?.lon ?? 11.73}
-                />
-
-              </div>
-
-              {/* Title */}
-
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-
-                {meta.name}
-
-                <span className="block text-[#9FC7C9] mt-1">
-                  Research Station
-                </span>
-
-              </h1>
-
-              {/* Location */}
-
-              <div className="flex flex-wrap items-center gap-2 mt-4 text-sm text-[#C5D6D9]">
-
-                <MapPin className="w-4 h-4 text-[#8EC0C2]" />
-
-                <span>{meta.coordinates}</span>
-
-                <span className="text-[#718D96]">
-                  •
-                </span>
-
-                <span>{meta.region}</span>
-
-              </div>
-
-              {/* Description */}
-
-              <p className="mt-5 max-w-xl text-sm leading-6 text-[#C5D2D5]">
-                {stationInfo.short}
-              </p>
+              <SolarBadge
+                lat={STATIONS.find((s) => s.id === selectedStation)?.lat ?? -70.76}
+                lon={STATIONS.find((s) => s.id === selectedStation)?.lon ?? 11.73}
+              />
 
             </div>
 
+            {/* Title */}
+
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+              {meta.name}
+              <span className="block text-[#9FC7C9] mt-1">
+                Research Station
+              </span>
+            </h1>
+
+            {/* Coordinates */}
+
+            <div className="flex flex-wrap items-center gap-2 mt-4 text-sm text-[#C5D6D9]">
+              <MapPin className="w-4 h-4 text-[#8EC0C2]" />
+              <span>{meta.coordinates}</span>
+              <span className="text-[#718D96]">•</span>
+              <span>{meta.region}</span>
+            </div>
+
+            {/* Description — white/90 gives ≥ 4.5:1 against the overlay */}
+
+            <p className="mt-5 text-sm leading-6 text-white/90">
+              {stationInfo.short}
+            </p>
+
             {/* =================================================
-                STATION STATS
+                STATION STATS (2 cols mobile / 4 cols sm+)
             ================================================= */}
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-7">
@@ -520,13 +547,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#8DBFC0]">
-
                   <Users className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Capacity
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -540,13 +564,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#D2B477]">
-
                   <Mountain className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Elevation
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -560,13 +581,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#A9C6D0]">
-
                   <CalendarDays className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     {stationInfo.establishedLabel}
                   </span>
-
                 </div>
 
                 <p className="text-sm font-bold text-white mt-2">
@@ -575,18 +593,15 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
               </div>
 
-              {/* Satellite */}
+              {/* Satellite link */}
 
               <div className="rounded-2xl bg-white/[0.07] border border-white/[0.10] p-3.5">
 
                 <div className="flex items-center gap-2 text-[#B8D4C8]">
-
                   <Satellite className="w-4 h-4" />
-
                   <span className="text-[9px] uppercase tracking-wider font-semibold">
                     Link
                   </span>
-
                 </div>
 
                 <p className="text-[11px] font-bold text-white mt-2">
@@ -604,7 +619,17 @@ Communication is provided through dedicated satellite channels, enabling voice, 
           </div>
 
         </div>
+
+        {/* ── Photo credit chip (bottom-right, z-10) ─────────────────── */}
+
+        <div className="absolute bottom-4 right-5 z-10">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-[9px] font-medium text-white/60 tracking-wide">
+            {PHOTO_CREDIT}
+          </span>
+        </div>
+
       </section>
+
 
       {/* =====================================================
           ANTARCTIC STATION MAP
