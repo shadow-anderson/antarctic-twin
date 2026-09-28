@@ -4,13 +4,11 @@ import React from "react";
 import { AssetDetail } from "@/lib/types";
 import { SourceBadge } from "../shared/SourceBadge";
 import {
-  Activity,
   Cpu,
   Clock,
   Thermometer,
   Zap,
   Gauge,
-  Info,
   ShieldCheck,
   Radio,
   CircleDot,
@@ -200,20 +198,18 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
         </div>
 
         {/* ===================================================
-            HEALTH + TELEMETRY
+            HERO SYSTEM HEALTH
         =================================================== */}
 
         <div className="mt-6">
 
           <div className="flex items-center justify-between mb-3">
-
             <div>
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#82949A]">
                 Live Instrumentation
               </p>
-
               <h3 className="text-sm font-bold text-[#425B64] mt-0.5">
-                Asset Telemetry
+                System Health &amp; Telemetry
               </h3>
             </div>
 
@@ -221,210 +217,155 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-[#5B8A70] animate-pulse" />
               Live
             </div>
-
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          {/* Hero health card */}
+          <div
+            className="relative overflow-hidden rounded-[20px] p-5 mb-4"
+            style={{
+              background: `linear-gradient(135deg, ${status.soft} 0%, #F4F9F9 100%)`,
+              borderWidth: 1,
+              borderStyle: "solid",
+              borderColor: status.accent + "55",
+            }}
+          >
+            {/* Accent bar */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-1"
+              style={{ backgroundColor: status.accent }}
+            />
 
-            {/* HEALTH */}
-            <div className="relative overflow-hidden rounded-[20px] bg-[#E9F1EC] border border-[#D2E1D8] p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5 pl-3">
 
-              <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full border-[12px] border-[#DDEAE1]" />
-
-              <div className="relative flex items-start justify-between">
-
-                <div>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72887D]">
-                    System Health
-                  </p>
-
-                  <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-3xl font-bold text-[#3F5F50] tabular-nums">
-                      {asset.health_pct}
-                    </span>
-                    <span className="text-xs font-semibold text-[#789087]">
-                      %
-                    </span>
-                  </div>
+              {/* Big number */}
+              <div className="shrink-0">
+                <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72888D] mb-1">System Health</p>
+                <div className="flex items-baseline gap-1.5">
+                  <span
+                    className="text-6xl font-bold tabular-nums leading-none"
+                    style={{ color: status.accent }}
+                  >
+                    {asset.health_pct}
+                  </span>
+                  <span className="text-base font-semibold text-[#789087]">%</span>
                 </div>
-
-                <div className="w-9 h-9 rounded-xl bg-[#DCEAE1] flex items-center justify-center text-[#56806B]">
-                  <Activity className="w-4 h-4" />
-                </div>
-
               </div>
 
-              <div className="mt-4 h-2 rounded-full bg-[#D7E4DB] overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-[#5B8A70]"
-                  style={{
-                    width: `${Math.min(
-                      Math.max(asset.health_pct, 0),
-                      100
-                    )}%`,
-                  }}
-                />
+              {/* Bar + Operational status */}
+              <div className="flex-1 min-w-0">
+                {/* Thick health bar */}
+                <div className="h-3 rounded-full bg-white/60 overflow-hidden mb-3 border border-white/40 shadow-inner">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(Math.max(asset.health_pct, 0), 100)}%`,
+                      backgroundColor: status.accent,
+                    }}
+                  />
+                </div>
+
+                {/* Operational status inline */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-semibold ${status.bg} ${status.border} ${status.text}`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
+                    {status.label}
+                  </span>
+                  <span className="text-xs text-[#617880] leading-5">{asset.operational_status}</span>
+                </div>
               </div>
 
-              <p className="mt-2 text-[9px] font-medium text-[#7B9086]">
-                Overall operational health
-              </p>
             </div>
-
-            {/* TEMPERATURE */}
-            {asset.temperature_c != null && (
-              <div className="rounded-[20px] bg-[#E7F0F3] border border-[#D1E1E5] p-4">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#71868E]">
-                      Temperature
-                    </p>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#405C65] tabular-nums">
-                        {asset.temperature_c}
-                      </span>
-                      <span className="text-xs font-semibold text-[#7C9097]">
-                        °C
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-[#D8E8EC] flex items-center justify-center text-[#568392]">
-                    <Thermometer className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#D5E3E7]" />
-                  <span className="text-[9px] font-bold text-[#83959A]">
-                    CURRENT
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* VIBRATION */}
-            {asset.vibration_mms != null && (
-              <div className="rounded-[20px] bg-[#F5EDDD] border border-[#E7D9BB] p-4">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#8B7B60]">
-                      Vibration
-                    </p>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#665B49] tabular-nums">
-                        {asset.vibration_mms}
-                      </span>
-                      <span className="text-[10px] font-semibold text-[#8E816B]">
-                        mm/s
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-[#EEE2CA] flex items-center justify-center text-[#9A783E]">
-                    <Gauge className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#E9DDBF]" />
-                  <span className="text-[9px] font-bold text-[#8C7C62]">
-                    RMS
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* EFFICIENCY */}
-            {asset.efficiency_pct != null && (
-              <div className="rounded-[20px] bg-[#E8EEF0] border border-[#D2DEE1] p-4">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#687D84]">
-                      Efficiency
-                    </p>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#405B62] tabular-nums">
-                        {asset.efficiency_pct}
-                      </span>
-                      <span className="text-xs font-semibold text-[#7D9095]">
-                        %
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-[#DCE7E9] flex items-center justify-center text-[#51818A]">
-                    <Zap className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <div className="mt-5 flex items-center gap-2">
-                  <div className="h-1.5 flex-1 rounded-full bg-[#D8E3E5] overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-[#5C8991]"
-                      style={{
-                        width: `${Math.min(
-                          Math.max(asset.efficiency_pct, 0),
-                          100
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* RUNTIME */}
-            {asset.runtime_hours != null && (
-              <div className="rounded-[20px] bg-[#ECE9F2] border border-[#DDD7E7] p-4">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#786F87]">
-                      Runtime
-                    </p>
-
-                    <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-3xl font-bold text-[#59536A] tabular-nums">
-                        {asset.runtime_hours.toLocaleString()}
-                      </span>
-                      <span className="text-xs font-semibold text-[#827B91]">
-                        h
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="w-9 h-9 rounded-xl bg-[#E2DDEC] flex items-center justify-center text-[#786E94]">
-                    <Clock className="w-4 h-4" />
-                  </div>
-
-                </div>
-
-                <p className="mt-5 text-[9px] font-semibold uppercase tracking-wider text-[#81798E]">
-                  Total operating time
-                </p>
-              </div>
-            )}
-
           </div>
+
+          {/* Compact telemetry table */}
+          {(asset.temperature_c != null ||
+            asset.vibration_mms != null ||
+            asset.efficiency_pct != null ||
+            asset.runtime_hours != null) && (
+            <div className="rounded-[18px] border border-[#D9E3E5] overflow-hidden bg-[#F1F5F5]">
+
+              <div className="px-4 py-2.5 border-b border-[#D9E3E5] flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#82949A]">
+                  Sensor Readings
+                </span>
+                <SourceBadge source={asset.telemetry_source} />
+              </div>
+
+              <div className="divide-y divide-[#DDE6E8]">
+
+                {asset.temperature_c != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Thermometer className="w-3.5 h-3.5 text-[#6FA8C7] shrink-0" />
+                      <span className="text-xs text-[#73858B] font-medium">Temperature</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.temperature_c}</span>
+                      <span className="text-[10px] text-[#7D9095]">°C</span>
+                    </div>
+                  </div>
+                )}
+
+                {asset.vibration_mms != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Gauge className="w-3.5 h-3.5 text-[#D9A441] shrink-0" />
+                      <span className="text-xs text-[#73858B] font-medium">Vibration</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.vibration_mms}</span>
+                      <span className="text-[10px] text-[#7D9095]">mm/s</span>
+                    </div>
+                  </div>
+                )}
+
+                {asset.efficiency_pct != null && (
+                  <div className="flex items-center gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      <Zap className="w-3.5 h-3.5 text-[#4FB58A] shrink-0" />
+                      <span className="text-xs text-[#73858B] font-medium">Efficiency</span>
+                    </div>
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      {/* Real data bar — efficiency is a genuine 0-100% */}
+                      <div className="flex-1 h-1.5 rounded-full bg-[#D8E3E5] overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-[#4FB58A]"
+                          style={{ width: `${Math.min(Math.max(asset.efficiency_pct, 0), 100)}%` }}
+                        />
+                      </div>
+                      <div className="flex items-baseline gap-0.5 shrink-0">
+                        <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.efficiency_pct}</span>
+                        <span className="text-[10px] text-[#7D9095]">%</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {asset.runtime_hours != null && (
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Clock className="w-3.5 h-3.5 text-[#8F86B8] shrink-0" />
+                      <span className="text-xs text-[#73858B] font-medium">Runtime Hours</span>
+                    </div>
+                    <div className="flex items-baseline gap-1 shrink-0">
+                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.runtime_hours.toLocaleString()}</span>
+                      <span className="text-[10px] text-[#7D9095]">h</span>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* ===================================================
             OPERATIONAL CONDITION
         =================================================== */}
+
 
         <div className="mt-6">
 
