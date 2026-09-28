@@ -18,6 +18,7 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
+import { SectionProvenance } from "../shared/SectionProvenance";
 
 interface ResultsPanelProps {
   scenario: ScenarioDefinition;
@@ -622,7 +623,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
               />
 
               <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#607A6C]">
-                Polar Physics Model v2.4
+                Scenario Engine · rule-based
               </span>
 
             </div>
@@ -681,11 +682,16 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 Impact Cascade
               </h3>
 
-              <p className="text-[11px] text-[#89989D] mt-0.5">
-                {activeSection === "impact"
-                  ? "Tracing disruption propagation..."
-                  : "Cascade sequence generated"}
-              </p>
+              <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                <p className="text-[11px] text-[#89989D]">
+                  {activeSection === "impact"
+                    ? "Tracing disruption propagation..."
+                    : "Cascade sequence generated"}
+                </p>
+                <span className="text-[10px] text-[#89989D] italic">
+                  · Scenario definition
+                </span>
+              </div>
 
             </div>
 
@@ -944,6 +950,13 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                   Projected sequence of operational events
                 </p>
 
+                <div className="mt-1">
+                  <SectionProvenance
+                    source="derived"
+                    origin="Scenario multipliers on simulated state"
+                  />
+                </div>
+
               </div>
 
             </div>
@@ -1091,6 +1104,13 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 <p className="text-[11px] text-[#82938A] mt-0.5">
                   Response actions derived from the simulated scenario
                 </p>
+
+                <div className="mt-1">
+                  <SectionProvenance
+                    source="derived"
+                    origin="Scenario multipliers on simulated state"
+                  />
+                </div>
 
               </div>
 

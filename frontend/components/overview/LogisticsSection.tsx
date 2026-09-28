@@ -3,6 +3,7 @@
 import React from "react";
 import { StationCurrent } from "@/lib/types";
 import { MetricCard } from "../shared/MetricCard";
+import { SectionProvenance } from "../shared/SectionProvenance";
 import { Package, Truck, HeartPulse, ShieldCheck } from "lucide-react";
 import { SourceBadge } from "../shared/SourceBadge";
 
@@ -32,12 +33,19 @@ export const LogisticsSection: React.FC<LogisticsSectionProps> = ({
 
           <div>
             <h3 className="text-base font-bold tracking-tight text-[#344955]">
-              Logistics & Autonomous Reserves
+              Logistics &amp; Autonomous Reserves
             </h3>
 
             <p className="text-[11px] text-[#78858D] mt-0.5">
-              Supplies, fuel autonomy & critical inventory
+              Supplies, fuel autonomy &amp; critical inventory
             </p>
+
+            <div className="mt-1">
+              <SectionProvenance
+                source="simulated"
+                origin="Seeded logistics model"
+              />
+            </div>
           </div>
 
         </div>
@@ -111,7 +119,7 @@ export const LogisticsSection: React.FC<LogisticsSectionProps> = ({
 
               <div className="min-w-0">
                 <span className="block text-[11px] font-semibold tracking-wider uppercase leading-4 text-[#765A63]">
-                  Medical & Critical Spares
+                  Medical &amp; Critical Spares
                 </span>
 
                 <span className="block text-[10px] text-[#9A7D85] mt-1">

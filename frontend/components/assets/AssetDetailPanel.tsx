@@ -193,7 +193,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 </span>
               </div>
 
-              <SourceBadge source={asset.telemetry_source} />
+              <SourceBadge source={asset.telemetry_source} origin="Seeded asset simulation" />
 
             </div>
           </div>
@@ -234,9 +234,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
               <div className="relative flex items-start justify-between">
 
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72887D]">
-                    System Health
-                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72887D]">
+                      System Health
+                    </p>
+                    <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                  </div>
 
                   <div className="flex items-baseline gap-1 mt-2">
                     <span className="text-3xl font-bold text-[#3F5F50] tabular-nums">
@@ -278,9 +281,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#71868E]">
-                      Temperature
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#71868E]">
+                        Temperature
+                      </p>
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                    </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl font-bold text-[#405C65] tabular-nums">
@@ -314,9 +320,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#8B7B60]">
-                      Vibration
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#8B7B60]">
+                        Vibration
+                      </p>
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                    </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl font-bold text-[#665B49] tabular-nums">
@@ -350,9 +359,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#687D84]">
-                      Efficiency
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#687D84]">
+                        Efficiency
+                      </p>
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                    </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl font-bold text-[#405B62] tabular-nums">
@@ -393,9 +405,12 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                 <div className="flex items-start justify-between">
 
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#786F87]">
-                      Runtime
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#786F87]">
+                        Runtime
+                      </p>
+                      <SourceBadge source={asset.telemetry_source} size="xs" origin="Seeded asset simulation" />
+                    </div>
 
                     <div className="flex items-baseline gap-1 mt-2">
                       <span className="text-3xl font-bold text-[#59536A] tabular-nums">

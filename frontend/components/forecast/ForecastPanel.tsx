@@ -6,6 +6,7 @@ import { StationForecast } from "@/lib/types";
 import { getStationForecast } from "@/lib/api";
 import { MOCK_FORECASTS } from "@/lib/mockData";
 import { ResourceForecastCard } from "./ResourceForecastCard";
+import { SectionProvenance } from "../shared/SectionProvenance";
 import {
   TrendingDown,
   Loader2,
@@ -106,6 +107,13 @@ export const ForecastPanel: React.FC = () => {
                 <p className="mt-2 max-w-2xl text-sm sm:text-[15px] leading-6 text-[#586F78]">
                   Continuous daily linear projection for mission-critical fuel and food supplies. Evaluates days remaining against standard 15-day warning and 7-day emergency critical thresholds.
                 </p>
+
+                <div className="mt-2">
+                  <SectionProvenance
+                    source="derived"
+                    origin="Computed from simulated inventory · linear burn model"
+                  />
+                </div>
               </div>
             </div>
           </div>

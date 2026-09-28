@@ -14,6 +14,7 @@ import {
   Menu,
   AlertTriangle,
 } from "lucide-react";
+import { SectionProvenance } from "../shared/SectionProvenance";
 
 export const AssetsPanel: React.FC = () => {
   /* =========================================================
@@ -247,6 +248,13 @@ export const AssetsPanel: React.FC = () => {
                 Inspect physical station components, mechanical state, and
                 operational health.
               </p>
+
+              <div className="mt-1">
+                <SectionProvenance
+                  source="simulated"
+                  origin="Seeded asset simulation"
+                />
+              </div>
 
             </div>
           </div>

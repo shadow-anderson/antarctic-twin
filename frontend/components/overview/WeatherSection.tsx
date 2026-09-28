@@ -3,15 +3,43 @@
 import React from "react";
 import { StationCurrent } from "@/lib/types";
 import { MetricCard } from "../shared/MetricCard";
+import { SectionProvenance } from "../shared/SectionProvenance";
 import { Thermometer, Wind, Gauge, CloudSnow } from "lucide-react";
 
 interface WeatherSectionProps {
   weather: StationCurrent["weather"];
+  observationTime?: string;
+}
+
+function formatObservationTime(isoString?: string): string {
+  if (!isoString) return "";
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    const day = d.getUTCDate();
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    const month = months[d.getUTCMonth()];
+    const year = d.getUTCFullYear();
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${day} ${month} ${year} · ${hours}:${minutes} UTC`;
+  } catch {
+    return isoString;
+  }
 }
 
 export const WeatherSection: React.FC<WeatherSectionProps> = ({
   weather,
+  observationTime,
 }) => {
+  const formattedTime = formatObservationTime(observationTime);
+  const caption = formattedTime
+    ? `Latest archived NCPOR observation · ${formattedTime}`
+    : "Latest archived NCPOR observation";
+
   return (
     <section className="relative overflow-hidden rounded-[28px] border border-[#D5E1E3] bg-gradient-to-br from-[#F3F8F8] via-[#EEF5F6] to-[#E8F0F2] p-5 lg:p-7 shadow-[0_6px_24px_rgba(40,60,70,0.06)]">
 
@@ -31,12 +59,20 @@ export const WeatherSection: React.FC<WeatherSectionProps> = ({
 
           <div>
             <h3 className="text-base font-bold tracking-tight text-[#304955]">
-              Atmospheric & Environmental Telemetry
+              Atmospheric &amp; Environmental Telemetry
             </h3>
 
             <p className="text-[11px] text-[#71848D] mt-0.5">
-              Current environmental conditions
+              Latest available observation
             </p>
+
+            <div className="mt-1">
+              <SectionProvenance
+                source="real"
+                origin="NCPOR/IMD AWS archive"
+                caption={caption}
+              />
+            </div>
           </div>
 
         </div>

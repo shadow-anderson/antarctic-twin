@@ -3,6 +3,7 @@
 import React from "react";
 import { StationCurrent } from "@/lib/types";
 import { MetricCard } from "../shared/MetricCard";
+import { SectionProvenance } from "../shared/SectionProvenance";
 import { Zap, Activity, Fuel, BatteryCharging } from "lucide-react";
 
 interface EnergySectionProps {
@@ -31,12 +32,19 @@ export const EnergySection: React.FC<EnergySectionProps> = ({ energy }) => {
 
           <div>
             <h3 className="text-base font-bold tracking-tight text-[#354650]">
-              Power Microgrid & Energy Generation
+              Power Microgrid &amp; Energy Generation
             </h3>
 
             <p className="text-[11px] text-[#7C8580] mt-0.5">
-              Station power, consumption & reserve telemetry
+              Station power, consumption &amp; reserve telemetry
             </p>
+
+            <div className="mt-1">
+              <SectionProvenance
+                source="simulated"
+                origin="Seeded microgrid model"
+              />
+            </div>
           </div>
 
         </div>

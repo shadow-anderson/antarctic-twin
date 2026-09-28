@@ -21,6 +21,7 @@ import {
   TrendingDown,
   Flame,
 } from "lucide-react";
+import { SectionProvenance } from "../shared/SectionProvenance";
 
 interface ResourceForecastCardProps {
   forecast: ResourceForecast;
@@ -95,6 +96,12 @@ export const ResourceForecastCard: React.FC<ResourceForecastCardProps> = ({
             <h3 className="text-lg sm:text-xl font-bold text-[#1C3240] tracking-tight">
               {resourceTitle}
             </h3>
+            <div className="mt-1">
+              <SectionProvenance
+                source="derived"
+                origin="Computed from simulated inventory · linear burn model"
+              />
+            </div>
           </div>
         </div>
 

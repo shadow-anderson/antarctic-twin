@@ -597,6 +597,10 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
             </div>
 
+            <p className="mt-2 text-[10px] text-[#A2B7BD] text-right font-medium">
+              Station facts: NCPOR documentation
+            </p>
+
           </div>
 
         </div>
@@ -792,7 +796,16 @@ Communication is provided through dedicated satellite channels, enabling voice, 
       <AnomalyBanner
         anomalies={anomalies}
         stationName={meta.name}
-        timestamp="14:32 UTC"
+        timestamp={
+          currentData.observation_time
+            ? (() => {
+                const d = new Date(currentData.observation_time);
+                return `${String(d.getUTCHours()).padStart(2, "0")}:${String(
+                  d.getUTCMinutes()
+                ).padStart(2, "0")} UTC`;
+              })()
+            : undefined
+        }
       />
 
       {/* =====================================================
@@ -803,6 +816,7 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
         <WeatherSection
           weather={currentData.weather}
+          observationTime={currentData.observation_time}
         />
 
         <div className="space-y-7 w-full">

@@ -7,6 +7,7 @@ import { SCENARIOS } from "@/lib/mockData";
 import { simulateWhatIf } from "@/lib/api";
 import { ScenarioPicker } from "./ScenarioPicker";
 import { ResultsPanel } from "./ResultsPanel";
+import { SectionProvenance } from "../shared/SectionProvenance";
 
 import {
   Play,
@@ -125,6 +126,13 @@ export const WhatIfPanel: React.FC = () => {
                   cascading effects, and evaluate mitigation pathways before
                   field actions are taken.
                 </p>
+
+                <div className="mt-2">
+                  <SectionProvenance
+                    source="derived"
+                    origin="Scenario multipliers on simulated state"
+                  />
+                </div>
               </div>
 
             </div>
@@ -361,9 +369,15 @@ export const WhatIfPanel: React.FC = () => {
               <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#405963]">
                 Simulation Output
               </h2>
-              <p className="text-[11px] text-[#89979C]">
-                Projected operational cascade and mitigation response
-              </p>
+              <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                <p className="text-[11px] text-[#89979C]">
+                  Projected operational cascade and mitigation response
+                </p>
+                <SectionProvenance
+                  source="derived"
+                  origin="Scenario multipliers on simulated state"
+                />
+              </div>
             </div>
 
             <div className="ml-auto hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E8F0EA] border border-[#D4E2D8] text-[10px] font-bold uppercase tracking-wider text-[#5F7C69]">

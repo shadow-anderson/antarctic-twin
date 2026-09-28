@@ -8,6 +8,7 @@ import {
   TriangleAlert,
   Activity,
 } from "lucide-react";
+import { SourceBadge } from "./SourceBadge";
 
 interface AnomalyBannerProps {
   anomalies: Anomaly[];
@@ -19,7 +20,7 @@ interface AnomalyBannerProps {
 export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
   anomalies,
   stationName,
-  timestamp = "14:32 UTC",
+  timestamp,
 }) => {
   const [activeAnomalies, setActiveAnomalies] = useState<Anomaly[]>(anomalies);
 
@@ -134,17 +135,27 @@ export const AnomalyBanner: React.FC<AnomalyBannerProps> = ({
                     Environmental Anomaly Detected
                   </span>
 
+                  <SourceBadge
+                    source="derived"
+                    size="xs"
+                    origin="z-score vs NCPOR historical baseline"
+                  />
+
                   <span className={`text-[10px] ${style.meta}`}>
                     {stationName} Station
                   </span>
 
-                  <span className={`hidden sm:inline text-[10px] ${style.meta}`}>
-                    •
-                  </span>
+                  {timestamp && (
+                    <>
+                      <span className={`hidden sm:inline text-[10px] ${style.meta}`}>
+                        •
+                      </span>
 
-                  <span className={`text-[10px] ${style.meta}`}>
-                    {timestamp}
-                  </span>
+                      <span className={`text-[10px] ${style.meta}`}>
+                        {timestamp}
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <p
