@@ -380,44 +380,41 @@ export const WhatIfPanel: React.FC = () => {
             (() => {
               const verdictStyles = {
                 urgent: {
-                  bg: "from-[#FEF2F2] to-[#FDF5F5]",
-                  border: "border-[#F8C5C5]",
+                  border: "border-ops-red/30",
                   label: "URGENT",
-                  labelColor: "text-[#B65C5C]",
-                  daysColor: "text-[#B65C5C]",
-                  pill: "bg-[#B65C5C]/15 border-[#B65C5C]/30 text-[#C07070]",
-                  dot: "bg-[#B65C5C]",
-                  glow: "rgba(182,92,92,0.12)",
+                  labelColor: "text-ops-red",
+                  daysColor: "text-ops-red",
+                  pill: "bg-ops-red/15 border-ops-red/30 text-ops-red",
+                  dot: "bg-ops-red",
+                  glow: "rgba(212,112,111,0.25)",
                 },
                 warning: {
-                  bg: "from-[#FEF9EE] to-[#FFF8F0]",
-                  border: "border-[#F0D99A]",
+                  border: "border-ops-amber/30",
                   label: "WARNING",
-                  labelColor: "text-[#B98232]",
-                  daysColor: "text-[#B98232]",
-                  pill: "bg-[#B98232]/15 border-[#B98232]/30 text-[#C09050]",
-                  dot: "bg-[#B98232]",
-                  glow: "rgba(185,130,50,0.12)",
+                  labelColor: "text-ops-amber",
+                  daysColor: "text-ops-amber",
+                  pill: "bg-ops-amber/15 border-ops-amber/30 text-ops-amber",
+                  dot: "bg-ops-amber",
+                  glow: "rgba(217,164,65,0.25)",
                 },
                 monitor: {
-                  bg: "from-[#E8F5EE] to-[#F3FAF5]",
-                  border: "border-[#BFD8CC]",
+                  border: "border-ops-green/30",
                   label: "MONITOR",
-                  labelColor: "text-[#4F8A6B]",
-                  daysColor: "text-[#4F8A6B]",
-                  pill: "bg-[#4F8A6B]/15 border-[#4F8A6B]/30 text-[#5E9E7C]",
-                  dot: "bg-[#4F8A6B]",
-                  glow: "rgba(79,138,107,0.10)",
+                  labelColor: "text-ops-green",
+                  daysColor: "text-ops-green",
+                  pill: "bg-ops-green/15 border-ops-green/30 text-ops-green",
+                  dot: "bg-ops-green",
+                  glow: "rgba(79,181,138,0.20)",
                 },
               };
               const vs = verdictStyles[result.urgency!];
               return (
                 <div
                   style={{ boxShadow: `0 4px 20px ${vs.glow}` }}
-                  className={`flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6 rounded-[24px] border ${vs.border} bg-gradient-to-br ${vs.bg}`}
+                  className={`flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6 rounded-[24px] border ${vs.border} bg-ops-panel/90 backdrop-blur-sm ring-1 ring-white/5`}
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8A8898] mb-1">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-ops-text-3 mb-1">
                       Simulation Verdict
                     </div>
                     <div className="flex items-baseline gap-2 flex-wrap">
@@ -425,7 +422,7 @@ export const WhatIfPanel: React.FC = () => {
                         {result.days_until_critical != null ? result.days_until_critical : "—"}
                       </span>
                       {result.days_until_critical != null && (
-                        <span className="text-sm font-semibold text-[#7A788A] mb-0.5">days to critical</span>
+                        <span className="text-sm font-semibold text-ops-text-2 mb-0.5">days to critical</span>
                       )}
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wide ${vs.pill}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${vs.dot}`} />

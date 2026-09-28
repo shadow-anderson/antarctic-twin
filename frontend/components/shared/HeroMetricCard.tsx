@@ -29,34 +29,34 @@ const STATUS_STYLES: Record<ResourceStatus, {
   markerBorder: string;
 }> = {
   nominal: {
-    bar: "bg-[#4F8A6B]",
-    glow: "rgba(79,138,107,0.30)",
-    pill: "bg-[#4F8A6B]/20 border border-[#4F8A6B]/40",
-    pillText: "text-[#7ECBA3]",
+    bar: "bg-ops-green",
+    glow: "rgba(79,181,138,0.30)",
+    pill: "bg-ops-green/15 border border-ops-green/30",
+    pillText: "text-ops-green",
     label: "Nominal",
-    criticalZone: "bg-[#B65C5C]/25",
-    warningZone: "bg-[#B98232]/20",
-    markerBorder: "border-[#4F8A6B]",
+    criticalZone: "bg-ops-red/30",
+    warningZone: "bg-ops-amber/25",
+    markerBorder: "border-ops-green",
   },
   warning: {
-    bar: "bg-[#B98232]",
-    glow: "rgba(185,130,50,0.35)",
-    pill: "bg-[#B98232]/20 border border-[#B98232]/40",
-    pillText: "text-[#E3B060]",
+    bar: "bg-ops-amber",
+    glow: "rgba(217,164,65,0.35)",
+    pill: "bg-ops-amber/15 border border-ops-amber/30",
+    pillText: "text-ops-amber",
     label: "Warning",
-    criticalZone: "bg-[#B65C5C]/25",
-    warningZone: "bg-[#B98232]/20",
-    markerBorder: "border-[#B98232]",
+    criticalZone: "bg-ops-red/30",
+    warningZone: "bg-ops-amber/25",
+    markerBorder: "border-ops-amber",
   },
   critical: {
-    bar: "bg-[#B65C5C]",
-    glow: "rgba(182,92,92,0.40)",
-    pill: "bg-[#B65C5C]/20 border border-[#B65C5C]/40",
-    pillText: "text-[#E08080]",
+    bar: "bg-ops-red",
+    glow: "rgba(212,112,111,0.40)",
+    pill: "bg-ops-red/15 border border-ops-red/30",
+    pillText: "text-ops-red",
     label: "Critical",
-    criticalZone: "bg-[#B65C5C]/35",
-    warningZone: "bg-[#B98232]/25",
-    markerBorder: "border-[#B65C5C]",
+    criticalZone: "bg-ops-red/35",
+    warningZone: "bg-ops-amber/30",
+    markerBorder: "border-ops-red",
   },
 };
 
@@ -124,7 +124,7 @@ export const HeroMetricCard: React.FC<HeroMetricCardProps> = ({
               Stale
             </span>
           )}
-          <SourceBadge source={source} />
+          <SourceBadge source={source} variant="dark" />
         </div>
       </div>
 
@@ -161,7 +161,7 @@ export const HeroMetricCard: React.FC<HeroMetricCardProps> = ({
           </div>
 
           {/* Track */}
-          <div className="relative h-2 rounded-full bg-white/10 overflow-hidden">
+          <div className="relative h-2 rounded-full bg-ops-panel border border-white/5 overflow-hidden">
             {/* Critical zone (0 → criticalPct) */}
             <div
               className={`absolute left-0 top-0 h-full ${styles.criticalZone}`}
@@ -177,10 +177,9 @@ export const HeroMetricCard: React.FC<HeroMetricCardProps> = ({
           {/* Marker */}
           {markerPct !== null && (
             <div
-              className="absolute top-[1.45rem] w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white border-2"
+              className={`absolute top-[1.45rem] w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ops-text border-2 ${styles.markerBorder} shadow-sm`}
               style={{
                 left: `${markerPct}%`,
-                borderColor: styles.markerBorder.replace("border-[", "").replace("]", ""),
               }}
             />
           )}

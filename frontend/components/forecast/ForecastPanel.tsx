@@ -213,16 +213,16 @@ export const ForecastPanel: React.FC = () => {
             if (!nearest) {
               // Stable — no threshold crossing
               return (
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 sm:p-6 rounded-[24px] border border-[#BFD8CC] bg-gradient-to-br from-[#E8F5EE] to-[#F3FAF5] shadow-[0_4px_16px_rgba(79,138,107,0.10)]">
-                  <div className="flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] bg-[#D5EBDF] border border-[#BDD8CA] text-[#4F8A6B] shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 sm:p-6 rounded-[24px] border border-ops-green/30 bg-ops-panel/90 backdrop-blur-sm shadow-[0_4px_20px_rgba(79,181,138,0.15)] ring-1 ring-white/5">
+                  <div className="flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] bg-ops-green/15 border border-ops-green/30 text-ops-green shadow-inner">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#6A9B82] mb-1">Threshold Status</div>
-                    <p className="text-xl font-bold text-[#2F6A50] tracking-tight">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-ops-green mb-1">Threshold Status</div>
+                    <p className="text-xl font-bold text-white tracking-tight">
                       Stable — no threshold crossing in 30 days
                     </p>
-                    <p className="text-xs text-[#6A9B82] mt-1">Both diesel and food reserves remain above warning levels throughout the forecast window.</p>
+                    <p className="text-xs text-ops-text-2 mt-1">Both diesel and food reserves remain above warning levels throughout the forecast window.</p>
                   </div>
                 </div>
               );
@@ -230,16 +230,16 @@ export const ForecastPanel: React.FC = () => {
 
             const isCritical = nearest.type === "critical";
             const colors = isCritical
-              ? { bg: "from-[#FEF2F2] to-[#FDF5F5]", border: "border-[#F8C5C5]", iconBg: "bg-[#FCDCDC] border-[#F8C5C5] text-[#B65C5C]", numColor: "text-[#B65C5C]", labelBg: "bg-[#B65C5C]/15 border-[#B65C5C]/30 text-[#C07070]", dot: "bg-[#B65C5C]", glow: "rgba(182,92,92,0.12)" }
-              : { bg: "from-[#FEF9EE] to-[#FFF8F0]", border: "border-[#F0D99A]", iconBg: "bg-[#FDEDC7] border-[#F0D99A] text-[#B98232]", numColor: "text-[#B98232]", labelBg: "bg-[#B98232]/15 border-[#B98232]/30 text-[#C09050]", dot: "bg-[#B98232]", glow: "rgba(185,130,50,0.12)" };
+              ? { border: "border-ops-red/30", iconBg: "bg-ops-red/15 border border-ops-red/30 text-ops-red", numColor: "text-ops-red", labelBg: "bg-ops-red/15 border border-ops-red/30 text-ops-red", dot: "bg-ops-red", glow: "rgba(212,112,111,0.25)" }
+              : { border: "border-ops-amber/30", iconBg: "bg-ops-amber/15 border border-ops-amber/30 text-ops-amber", numColor: "text-ops-amber", labelBg: "bg-ops-amber/15 border border-ops-amber/30 text-ops-amber", dot: "bg-ops-amber", glow: "rgba(217,164,65,0.25)" };
 
             return (
               <div
                 style={{ boxShadow: `0 4px 20px ${colors.glow}` }}
-                className={`flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6 rounded-[24px] border ${colors.border} bg-gradient-to-br ${colors.bg}`}
+                className={`flex flex-col sm:flex-row sm:items-center gap-5 p-5 sm:p-6 rounded-[24px] border ${colors.border} bg-ops-panel/90 backdrop-blur-sm ring-1 ring-white/5`}
               >
                 {/* Icon */}
-                <div className={`flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] border ${colors.iconBg} shadow-sm`}>
+                <div className={`flex items-center justify-center w-14 h-14 shrink-0 rounded-[18px] ${colors.iconBg} shadow-inner`}>
                   {isCritical
                     ? <AlertCircle className="w-7 h-7" />
                     : <AlertTriangle className="w-7 h-7" />}
@@ -247,12 +247,12 @@ export const ForecastPanel: React.FC = () => {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A8070] mb-1">Time to Threshold</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-ops-text-3 mb-1">Time to Threshold</div>
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <span className={`text-5xl sm:text-6xl font-bold tabular-nums leading-none ${colors.numColor}`}>
                       {nearest.day}
                     </span>
-                    <span className="text-sm font-semibold text-[#7A7060] mb-0.5">days</span>
+                    <span className="text-sm font-semibold text-ops-text-2 mb-0.5">days</span>
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wide ${colors.labelBg}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
                       {nearest.resource} reaches {nearest.label.toUpperCase()} threshold

@@ -221,12 +221,9 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
           {/* Hero health card */}
           <div
-            className="relative overflow-hidden rounded-[20px] p-5 mb-4"
+            className="relative overflow-hidden rounded-[20px] bg-ops-card/90 border border-white/[0.08] p-5 mb-4 ring-1 ring-white/5"
             style={{
-              background: `linear-gradient(135deg, ${status.soft} 0%, #F4F9F9 100%)`,
-              borderWidth: 1,
-              borderStyle: "solid",
-              borderColor: status.accent + "55",
+              boxShadow: `0 4px 20px ${status.soft}`,
             }}
           >
             {/* Accent bar */}
@@ -239,7 +236,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
 
               {/* Big number */}
               <div className="shrink-0">
-                <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#72888D] mb-1">System Health</p>
+                <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-ops-text-3 mb-1">System Health</p>
                 <div className="flex items-baseline gap-1.5">
                   <span
                     className="text-6xl font-bold tabular-nums leading-none"
@@ -247,14 +244,14 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                   >
                     {asset.health_pct}
                   </span>
-                  <span className="text-base font-semibold text-[#789087]">%</span>
+                  <span className="text-base font-semibold text-ops-text-2">%</span>
                 </div>
               </div>
 
               {/* Bar + Operational status */}
               <div className="flex-1 min-w-0">
                 {/* Thick health bar */}
-                <div className="h-3 rounded-full bg-white/60 overflow-hidden mb-3 border border-white/40 shadow-inner">
+                <div className="h-3 rounded-full bg-ops-panel border border-white/5 overflow-hidden mb-3 shadow-inner">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -272,7 +269,7 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
                     <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
                     {status.label}
                   </span>
-                  <span className="text-xs text-[#617880] leading-5">{asset.operational_status}</span>
+                  <span className="text-xs text-ops-text-2 leading-5">{asset.operational_status}</span>
                 </div>
               </div>
 
@@ -284,74 +281,74 @@ export const AssetDetailPanel: React.FC<AssetDetailPanelProps> = ({
             asset.vibration_mms != null ||
             asset.efficiency_pct != null ||
             asset.runtime_hours != null) && (
-            <div className="rounded-[18px] border border-[#D9E3E5] overflow-hidden bg-[#F1F5F5]">
+            <div className="rounded-[18px] border border-white/[0.08] overflow-hidden bg-ops-card/90 ring-1 ring-white/5">
 
-              <div className="px-4 py-2.5 border-b border-[#D9E3E5] flex items-center justify-between">
-                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#82949A]">
+              <div className="px-4 py-2.5 border-b border-white/[0.08] flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-ops-text-3">
                   Sensor Readings
                 </span>
-                <SourceBadge source={asset.telemetry_source} />
+                <SourceBadge source={asset.telemetry_source} variant="dark" />
               </div>
 
-              <div className="divide-y divide-[#DDE6E8]">
+              <div className="divide-y divide-white/[0.08]">
 
                 {asset.temperature_c != null && (
-                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <Thermometer className="w-3.5 h-3.5 text-[#6FA8C7] shrink-0" />
-                      <span className="text-xs text-[#73858B] font-medium">Temperature</span>
+                      <Thermometer className="w-3.5 h-3.5 text-ops-ice shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Temperature</span>
                     </div>
                     <div className="flex items-baseline gap-1 shrink-0">
-                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.temperature_c}</span>
-                      <span className="text-[10px] text-[#7D9095]">°C</span>
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.temperature_c}</span>
+                      <span className="text-[10px] text-ops-text-3">°C</span>
                     </div>
                   </div>
                 )}
 
                 {asset.vibration_mms != null && (
-                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <Gauge className="w-3.5 h-3.5 text-[#D9A441] shrink-0" />
-                      <span className="text-xs text-[#73858B] font-medium">Vibration</span>
+                      <Gauge className="w-3.5 h-3.5 text-ops-amber shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Vibration</span>
                     </div>
                     <div className="flex items-baseline gap-1 shrink-0">
-                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.vibration_mms}</span>
-                      <span className="text-[10px] text-[#7D9095]">mm/s</span>
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.vibration_mms}</span>
+                      <span className="text-[10px] text-ops-text-3">mm/s</span>
                     </div>
                   </div>
                 )}
 
                 {asset.efficiency_pct != null && (
-                  <div className="flex items-center gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                  <div className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
                     <div className="flex items-center gap-2.5 shrink-0">
-                      <Zap className="w-3.5 h-3.5 text-[#4FB58A] shrink-0" />
-                      <span className="text-xs text-[#73858B] font-medium">Efficiency</span>
+                      <Zap className="w-3.5 h-3.5 text-ops-green shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Efficiency</span>
                     </div>
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {/* Real data bar — efficiency is a genuine 0-100% */}
-                      <div className="flex-1 h-1.5 rounded-full bg-[#D8E3E5] overflow-hidden">
+                      <div className="flex-1 h-1.5 rounded-full bg-ops-panel border border-white/5 overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-[#4FB58A]"
+                          className="h-full rounded-full bg-ops-green"
                           style={{ width: `${Math.min(Math.max(asset.efficiency_pct, 0), 100)}%` }}
                         />
                       </div>
                       <div className="flex items-baseline gap-0.5 shrink-0">
-                        <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.efficiency_pct}</span>
-                        <span className="text-[10px] text-[#7D9095]">%</span>
+                        <span className="text-sm font-bold text-white tabular-nums">{asset.efficiency_pct}</span>
+                        <span className="text-[10px] text-ops-text-3">%</span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {asset.runtime_hours != null && (
-                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-[#EBF1F2] transition-colors">
+                  <div className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <Clock className="w-3.5 h-3.5 text-[#8F86B8] shrink-0" />
-                      <span className="text-xs text-[#73858B] font-medium">Runtime Hours</span>
+                      <Clock className="w-3.5 h-3.5 text-ops-violet shrink-0" />
+                      <span className="text-xs text-ops-text-2 font-medium">Runtime Hours</span>
                     </div>
                     <div className="flex items-baseline gap-1 shrink-0">
-                      <span className="text-sm font-bold text-[#405B65] tabular-nums">{asset.runtime_hours.toLocaleString()}</span>
-                      <span className="text-[10px] text-[#7D9095]">h</span>
+                      <span className="text-sm font-bold text-white tabular-nums">{asset.runtime_hours.toLocaleString()}</span>
+                      <span className="text-[10px] text-ops-text-3">h</span>
                     </div>
                   </div>
                 )}
