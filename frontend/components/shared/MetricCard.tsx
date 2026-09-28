@@ -12,7 +12,6 @@ interface MetricCardProps {
   source: DataSource;
   icon?: React.ReactNode;
   className?: string;
-  trendSparkline?: number[];
   tone?: "ice" | "lavender" | "mint" | "amber" | "teal";
   /** "standard" (default) = full-height card; "compact" = denser, smaller text, no icon chip */
   variant?: "standard" | "compact";
