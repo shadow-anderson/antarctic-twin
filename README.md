@@ -88,7 +88,7 @@ The frontend starts on `http://localhost:3000`.
 **Required environment variable** (from `frontend/.env.local.example`):
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=https://antarctic-twin.onrender.com/
 ```
 
 Set this to the deployed backend URL when running in production.
