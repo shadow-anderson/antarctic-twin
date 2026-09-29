@@ -97,6 +97,3 @@ Set this to the deployed backend URL when running in production.
 
 See `docs/demo-script.md` for a full walkthrough.
 
-## Team
-
-Team [FILL IN], Smart India Hackathon 2026
