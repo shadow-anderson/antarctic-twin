@@ -50,7 +50,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
         <button
           type="button"
           onClick={() => setIsCollapsed(false)}
-          className="w-10 h-10 rounded-xl bg-[#0A101C]/90 hover:bg-[#2979FF]/30 border border-[#00E5FF]/40 text-[#00E5FF] flex items-center justify-center shadow-2xl backdrop-blur-md transition-all cursor-pointer"
+          className="w-10 h-10 rounded-xl bg-[#111C2E]/95 hover:bg-[#1A2A44] border border-[#00E5FF]/40 text-[#00E5FF] flex items-center justify-center shadow-2xl backdrop-blur-md transition-all cursor-pointer"
           title="Expand Control Panel"
         >
           <ChevronRight className="w-5 h-5" />
@@ -59,7 +59,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
         <button
           type="button"
           onClick={onResetCamera}
-          className="w-10 h-10 rounded-xl bg-[#0A101C]/90 hover:bg-white/15 border border-white/15 text-white flex items-center justify-center shadow-2xl backdrop-blur-md transition-all cursor-pointer"
+          className="w-10 h-10 rounded-xl bg-[#111C2E]/95 hover:bg-[#1A2A44] border border-[#22354D]/80 text-slate-200 flex items-center justify-center shadow-2xl backdrop-blur-md transition-all cursor-pointer"
           title="Reset View"
         >
           <RotateCcw className="w-4 h-4" />
@@ -71,7 +71,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
           className={`w-10 h-10 rounded-xl border flex items-center justify-center shadow-2xl backdrop-blur-md transition-all cursor-pointer ${
             autoRotate
               ? "bg-[#00E5FF]/20 border-[#00E5FF] text-[#00E5FF]"
-              : "bg-[#0A101C]/90 border-white/15 text-[#8B9BB4] hover:text-white"
+              : "bg-[#111C2E]/95 border-[#22354D]/80 text-slate-400 hover:text-white"
           }`}
           title="Toggle Orbit Rotation"
         >
@@ -83,23 +83,23 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
 
   return (
     <aside
-      className="absolute top-4 left-3 bottom-4 w-60 sm:w-64 rounded-2xl border border-white/15 bg-[#0A101C]/85 backdrop-blur-xl shadow-[0_12px_45px_rgba(0,0,0,0.8),0_0_20px_rgba(0,229,255,0.1)] z-20 flex flex-col overflow-hidden text-white transition-all duration-300"
+      className="absolute top-4 left-3 bottom-4 w-60 sm:w-64 rounded-2xl border border-[#22354D]/80 bg-[#111C2E]/92 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.55),0_0_20px_rgba(0,229,255,0.08)] z-20 flex flex-col overflow-hidden text-slate-100 transition-all duration-300"
       aria-label="3D Twin Controls"
     >
       {/* Top Accent Line */}
       <div className="h-0.5 w-full bg-gradient-to-r from-[#00E5FF] via-[#2979FF] to-[#00E676]" />
 
       {/* Header */}
-      <div className="p-3.5 border-b border-white/10 flex items-center justify-between">
+      <div className="p-3.5 border-b border-[#203047]/70 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[#2979FF]/20 border border-[#2979FF]/40 flex items-center justify-center text-[#00E5FF]">
             <Compass className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h2 className="text-[11px] font-bold uppercase tracking-wider text-white">
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-100">
               Twin Controls
             </h2>
-            <p className="text-[9px] text-[#8B9BB4]">POLARIS Suite</p>
+            <p className="text-[9px] text-slate-400 font-medium">POLARIS Suite</p>
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
           <button
             type="button"
             onClick={onResetCamera}
-            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-[#8B9BB4] hover:text-white text-[10px] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white text-[10px] transition-colors cursor-pointer"
             title="Reset Camera"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -115,7 +115,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
           <button
             type="button"
             onClick={() => setIsCollapsed(true)}
-            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-[#8B9BB4] hover:text-white text-[10px] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white text-[10px] transition-colors cursor-pointer"
             title="Collapse Panel"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -127,18 +127,18 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 custom-scrollbar text-xs">
         {/* Station Selector */}
         <div>
-          <label className="block text-[9px] font-bold uppercase tracking-wider text-[#8B9BB4] mb-1.5 flex items-center gap-1">
+          <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1">
             <Radio className="w-3 h-3 text-[#00E5FF]" />
             Station Select
           </label>
-          <div className="grid grid-cols-2 gap-1.5 p-0.5 rounded-xl bg-black/40 border border-white/10">
+          <div className="grid grid-cols-2 gap-1.5 p-0.5 rounded-xl bg-[#0B1320]/60 border border-[#1E2E42]/70">
             <button
               type="button"
               onClick={() => onStationChange("maitri")}
               className={`py-1.5 px-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 stationId === "maitri"
                   ? "bg-[#2979FF] text-white shadow-[0_0_10px_rgba(41,121,255,0.5)]"
-                  : "text-[#8B9BB4] hover:text-white hover:bg-white/5"
+                  : "text-slate-400 hover:text-white hover:bg-white/5"
               }`}
             >
               Maitri
@@ -149,7 +149,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
               className={`py-1.5 px-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 stationId === "bharati"
                   ? "bg-[#2979FF] text-white shadow-[0_0_10px_rgba(41,121,255,0.5)]"
-                  : "text-[#8B9BB4] hover:text-white hover:bg-white/5"
+                  : "text-slate-400 hover:text-white hover:bg-white/5"
               }`}
             >
               Bharati
@@ -159,7 +159,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
 
         {/* Camera Preset Quick Jumps */}
         <div>
-          <label className="block text-[9px] font-bold uppercase tracking-wider text-[#8B9BB4] mb-1.5 flex items-center gap-1">
+          <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1">
             <Camera className="w-3 h-3 text-[#00E5FF]" />
             Quick Presets
           </label>
@@ -167,49 +167,49 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
             <button
               type="button"
               onClick={() => onFocusPreset("overview")}
-              className="col-span-2 py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="col-span-2 py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Station Overview
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("generator")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Generators
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("battery")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Battery BESS
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("habitation")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Habitation
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("water")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Water System
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("fuel")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Fuel Storage
             </button>
             <button
               type="button"
               onClick={() => onFocusPreset("weather")}
-              className="py-1 px-2 rounded-lg bg-black/40 hover:bg-[#2979FF]/20 border border-white/10 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-white transition-all cursor-pointer"
+              className="py-1 px-2 rounded-lg bg-[#0B1320]/60 hover:bg-[#1C2C42] border border-[#1E2E42]/70 hover:border-[#00E5FF]/40 text-left text-[10px] font-medium text-slate-200 transition-all cursor-pointer"
             >
               Weather Mast
             </button>
@@ -219,7 +219,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
         {/* 8 Visualization Layers */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-[9px] font-bold uppercase tracking-wider text-[#8B9BB4] flex items-center gap-1">
+            <label className="text-[9px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
               <Layers className="w-3 h-3 text-[#00E5FF]" />
               Layers
             </label>
@@ -228,7 +228,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
             </span>
           </div>
 
-          <div className="space-y-1 rounded-xl bg-black/40 border border-white/10 p-1.5">
+          <div className="space-y-1 rounded-xl bg-[#0B1320]/60 border border-[#1E2E42]/70 p-1.5">
             {TWIN_LAYERS.map((layer) => {
               const active = activeLayers[layer.id];
               return (
@@ -239,14 +239,14 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
                   className={`w-full flex items-center justify-between px-2 py-1 rounded-md text-left transition-all cursor-pointer ${
                     active
                       ? "bg-white/10 text-white"
-                      : "text-[#8B9BB4] hover:text-white hover:bg-white/5"
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-1.5">
                     {active ? (
                       <CheckSquare className="w-3 h-3 text-[#00E5FF]" />
                     ) : (
-                      <Square className="w-3 h-3 text-[#8B9BB4]" />
+                      <Square className="w-3 h-3 text-slate-500" />
                     )}
                     <span className="text-[10px] font-semibold">{layer.label}</span>
                   </div>
@@ -258,7 +258,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
 
         {/* Display Toggles */}
         <div>
-          <label className="block text-[9px] font-bold uppercase tracking-wider text-[#8B9BB4] mb-1.5 flex items-center gap-1">
+          <label className="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1">
             <Sliders className="w-3 h-3 text-[#00E5FF]" />
             Display
           </label>
@@ -269,7 +269,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
               className={`py-1 px-2 rounded-lg border text-[10px] font-semibold text-center transition-all cursor-pointer ${
                 autoRotate
                   ? "bg-[#00E5FF]/20 border-[#00E5FF] text-[#00E5FF]"
-                  : "bg-black/40 border-white/10 text-[#8B9BB4] hover:text-white"
+                  : "bg-[#0B1320]/60 border-[#1E2E42]/70 text-slate-300 hover:text-white"
               }`}
             >
               Rotate
@@ -280,7 +280,7 @@ export const TwinControlPanel: React.FC<TwinControlPanelProps> = ({
               className={`py-1 px-2 rounded-lg border text-[10px] font-semibold text-center transition-all cursor-pointer ${
                 wireframe
                   ? "bg-[#2979FF]/20 border-[#2979FF] text-[#2979FF]"
-                  : "bg-black/40 border-white/10 text-[#8B9BB4] hover:text-white"
+                  : "bg-[#0B1320]/60 border-[#1E2E42]/70 text-slate-300 hover:text-white"
               }`}
             >
               Wireframe

@@ -190,7 +190,7 @@ export const PolarisTwinPanel: React.FC = () => {
       {/* ============================================================
           TOP TELEMETRY & COMMAND TICKER
       ============================================================ */}
-      <section className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[#0A101C]/90 px-4 py-3 sm:px-5 sm:py-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.4)] backdrop-blur-md">
+      <section className="relative overflow-hidden rounded-[22px] border border-[#203047]/70 bg-[#0E1726]/95 px-4 py-3 sm:px-5 sm:py-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           {/* Station Title */}
           <div className="flex items-center gap-3">
@@ -199,14 +199,14 @@ export const PolarisTwinPanel: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                <h1 className="text-sm sm:text-base font-bold text-slate-100 tracking-tight">
                   POLARIS 3D Digital Twin
                 </h1>
                 <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-[#00E5FF]/15 text-[#00E5FF] border border-[#00E5FF]/30">
                   {selectedStation === "maitri" ? "Maitri Station" : "Bharati Station"}
                 </span>
               </div>
-              <p className="text-[10px] text-[#8B9BB4]">
+              <p className="text-[10px] text-slate-400">
                 Interactive 3D spatial twin • Click an asset to focus camera &amp; view telemetry
               </p>
             </div>
@@ -217,10 +217,10 @@ export const PolarisTwinPanel: React.FC = () => {
             <div className="flex items-center gap-2">
               <Thermometer className="w-3.5 h-3.5 text-[#00E5FF]" />
               <div>
-                <span className="text-[8px] uppercase tracking-wider text-[#8B9BB4] block">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">
                   Ambient
                 </span>
-                <span className="text-[11px] font-mono font-bold text-white">
+                <span className="text-[11px] font-mono font-bold text-slate-100">
                   {stationTicker.temp}
                 </span>
               </div>
@@ -229,10 +229,10 @@ export const PolarisTwinPanel: React.FC = () => {
             <div className="flex items-center gap-2">
               <Wind className="w-3.5 h-3.5 text-[#2979FF]" />
               <div>
-                <span className="text-[8px] uppercase tracking-wider text-[#8B9BB4] block">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">
                   Wind
                 </span>
-                <span className="text-[11px] font-mono font-bold text-white">
+                <span className="text-[11px] font-mono font-bold text-slate-100">
                   {stationTicker.wind}
                 </span>
               </div>
@@ -241,10 +241,10 @@ export const PolarisTwinPanel: React.FC = () => {
             <div className="flex items-center gap-2">
               <Zap className="w-3.5 h-3.5 text-[#FFAB00]" />
               <div>
-                <span className="text-[8px] uppercase tracking-wider text-[#8B9BB4] block">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">
                   Load
                 </span>
-                <span className="text-[11px] font-mono font-bold text-white">
+                <span className="text-[11px] font-mono font-bold text-slate-100">
                   {stationTicker.power}
                 </span>
               </div>
@@ -253,10 +253,10 @@ export const PolarisTwinPanel: React.FC = () => {
             <div className="flex items-center gap-2">
               <Battery className="w-3.5 h-3.5 text-[#00E676]" />
               <div>
-                <span className="text-[8px] uppercase tracking-wider text-[#8B9BB4] block">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">
                   BESS
                 </span>
-                <span className="text-[11px] font-mono font-bold text-white">
+                <span className="text-[11px] font-mono font-bold text-slate-100">
                   {stationTicker.bess}
                 </span>
               </div>
@@ -265,10 +265,10 @@ export const PolarisTwinPanel: React.FC = () => {
             <div className="flex items-center gap-2">
               <Fuel className="w-3.5 h-3.5 text-[#FF9100]" />
               <div>
-                <span className="text-[8px] uppercase tracking-wider text-[#8B9BB4] block">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-medium">
                   Fuel Days
                 </span>
-                <span className="text-[11px] font-mono font-bold text-white">
+                <span className="text-[11px] font-mono font-bold text-slate-100">
                   {stationTicker.fuel}
                 </span>
               </div>
@@ -280,7 +280,7 @@ export const PolarisTwinPanel: React.FC = () => {
       {/* ============================================================
           DOMINANT 3D VIEWPORT (Full-Height, Wide Canvas)
       ============================================================ */}
-      <section className="relative w-full h-[720px] sm:h-[780px] lg:h-[820px] rounded-[26px] border border-white/10 bg-[#050811] overflow-hidden shadow-[0_12px_45px_rgba(0,0,0,0.7)]">
+      <section className="relative w-full h-[720px] sm:h-[780px] lg:h-[820px] rounded-[26px] border border-[#22354D]/70 bg-[#0E1726] overflow-hidden shadow-[0_12px_45px_rgba(0,0,0,0.55)]">
         {/* Floating Left Control Panel (Pushed to far left, collapsible) */}
         <TwinControlPanel
           stationId={selectedStation}
@@ -322,7 +322,7 @@ export const PolarisTwinPanel: React.FC = () => {
         />
 
         {/* Bottom Subsystem Filter Tabs */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 p-1 rounded-2xl bg-[#0A101C]/85 border border-white/15 backdrop-blur-md shadow-2xl">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 p-1 rounded-2xl bg-[#111C2E]/90 border border-[#22354D]/70 backdrop-blur-md shadow-2xl">
           {["ALL", "POWER", "STRUCTURE", "WATER", "LOGISTICS", "SCIENCE"].map((cat) => (
             <button
               key={cat}
@@ -330,8 +330,8 @@ export const PolarisTwinPanel: React.FC = () => {
               onClick={() => setCategoryFilter(cat)}
               className={`px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 categoryFilter === cat
-                  ? "bg-[#00E5FF] text-[#050811] shadow-[0_0_12px_rgba(0,229,255,0.4)]"
-                  : "text-[#8B9BB4] hover:text-white hover:bg-white/5"
+                  ? "bg-[#00E5FF] text-[#0A121E] shadow-[0_0_12px_rgba(0,229,255,0.4)]"
+                  : "text-slate-300 hover:text-white hover:bg-white/10"
               }`}
             >
               {cat}
@@ -341,7 +341,7 @@ export const PolarisTwinPanel: React.FC = () => {
       </section>
 
       {/* Footer Info */}
-      <div className="flex items-center justify-between text-[11px] text-[#8B9BB4] px-2">
+      <div className="flex items-center justify-between text-[11px] text-slate-400 px-2">
         <span>Click any 3D asset to focus camera and inspect live telemetry</span>
         <SectionProvenance source="derived" origin="POLARIS 3D spatial twin & CAD subsystem model" />
       </div>

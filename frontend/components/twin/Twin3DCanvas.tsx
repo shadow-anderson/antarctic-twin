@@ -113,19 +113,19 @@ function ArchitecturalAssetMesh({
   const data = stationId === "maitri" ? asset.maitri : asset.bharati;
   const statusColor = STATUS_COLORS[data.status];
 
-  // Material Palette
-  const stationHue = stationId === "bharati" ? "#2B4C6F" : "#7A4D1A"; // Bharati is metallic blue, Maitri is golden yellow
+  // Material Palette - Technical Antarctic Command Tone
+  const stationHue = stationId === "bharati" ? "#3A5D82" : "#B87B2E"; // Bharati is crisp metallic blue-gray, Maitri is insulated polar ochre
   const stationAccent = stationId === "bharati" ? "#00E5FF" : "#FFAB00";
 
   const metallicPanel = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: isSelected ? "#00E5FF" : hovered ? "#5588AA" : stationHue,
+        color: isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : stationHue,
         roughness: 0.35,
-        metalness: 0.65,
+        metalness: 0.55,
         wireframe,
-        emissive: isSelected ? "#00E5FF" : hovered ? statusColor : "#05101A",
-        emissiveIntensity: isSelected ? 0.45 : hovered ? 0.25 : 0.05,
+        emissive: isSelected ? "#00E5FF" : hovered ? statusColor : "#0E1A29",
+        emissiveIntensity: isSelected ? 0.35 : hovered ? 0.25 : 0.04,
       }),
     [isSelected, hovered, statusColor, stationHue, wireframe]
   );
@@ -133,9 +133,9 @@ function ArchitecturalAssetMesh({
   const darkStructuralMat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#182430",
-        metalness: 0.8,
-        roughness: 0.4,
+        color: "#33465C",
+        metalness: 0.7,
+        roughness: 0.35,
         wireframe,
       }),
     [wireframe]
@@ -144,11 +144,11 @@ function ArchitecturalAssetMesh({
   const glassMat = useMemo(
     () =>
       new THREE.MeshPhysicalMaterial({
-        color: "#88CCEE",
-        transmission: 0.7,
+        color: "#A6DDF8",
+        transmission: 0.75,
         opacity: 1,
         transparent: true,
-        roughness: 0.1,
+        roughness: 0.12,
         ior: 1.5,
       }),
     []
@@ -275,18 +275,18 @@ function ArchitecturalAssetMesh({
           {/* Concrete / Steel Foundation Pad */}
           <mesh position={[0, 0.08, 0]}>
             <boxGeometry args={[1.2, 0.16, 0.9]} />
-            <meshStandardMaterial color="#2B3540" roughness={0.9} />
+            <meshStandardMaterial color="#3A4A5C" roughness={0.85} />
           </mesh>
 
           {/* Generator Acoustic Housing */}
           <mesh position={[0, 0.52, 0]}>
             <boxGeometry args={[1.0, 0.72, 0.7]} />
             <meshStandardMaterial
-              color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#32445A"}
-              metalness={0.7}
-              roughness={0.3}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A1420"}
-              emissiveIntensity={isSelected ? 0.4 : 0.08}
+              color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#4A6582"}
+              metalness={0.65}
+              roughness={0.32}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#101D2C"}
+              emissiveIntensity={isSelected ? 0.35 : 0.06}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
@@ -294,21 +294,21 @@ function ArchitecturalAssetMesh({
           {/* Radiator Cooling Grills */}
           <mesh position={[-0.45, 0.55, 0]}>
             <boxGeometry args={[0.05, 0.5, 0.55]} />
-            <meshStandardMaterial color="#111B24" metalness={0.9} />
+            <meshStandardMaterial color="#1E2D3E" metalness={0.8} />
           </mesh>
 
           {/* Twin Silver Exhaust Stacks */}
           {[0.15, 0.35].map((x, i) => (
             <mesh key={`exhaust-${i}`} position={[x, 1.05, 0]}>
               <cylinderGeometry args={[0.05, 0.06, 0.65, 12]} />
-              <meshStandardMaterial color="#8899A6" metalness={0.85} roughness={0.2} />
+              <meshStandardMaterial color="#9FB2C4" metalness={0.85} roughness={0.2} />
             </mesh>
           ))}
 
           {/* Safety Warning Stripe */}
           <mesh position={[0, 0.22, 0.36]}>
             <boxGeometry args={[0.9, 0.06, 0.01]} />
-            <meshStandardMaterial color="#FFAB00" />
+            <meshStandardMaterial color="#FFB300" />
           </mesh>
         </group>
       )}
@@ -321,18 +321,18 @@ function ArchitecturalAssetMesh({
           {/* Base pad */}
           <mesh position={[0, 0.06, 0]}>
             <boxGeometry args={[1.6, 0.12, 0.9]} />
-            <meshStandardMaterial color="#1F2A38" />
+            <meshStandardMaterial color="#2C3E54" />
           </mesh>
 
           {/* High-Tech BESS Container Enclosure */}
           <mesh position={[0, 0.58, 0]}>
             <boxGeometry args={[1.45, 0.9, 0.75]} />
             <meshStandardMaterial
-              color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#243B53"}
-              metalness={0.8}
-              roughness={0.25}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A1826"}
-              emissiveIntensity={isSelected ? 0.4 : 0.08}
+              color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#3E5C7F"}
+              metalness={0.7}
+              roughness={0.28}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#101E2E"}
+              emissiveIntensity={isSelected ? 0.35 : 0.06}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
@@ -370,7 +370,7 @@ function ArchitecturalAssetMesh({
           {/* Insulated Primary Intake Pipe */}
           <mesh position={[0.55, 0.25, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.08, 0.08, 0.9, 12]} />
-            <meshStandardMaterial color="#00E5FF" metalness={0.7} roughness={0.3} />
+            <meshStandardMaterial color="#00E5FF" metalness={0.65} roughness={0.3} />
           </mesh>
 
           {/* Trace Heating Cable Junction Box */}
@@ -388,18 +388,18 @@ function ArchitecturalAssetMesh({
         <group position={[0, 0, 0]}>
           <mesh position={[0, 0.05, 0]}>
             <cylinderGeometry args={[0.65, 0.7, 0.1, 18]} />
-            <meshStandardMaterial color="#2B3540" />
+            <meshStandardMaterial color="#35485A" />
           </mesh>
 
           {/* Insulated Vertical Cylinder Tank */}
           <mesh position={[0, 0.85, 0]}>
             <cylinderGeometry args={[0.55, 0.55, 1.5, 24]} />
             <meshStandardMaterial
-              color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#3D5A80"}
+              color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#4B729A"}
               metalness={0.65}
-              roughness={0.35}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A1826"}
-              emissiveIntensity={isSelected ? 0.4 : 0.08}
+              roughness={0.32}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#101E2E"}
+              emissiveIntensity={isSelected ? 0.35 : 0.06}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
@@ -420,7 +420,7 @@ function ArchitecturalAssetMesh({
           {/* Spill Containment Bund Wall */}
           <mesh position={[0, 0.1, 0]}>
             <boxGeometry args={[1.5, 0.2, 1.8]} />
-            <meshStandardMaterial color="#2B3540" roughness={0.8} />
+            <meshStandardMaterial color="#36495E" roughness={0.8} />
           </mesh>
 
           {/* Twin Horizontal Bulk Cylinders on Cradle Saddles */}
@@ -429,22 +429,22 @@ function ArchitecturalAssetMesh({
               <mesh position={[0, 0.58, z]} rotation={[0, 0, Math.PI / 2]}>
                 <cylinderGeometry args={[0.35, 0.35, 1.3, 20]} />
                 <meshStandardMaterial
-                  color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#D48B38"}
-                  metalness={0.7}
+                  color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#DE933E"}
+                  metalness={0.65}
                   roughness={0.3}
-                  emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#1A1005"}
-                  emissiveIntensity={isSelected ? 0.4 : 0.08}
+                  emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#241608"}
+                  emissiveIntensity={isSelected ? 0.35 : 0.06}
                 />
                 {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
               </mesh>
               {/* Spherical End Caps */}
               <mesh position={[-0.65, 0.58, z]}>
                 <sphereGeometry args={[0.35, 12, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
-                <meshStandardMaterial color="#D48B38" metalness={0.7} />
+                <meshStandardMaterial color="#DE933E" metalness={0.65} />
               </mesh>
               <mesh position={[0.65, 0.58, z]} rotation={[0, Math.PI, 0]}>
                 <sphereGeometry args={[0.35, 12, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
-                <meshStandardMaterial color="#D48B38" metalness={0.7} />
+                <meshStandardMaterial color="#DE933E" metalness={0.65} />
               </mesh>
             </group>
           ))}
@@ -469,11 +469,11 @@ function ArchitecturalAssetMesh({
             <mesh>
               <boxGeometry args={[2.2, 0.04, 1.3]} />
               <meshStandardMaterial
-                color="#0A1E35"
-                metalness={0.9}
+                color="#153255"
+                metalness={0.85}
                 roughness={0.15}
-                emissive={isSelected ? "#00E5FF" : "#051220"}
-                emissiveIntensity={isSelected ? 0.4 : 0.05}
+                emissive={isSelected ? "#00E5FF" : "#0A1B30"}
+                emissiveIntensity={isSelected ? 0.35 : 0.05}
               />
               {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
             </mesh>
@@ -501,11 +501,11 @@ function ArchitecturalAssetMesh({
           <mesh position={[0, 1.25, 0]}>
             <sphereGeometry args={[0.65, 18, 18]} />
             <meshStandardMaterial
-              color="#EEF4F8"
+              color="#F2F7FA"
               roughness={0.3}
-              metalness={0.2}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A141E"}
-              emissiveIntensity={isSelected ? 0.5 : 0.05}
+              metalness={0.15}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#12202E"}
+              emissiveIntensity={isSelected ? 0.35 : 0.05}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
@@ -520,13 +520,13 @@ function ArchitecturalAssetMesh({
           {/* Guyed Lattice Mast */}
           <mesh position={[0, 1.1, 0]}>
             <cylinderGeometry args={[0.03, 0.06, 2.2, 6]} />
-            <primitive object={darkStructuralMat} />
+            <meshStandardMaterial color="#3E5269" metalness={0.7} />
           </mesh>
 
           {/* Anemometer Crossarm */}
           <mesh position={[0, 2.0, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.02, 0.02, 0.7, 6]} />
-            <meshStandardMaterial color="#FFAB00" />
+            <meshStandardMaterial color="#FFB833" metalness={0.5} />
           </mesh>
 
           {/* Wind Vane & Pyranometer Sensor Orbs */}
@@ -547,18 +547,18 @@ function ArchitecturalAssetMesh({
           <mesh position={[0, 0.55, 0]}>
             <boxGeometry args={[1.9, 0.9, 1.2]} />
             <meshStandardMaterial
-              color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#2E4053"}
+              color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#455C75"}
               metalness={0.6}
-              roughness={0.4}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A1420"}
-              emissiveIntensity={isSelected ? 0.4 : 0.05}
+              roughness={0.38}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#101D2C"}
+              emissiveIntensity={isSelected ? 0.35 : 0.05}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
           {/* Roller Shutter Door */}
           <mesh position={[0.96, 0.45, 0]}>
             <boxGeometry args={[0.02, 0.65, 0.7]} />
-            <meshStandardMaterial color="#1A2530" metalness={0.9} />
+            <meshStandardMaterial color="#263649" metalness={0.85} />
           </mesh>
         </group>
       )}
@@ -571,11 +571,11 @@ function ArchitecturalAssetMesh({
           <mesh position={[0, 0.4, 0]}>
             <boxGeometry args={[1.1, 0.7, 0.65]} />
             <meshStandardMaterial
-              color={isSelected ? "#00E5FF" : hovered ? "#5588AA" : "#2E6B55"}
+              color={isSelected ? "#00E5FF" : hovered ? "#5C8BB5" : "#3A7A64"}
               metalness={0.65}
               roughness={0.35}
-              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0A1E14"}
-              emissiveIntensity={isSelected ? 0.4 : 0.05}
+              emissive={isSelected ? "#00E5FF" : hovered ? statusColor : "#0E241B"}
+              emissiveIntensity={isSelected ? 0.35 : 0.05}
             />
             {isSelected && <Edges threshold={15} color="#FFFFFF" linewidth={2} />}
           </mesh>
@@ -588,7 +588,7 @@ function ArchitecturalAssetMesh({
         <meshStandardMaterial
           color={statusColor}
           emissive={statusColor}
-          emissiveIntensity={isSelected ? 1.5 : 0.5}
+          emissiveIntensity={isSelected ? 1.4 : 0.6}
         />
       </mesh>
 
@@ -600,7 +600,7 @@ function ArchitecturalAssetMesh({
       {isSelected && (
         <Html position={[0, 2.65, 0]} center distanceFactor={14} style={{ pointerEvents: "none" }}>
           <div className="flex flex-col items-center animate-in fade-in zoom-in duration-200">
-            <div className="px-3 py-1.5 rounded-lg bg-[#0A101C]/95 border-2 border-[#00E5FF] shadow-[0_0_20px_rgba(0,229,255,0.6)] flex items-center gap-2 whitespace-nowrap text-white">
+            <div className="px-3 py-1.5 rounded-lg bg-[#0E1726]/95 border-2 border-[#00E5FF] shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center gap-2 whitespace-nowrap text-white">
               <span
                 className="w-2.5 h-2.5 rounded-full animate-ping"
                 style={{ backgroundColor: statusColor }}
@@ -637,16 +637,16 @@ function PolarTerrain({ stationId }: { stationId: "maitri" | "bharati" }) {
       <mesh position={[0, -0.06, 0]} receiveShadow>
         <cylinderGeometry args={[20, 21, 0.25, 64]} />
         <meshStandardMaterial
-          color="#060C16"
-          roughness={0.8}
-          metalness={0.2}
+          color="#121E2C"
+          roughness={0.82}
+          metalness={0.15}
           flatShading
         />
       </mesh>
 
       {/* Polar Coordinate Concentric Range Rings */}
       <polarGridHelper
-        args={[18, 6, 8, 64, "#00E5FF", "#11263A"]}
+        args={[18, 6, 8, 64, "#00E5FF", "#1F354D"]}
         position={[0, 0.08, 0]}
       />
 
@@ -654,11 +654,11 @@ function PolarTerrain({ stationId }: { stationId: "maitri" | "bharati" }) {
       <group position={[7.5, 0.08, -4.0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
           <circleGeometry args={[1.8, 32]} />
-          <meshStandardMaterial color="#0C1E30" roughness={0.7} />
+          <meshStandardMaterial color="#1A2C3E" roughness={0.7} />
         </mesh>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
           <ringGeometry args={[1.6, 1.75, 32]} />
-          <meshBasicMaterial color="#FFAB00" />
+          <meshBasicMaterial color="#FFB833" />
         </mesh>
       </group>
 
@@ -675,7 +675,7 @@ function PolarTerrain({ stationId }: { stationId: "maitri" | "bharati" }) {
           scale={ridge.s as [number, number, number]}
         >
           <coneGeometry args={[1, 1, 5]} />
-          <meshStandardMaterial color="#0A1828" flatShading roughness={0.9} />
+          <meshStandardMaterial color="#15273C" flatShading roughness={0.85} />
         </mesh>
       ))}
     </group>
@@ -709,13 +709,14 @@ export const Twin3DCanvas: React.FC<Twin3DCanvasProps> = ({
     <Canvas
       dpr={[1, 2]}
       camera={{ position: [14, 11, 15], fov: 42 }}
-      style={{ width: "100%", height: "100%", background: "#050811" }}
+      style={{ width: "100%", height: "100%", background: "#0E1726" }}
     >
-      {/* Cinematic Polar Lighting */}
-      <ambientLight intensity={0.65} />
-      <directionalLight position={[12, 18, 10]} intensity={1.4} castShadow />
-      <directionalLight position={[-10, 10, -8]} intensity={0.5} color="#00E5FF" />
-      <pointLight position={[0, 9, 0]} intensity={0.8} color="#FFFFFF" distance={30} />
+      {/* Balanced Technical Polar Lighting - Clear, Depth-rich, Never Flat */}
+      <ambientLight intensity={0.9} color="#D1E2F2" />
+      <hemisphereLight args={["#88B0D8", "#142232", 0.6]} />
+      <directionalLight position={[12, 18, 10]} intensity={1.5} color="#FFFBF5" castShadow />
+      <directionalLight position={[-10, 10, -8]} intensity={0.65} color="#00E5FF" />
+      <pointLight position={[0, 9, 0]} intensity={0.6} color="#E8F1FA" distance={35} />
 
       <CameraController
         focusTarget={focusTarget}
