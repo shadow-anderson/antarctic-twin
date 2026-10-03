@@ -134,50 +134,58 @@ export const TwinInspector: React.FC<TwinInspectorProps> = ({
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-4 custom-scrollbar text-xs">
         {/* KPI Strip */}
-        <div className="grid grid-cols-3 gap-1.5">
-          <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-              Health
-            </span>
-            <span
-              className={`text-base font-mono font-black mt-0.5 ${
-                data.healthPct >= 90
-                  ? "text-emerald-400"
-                  : data.healthPct >= 75
-                  ? "text-amber-400"
-                  : "text-rose-400"
-              }`}
-            >
-              {data.healthPct}%
-            </span>
-          </div>
+        {(() => {
+          const effectiveHealth = maintRecord ? maintRecord.healthPct : data.healthPct;
+          const effectiveFailProb = maintRecord ? maintRecord.failureProbPct : data.failureProbPct;
+          const effectiveRul = maintRecord ? maintRecord.rulHours : data.rulHours;
 
-          <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-              Fail Prob
-            </span>
-            <span
-              className={`text-base font-mono font-black mt-0.5 ${
-                data.failureProbPct > 15
-                  ? "text-rose-400"
-                  : data.failureProbPct > 5
-                  ? "text-amber-400"
-                  : "text-emerald-400"
-              }`}
-            >
-              {data.failureProbPct}%
-            </span>
-          </div>
+          return (
+            <div className="grid grid-cols-3 gap-1.5">
+              <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                  Health
+                </span>
+                <span
+                  className={`text-base font-mono font-black mt-0.5 ${
+                    effectiveHealth >= 90
+                      ? "text-emerald-400"
+                      : effectiveHealth >= 75
+                      ? "text-amber-400"
+                      : "text-rose-400"
+                  }`}
+                >
+                  {effectiveHealth}%
+                </span>
+              </div>
 
-          <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-              RUL
-            </span>
-            <span className="text-base font-mono font-black text-[#00E5FF] mt-0.5">
-              {data.rulHours > 9000 ? "Nominal" : `${data.rulHours}h`}
-            </span>
-          </div>
-        </div>
+              <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                  Fail Prob
+                </span>
+                <span
+                  className={`text-base font-mono font-black mt-0.5 ${
+                    effectiveFailProb > 15
+                      ? "text-rose-400"
+                      : effectiveFailProb > 5
+                      ? "text-amber-400"
+                      : "text-emerald-400"
+                  }`}
+                >
+                  {effectiveFailProb}%
+                </span>
+              </div>
+
+              <div className="p-2 rounded-xl bg-[#0B1320]/65 border border-[#1E2E42]/70 flex flex-col items-center text-center">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                  RUL
+                </span>
+                <span className="text-base font-mono font-black text-[#00E5FF] mt-0.5">
+                  {effectiveRul > 9000 ? "Nominal" : `${effectiveRul}h`}
+                </span>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Predictive Maintenance Status (Feature 9.5) */}
         {maintRecord && (

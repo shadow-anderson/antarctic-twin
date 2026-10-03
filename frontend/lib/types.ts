@@ -49,6 +49,7 @@ export interface WhatIfResult {
 export interface LinkStatus {
   connected: boolean;
   last_synced: string;
+  is_live?: boolean;
 }
 
 // Supporting UI types for Asset hierarchy & telemetry

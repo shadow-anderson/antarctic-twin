@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from "react";
 import { useStation } from "./StationContext";
 import {
   ScenarioId,
@@ -124,6 +124,11 @@ export const OperationalIntelligenceProvider: React.FC<{
   );
   const [logisticsWeather, setLogisticsWeather] = useState<WeatherCondition>("NORMAL");
 
+  // Keep route synced with station change
+  useEffect(() => {
+    setSelectedRouteId(selectedStation === "maitri" ? "goa-maitri-sea" : "goa-bharati-sea");
+  }, [selectedStation]);
+
   // Toggle individual mitigation action
   const toggleAction = useCallback((actionId: string) => {
     setAppliedActionIds((prev) =>
@@ -185,17 +190,6 @@ export const OperationalIntelligenceProvider: React.FC<{
     );
   }, [selectedStation, scenarioId, isSimulationActive, appliedActionIds]);
 
-  const missionReport = useMemo(() => {
-    return buildMissionReport(
-      selectedStation,
-      null,
-      cascadeResult,
-      resources,
-      alerts,
-      isSimulationActive
-    );
-  }, [selectedStation, cascadeResult, resources, alerts, isSimulationActive]);
-
   // ── NEW PHASE 2/3 COMPUTED RESULTS ────────────────────────────
 
   // Feature 8 — Mission Readiness
@@ -232,6 +226,21 @@ export const OperationalIntelligenceProvider: React.FC<{
       appliedActionIds
     );
   }, [selectedStation, scenarioId, isSimulationActive, appliedActionIds]);
+
+  // Feature 18 — Synchronized Mission Intelligence Report
+  const missionReport = useMemo(() => {
+    return buildMissionReport(
+      selectedStation,
+      null,
+      cascadeResult,
+      resources,
+      alerts,
+      isSimulationActive,
+      missionReadiness,
+      communicationHealth,
+      maintenanceRecords
+    );
+  }, [selectedStation, cascadeResult, resources, alerts, isSimulationActive, missionReadiness, communicationHealth, maintenanceRecords]);
 
   // Feature 12 — Inter-Station Coordination
   const interStationCoordination = useMemo(() => {

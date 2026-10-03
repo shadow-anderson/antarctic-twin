@@ -195,9 +195,28 @@ export const ExplainableRisk: React.FC = () => {
                 {cascadeResult.cascadeChain.map((node, i) => (
                   <React.Fragment key={node.id}>
                     <div className="p-3 rounded-xl bg-ops-panel border border-white/10 flex flex-col items-center text-center w-full sm:w-36">
-                      <span className="text-[9px] font-mono text-ops-teal font-bold mb-1">
-                        STEP {node.stepNumber}
-                      </span>
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <span className="text-[8px] font-mono text-ops-text-3 font-semibold">
+                          STEP {node.stepNumber}
+                        </span>
+                        <span className={`text-[8px] font-mono font-bold px-1.5 py-0.2 rounded border ${
+                          i === 0
+                            ? "bg-ops-teal/15 text-ops-teal border-ops-teal/30"
+                            : i === 1
+                            ? "bg-ops-amber/15 text-ops-amber border-ops-amber/30"
+                            : i === cascadeResult.cascadeChain.length - 1
+                            ? "bg-ops-red/15 text-ops-red border-ops-red/30"
+                            : "bg-orange-500/15 text-orange-400 border-orange-500/30"
+                        }`}>
+                          {i === 0
+                            ? "CAUSE"
+                            : i === 1
+                            ? "IMPACT"
+                            : i === cascadeResult.cascadeChain.length - 1
+                            ? "MISSION RISK"
+                            : "CASCADING EFFECT"}
+                        </span>
+                      </div>
                       <span className="text-xs font-bold text-ops-text line-clamp-2">
                         {node.label}
                       </span>
@@ -212,7 +231,10 @@ export const ExplainableRisk: React.FC = () => {
                     </div>
 
                     {i < cascadeResult.cascadeChain.length - 1 && (
-                      <ArrowRight className="w-4 h-4 text-ops-teal/60 shrink-0 rotate-90 sm:rotate-0 my-1 sm:my-0" />
+                      <div className="flex flex-col items-center">
+                        <ArrowRight className="w-4 h-4 text-ops-teal/60 shrink-0 rotate-90 sm:rotate-0 my-1 sm:my-0" />
+                        <span className="text-[8px] text-ops-text-3 font-mono hidden sm:inline">leads to</span>
+                      </div>
                     )}
                   </React.Fragment>
                 ))}

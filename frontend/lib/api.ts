@@ -19,21 +19,18 @@ import { MOCK_FORECASTS } from "./mockData";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 /**
- * Returns true only when we have a non-localhost API URL configured.
- * This prevents fetch hangs on Vercel where no backend is running.
+ * Returns true only when we have a valid, non-localhost API URL configured.
+ * This prevents fetch hangs on Vercel or local builds where no backend is running.
  */
-function isBackendAvailable(): boolean {
+export function isBackendAvailable(): boolean {
   if (!API_BASE_URL) return false;
-  // Never attempt localhost calls in a non-browser or production context
-  if (typeof window !== "undefined") {
-    try {
-      const url = new URL(API_BASE_URL);
-      if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
-        return false; // skip — no backend on Vercel
-      }
-    } catch {
-      return false;
+  try {
+    const url = new URL(API_BASE_URL);
+    if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
+      return false; // skip — no backend on Vercel or offline demo
     }
+  } catch {
+    return false;
   }
   return true;
 }
@@ -219,17 +216,17 @@ const CALIBRATED_ASSET_DETAILS: Record<string, Record<string, AssetDetail>> = {
       name: "Generator 01",
       category: "POWER INFRASTRUCTURE",
       status: "healthy",
-      health_pct: 89,
+      health_pct: 91,
       temperature_c: 76,
-      vibration_mms: 2.6,
+      vibration_mms: 3.8,
       efficiency_pct: 87,
-      runtime_hours: 5410,
+      runtime_hours: 14820,
       operational_status: "Operational",
       last_inspected: "2026-09-14 07:00 UTC",
       telemetry_source: "simulated",
       specs: [
         { label: "Rated Output", value: "250 kW" },
-        { label: "Fuel Rate", value: "41.3 L/h" },
+        { label: "Fuel Rate", value: "9.1 L/h" },
         { label: "Alternator Voltage", value: "411 V 3-Phase" },
         { label: "Oil Pressure", value: "4.5 bar" },
       ],
@@ -239,17 +236,17 @@ const CALIBRATED_ASSET_DETAILS: Record<string, Record<string, AssetDetail>> = {
       name: "Generator 02",
       category: "POWER INFRASTRUCTURE",
       status: "warning",
-      health_pct: 61,
-      temperature_c: 97,
+      health_pct: 76,
+      temperature_c: 82,
       vibration_mms: 6.2,
       efficiency_pct: 74,
-      runtime_hours: 7890,
+      runtime_hours: 19340,
       operational_status: "High Vibration — Inspection Due",
       last_inspected: "2026-09-05 09:00 UTC",
       telemetry_source: "simulated",
       specs: [
         { label: "Rated Output", value: "250 kW" },
-        { label: "Fuel Rate", value: "49.8 L/h" },
+        { label: "Fuel Rate", value: "6.7 L/h" },
         { label: "Alternator Voltage", value: "402 V 3-Phase" },
         { label: "Oil Pressure", value: "3.4 bar" },
       ],
@@ -259,7 +256,7 @@ const CALIBRATED_ASSET_DETAILS: Record<string, Record<string, AssetDetail>> = {
       name: "Battery System",
       category: "POWER INFRASTRUCTURE",
       status: "healthy",
-      health_pct: 91,
+      health_pct: 92,
       temperature_c: 22,
       vibration_mms: 0.2,
       efficiency_pct: 91,
@@ -281,19 +278,59 @@ const CALIBRATED_ASSET_DETAILS: Record<string, Record<string, AssetDetail>> = {
       name: "Generator 01",
       category: "POWER INFRASTRUCTURE",
       status: "healthy",
-      health_pct: 97,
-      temperature_c: 69,
-      vibration_mms: 1.8,
+      health_pct: 94,
+      temperature_c: 71,
+      vibration_mms: 2.9,
       efficiency_pct: 93,
-      runtime_hours: 2640,
+      runtime_hours: 11420,
       operational_status: "Operational",
       last_inspected: "2026-09-20 11:00 UTC",
       telemetry_source: "simulated",
       specs: [
         { label: "Rated Output", value: "250 kW" },
-        { label: "Fuel Rate", value: "36.4 L/h" },
+        { label: "Fuel Rate", value: "8.4 L/h" },
         { label: "Alternator Voltage", value: "416 V 3-Phase" },
         { label: "Oil Pressure", value: "4.9 bar" },
+      ],
+    },
+    "gen-02": {
+      id: "gen-02",
+      name: "Generator 02",
+      category: "POWER INFRASTRUCTURE",
+      status: "healthy",
+      health_pct: 88,
+      temperature_c: 74,
+      vibration_mms: 2.4,
+      efficiency_pct: 88,
+      runtime_hours: 9820,
+      operational_status: "Standby Ready",
+      last_inspected: "2026-09-18 14:00 UTC",
+      telemetry_source: "simulated",
+      specs: [
+        { label: "Rated Output", value: "250 kW" },
+        { label: "Fuel Rate", value: "7.2 L/h" },
+        { label: "Alternator Voltage", value: "414 V 3-Phase" },
+        { label: "Oil Pressure", value: "4.7 bar" },
+      ],
+    },
+    "battery-sys": {
+      id: "battery-sys",
+      name: "Battery System",
+      category: "POWER INFRASTRUCTURE",
+      status: "healthy",
+      health_pct: 96,
+      temperature_c: 20,
+      vibration_mms: 0.1,
+      efficiency_pct: 95,
+      runtime_hours: 4200,
+      operational_status: "Nominal Load Balancing",
+      last_inspected: "2026-09-21 08:00 UTC",
+      telemetry_source: "simulated",
+      specs: [
+        { label: "Capacity", value: "480 kWh" },
+        { label: "State of Charge", value: "91%" },
+        { label: "Cycle Count", value: "312" },
+        { label: "Bus Voltage", value: "480 V DC" },
       ],
     },
   },
@@ -407,14 +444,15 @@ export async function getLinkStatus(): Promise<LinkStatus> {
     try {
       const res = await fetchWithTimeout(getApiUrl("/link/status"), { cache: "no-store" });
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        return { ...data, is_live: true };
       }
     } catch {
       // Fallback
     }
   }
 
-  return { connected: true, last_synced: "Simulation Mode" };
+  return { connected: true, last_synced: "Simulation Mode", is_live: false };
 }
 
 /*

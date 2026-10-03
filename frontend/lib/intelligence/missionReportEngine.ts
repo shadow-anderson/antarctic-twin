@@ -2,6 +2,9 @@ import { CascadeResult } from "./types";
 import { StationCurrent } from "../types";
 import { SmartResource } from "./types";
 import { OperationalAlert } from "./types";
+import { ReadinessResult } from "./readinessEngine";
+import { CommunicationHealth } from "./communicationEngine";
+import { MaintenanceRecord } from "./maintenanceEngine";
 
 export interface MissionReportData {
   station: "MAITRI" | "BHARATI";
@@ -11,12 +14,17 @@ export interface MissionReportData {
   timestampUtc: string;
   generatedBy: string;
 
-  // 1. Station Health
+  // 1. Station Health & Readiness
   healthScore: number;
+  readinessStatus: string;
+  readinessDelta: number;
   environmentStatus: "NORMAL" | "WARNING" | "CRITICAL";
   energyStatus: "NORMAL" | "WARNING" | "CRITICAL";
   infrastructureStatus: "NORMAL" | "WARNING" | "CRITICAL";
   logisticsStatus: "NORMAL" | "WARNING" | "CRITICAL";
+  communicationStatus: string;
+  communicationLatencyMs: number;
+  communicationScore: number;
 
   // 2. Environment
   temperatureC: number;
@@ -33,11 +41,12 @@ export interface MissionReportData {
   fuelLevelPct: number;
   estimatedEnduranceHours: number;
 
-  // 4. Infrastructure
+  // 4. Infrastructure & Maintenance
   criticalSystemsStatus: string;
   equipmentHealthPct: number;
   detectedFailures: string[];
   maintenanceRisks: string[];
+  maintenancePrioritySummary: string;
 
   // 5. Logistics
   fuelAutonomyDays: number;
@@ -74,7 +83,10 @@ export function buildMissionReport(
   cascadeResult: CascadeResult,
   resources: SmartResource[],
   alerts: OperationalAlert[],
-  isSimulationActive: boolean
+  isSimulationActive: boolean,
+  missionReadiness?: ReadinessResult,
+  communicationHealth?: CommunicationHealth,
+  maintenanceRecords?: MaintenanceRecord[]
 ): MissionReportData {
   const stationName = stationId === "maitri" ? "MAITRI" : "BHARATI";
   const now = new Date();
@@ -96,18 +108,16 @@ export function buildMissionReport(
   const waterRes = resources.find((r) => r.id === "water");
   const foodRes = resources.find((r) => r.id === "food");
 
-  // Health scores
-  let overallHealth = stationId === "maitri" ? 82 : 89;
+  // Health scores - directly derived from missionReadiness if available
+  let overallHealth = missionReadiness?.overallScore ?? (stationId === "maitri" ? 82 : 89);
   let energyStatus: "NORMAL" | "WARNING" | "CRITICAL" = "WARNING";
   let logisticsStatus: "NORMAL" | "WARNING" | "CRITICAL" = fuelRes?.status === "CRITICAL" ? "CRITICAL" : "WARNING";
 
   if (isSimulationActive) {
     if (cascadeResult.missionRisk.simulated === "CRITICAL") {
-      overallHealth = 58;
       energyStatus = "CRITICAL";
       logisticsStatus = "CRITICAL";
     } else if (cascadeResult.missionRisk.simulated === "HIGH") {
-      overallHealth = 68;
       energyStatus = "WARNING";
       logisticsStatus = "WARNING";
     }
@@ -135,6 +145,15 @@ export function buildMissionReport(
     },
   ];
 
+  // Derive maintenance risks from predictive maintenance records
+  const highPriorityMaint = maintenanceRecords?.filter(m => m.priority === "CRITICAL" || m.priority === "HIGH") ?? [];
+  const dynamicMaintRisks = highPriorityMaint.length > 0
+    ? highPriorityMaint.map(m => `${m.shortId} (${m.assetName}) [${m.priority}]: ${m.nextRecommended}`)
+    : ["Injector overhaul due on backup diesel genset at 8,000 runtime hours"];
+
+  const critCount = maintenanceRecords?.filter(m => m.priority === "CRITICAL").length ?? 0;
+  const highCount = maintenanceRecords?.filter(m => m.priority === "HIGH").length ?? 1;
+
   return {
     station: stationName,
     stationName: stationId === "maitri" ? "Maitri Research Station" : "Bharati Research Station",
@@ -143,12 +162,17 @@ export function buildMissionReport(
     timestampUtc,
     generatedBy: "Antarctic Digital Twin — Operational Intelligence System (SIH26060)",
 
-    // 1. Station Health
+    // 1. Station Health & Readiness
     healthScore: overallHealth,
+    readinessStatus: missionReadiness?.status ?? (overallHealth >= 80 ? "MISSION READY" : "READY WITH CAUTION"),
+    readinessDelta: missionReadiness?.delta ?? 0,
     environmentStatus: "NORMAL",
     energyStatus,
     infrastructureStatus: stationId === "maitri" ? "WARNING" : "NORMAL",
     logisticsStatus,
+    communicationStatus: communicationHealth?.status ?? "CONNECTED",
+    communicationLatencyMs: communicationHealth?.latencyMs ?? 420,
+    communicationScore: communicationHealth?.overallScore ?? 88,
 
     // 2. Environment
     temperatureC: isSimulationActive ? cascadeResult.temperatureC.simulated : tempVal,
@@ -167,13 +191,14 @@ export function buildMissionReport(
     fuelLevelPct: fuelPct,
     estimatedEnduranceHours: isSimulationActive ? cascadeResult.batteryEnduranceHours.simulated : (stationId === "maitri" ? 14.5 : 18.2),
 
-    // 4. Infrastructure
+    // 4. Infrastructure & Maintenance
     criticalSystemsStatus: "Life Support Online · Radome Heating Active",
     equipmentHealthPct: stationId === "maitri" ? 84.5 : 94.2,
     detectedFailures: stationId === "maitri"
       ? ["Generator 02 Elevated Harmonic Vibration (6.2 mm/s)", "Lake Priyadarshini intake heating loop trace verification pending"]
       : ["Sea Water Desalination secondary RO differential pressure elevated (+0.4 bar)"],
-    maintenanceRisks: ["Injector overhaul due on backup diesel genset at 8,000 runtime hours"],
+    maintenanceRisks: dynamicMaintRisks,
+    maintenancePrioritySummary: `${critCount} Critical, ${highCount} High priority maintenance action${critCount + highCount !== 1 ? "s" : ""}`,
 
     // 5. Logistics
     fuelAutonomyDays: fuelRes?.daysRemaining ?? 42.0,

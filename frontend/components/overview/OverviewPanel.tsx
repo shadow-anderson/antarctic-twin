@@ -257,37 +257,33 @@ Communication is provided through dedicated satellite channels, enabling voice, 
   // LOADING STATE
   // =========================================================
 
-  if (loading || !currentData) {
-    return (
-      <div className="min-h-[420px] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-ops-text-2">
+  if (!currentData) {
+    if (loading) {
+      return (
+        <div className="min-h-[420px] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4 text-ops-text-2">
 
-          <div className="relative">
-            <div className="w-10 h-10 border-2 border-white/10 rounded-full" />
+            <div className="relative">
+              <div className="w-10 h-10 border-2 border-white/10 rounded-full" />
 
-            <div className="absolute inset-0 w-10 h-10 border-2 border-ops-teal border-t-transparent rounded-full animate-spin" />
+              <div className="absolute inset-0 w-10 h-10 border-2 border-ops-teal border-t-transparent rounded-full animate-spin" />
+            </div>
+
+            <div className="text-center">
+              <p className="font-semibold text-ops-text">
+                Loading Station Data
+              </p>
+
+              <p className="text-xs text-ops-text-3 mt-1">
+                Synchronizing {meta.name} telemetry...
+              </p>
+            </div>
+
           </div>
-
-          <div className="text-center">
-            <p className="font-semibold text-ops-text">
-              Loading Station Data
-            </p>
-
-            <p className="text-xs text-ops-text-3 mt-1">
-              Preparing {meta.name} station telemetry...
-            </p>
-          </div>
-
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // =========================================================
-  // NO DATA AVAILABLE
-  // =========================================================
-
-  if (!loading && !currentData) {
     return (
       <div className="min-h-[420px] flex items-center justify-center p-6">
 
@@ -302,12 +298,50 @@ Communication is provided through dedicated satellite channels, enabling voice, 
           </h2>
 
           <p className="text-sm text-ops-text-2 mt-2 leading-6">
-            Unable to retrieve station telemetry at the moment.
-            Please verify the communication link and try again.
+            Unable to retrieve live telemetry at the moment.
+            You can retry the connection or proceed with calibrated simulation data.
           </p>
 
-          <div className="mt-5 px-3 py-2 rounded-xl bg-ops-red/20 border border-ops-red/40 text-[10px] font-bold uppercase tracking-wider text-ops-red">
-            No Cached Data Available
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const [c, a] = await Promise.all([
+                    getStationCurrent(selectedStation),
+                    getStationAnomalies(selectedStation),
+                  ]);
+                  setCurrentData(c);
+                  setAnomalies(a);
+                  setError(null);
+                } catch (e: any) {
+                  setError(e?.message ?? "Failed to connect");
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-ops-card hover:bg-white/10 border border-white/20 text-xs font-bold text-white transition-all cursor-pointer"
+            >
+              Retry Connection
+            </button>
+
+            <button
+              type="button"
+              onClick={async () => {
+                setLoading(true);
+                const c = await getStationCurrent(selectedStation);
+                const a = await getStationAnomalies(selectedStation);
+                setCurrentData(c);
+                setAnomalies(a);
+                setUsingCachedData(true);
+                setError(null);
+                setLoading(false);
+              }}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-ops-teal hover:bg-ops-teal/90 text-xs font-bold text-[#0A1822] transition-all cursor-pointer shadow-sm"
+            >
+              Use Simulation Data
+            </button>
           </div>
 
         </div>
@@ -850,9 +884,9 @@ Communication is provided through dedicated satellite channels, enabling voice, 
         anomalies={anomalies}
         stationName={meta.name}
         timestamp={
-          currentData.observation_time
+          currentData?.observation_time
             ? (() => {
-                const d = new Date(currentData.observation_time);
+                const d = new Date(currentData.observation_time!);
                 return `${String(d.getUTCHours()).padStart(2, "0")}:${String(
                   d.getUTCMinutes()
                 ).padStart(2, "0")} UTC`;

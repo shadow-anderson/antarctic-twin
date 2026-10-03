@@ -49,7 +49,7 @@ const Twin3DCanvas = dynamic(
 
 export const PolarisTwinPanel: React.FC = () => {
   const { selectedStation, setSelectedStation } = useStation();
-  const { communicationHealth } = useOperationalIntelligence();
+  const { communicationHealth, cascadeResult, resources, isSimulationActive } = useOperationalIntelligence();
 
   // Active layers (8 layers)
   const [activeLayers, setActiveLayers] = useState<Record<TwinLayerId, boolean>>({
@@ -170,25 +170,37 @@ export const PolarisTwinPanel: React.FC = () => {
     );
   }, [categoryFilter]);
 
-  // Telemetry ticker values for active station
+  // Telemetry ticker values for active station — dynamically derived from simulation & resource state
   const stationTicker = useMemo(() => {
-    if (selectedStation === "maitri") {
+    const fuelRes = resources.find((r) => r.id === "fuel");
+    const fuelDays = fuelRes?.daysRemaining ?? (selectedStation === "maitri" ? 8.4 : 11.6);
+    const bessKwh = selectedStation === "maitri" ? "360kWh" : "480kWh";
+
+    if (isSimulationActive && cascadeResult) {
+      const isBlizzard = cascadeResult.scenarioId === "blizzard";
+      const isHighWind = cascadeResult.scenarioId === "high_wind";
+      const windSpeed = isBlizzard ? "34.0 m/s" : isHighWind ? "24.5 m/s" : (selectedStation === "maitri" ? "11.4 m/s" : "8.7 m/s");
       return {
-        temp: "-14.2°C",
-        wind: "11.4 m/s",
-        power: "218 kW",
-        bess: "68% (360kWh)",
-        fuel: "8.4 days",
+        temp: `${cascadeResult.temperatureC.simulated}°C`,
+        wind: windSpeed,
+        power: `${cascadeResult.energyConsumptionPct.simulatedKw} kW`,
+        bess: `${cascadeResult.batterySocPct.simulated}% (${bessKwh})`,
+        fuel: `${fuelDays} days`,
       };
     }
+
+    const baselineTemp = cascadeResult?.temperatureC.baseline ?? (selectedStation === "maitri" ? -14.2 : -8.6);
+    const baselinePower = selectedStation === "maitri" ? 218 : 232;
+    const baselineSoc = cascadeResult?.batterySocPct.baseline ?? (selectedStation === "maitri" ? 68 : 74);
+
     return {
-      temp: "-8.6°C",
-      wind: "8.7 m/s",
-      power: "232 kW",
-      bess: "74% (480kWh)",
-      fuel: "11.6 days",
+      temp: `${baselineTemp}°C`,
+      wind: selectedStation === "maitri" ? "11.4 m/s" : "8.7 m/s",
+      power: `${baselinePower} kW`,
+      bess: `${baselineSoc}% (${bessKwh})`,
+      fuel: `${fuelDays} days`,
     };
-  }, [selectedStation]);
+  }, [selectedStation, isSimulationActive, cascadeResult, resources]);
 
   return (
     <div className="space-y-3 pb-8">

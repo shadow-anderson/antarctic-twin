@@ -6,19 +6,21 @@ import { Wifi, WifiOff, RefreshCw } from "lucide-react";
 import { SourceBadge } from "../shared/SourceBadge";
 
 export const LinkStatusIndicator: React.FC = () => {
-  const { connected, lastSynced, isRestoring, toggle } = useLink();
+  const { connected, isLive, lastSynced, isRestoring, toggle } = useLink();
 
   return (
     <button
       onClick={toggle}
       disabled={isRestoring}
-      title="Simulated link demo — click to toggle communication link degradation"
+      title="Communication link status — click to toggle simulated degradation"
       className={`group relative flex items-center gap-3 px-3.5 py-2 rounded-xl border transition-all duration-200 text-left cursor-pointer select-none ${
         isRestoring
           ? "bg-ops-teal/15 border-ops-teal/30 text-ops-teal"
-          : connected
-          ? "bg-ops-card/80 border-white/10 hover:bg-ops-card hover:border-white/20 text-ops-text ring-1 ring-white/5"
-          : "bg-ops-amber/15 border-ops-amber/30 hover:bg-ops-amber/25 hover:border-ops-amber/40 text-ops-amber"
+          : !connected
+          ? "bg-ops-amber/15 border-ops-amber/30 hover:bg-ops-amber/25 hover:border-ops-amber/40 text-ops-amber"
+          : isLive
+          ? "bg-ops-card/80 border-ops-green/30 hover:bg-ops-card hover:border-ops-green/50 text-ops-text ring-1 ring-ops-green/10"
+          : "bg-ops-card/80 border-ops-teal/30 hover:bg-ops-card hover:border-ops-teal/40 text-ops-text ring-1 ring-ops-teal/10"
       }`}
     >
       {/* =====================================================
@@ -32,18 +34,18 @@ export const LinkStatusIndicator: React.FC = () => {
           <RefreshCw
             className="w-3.5 h-3.5 text-ops-teal animate-spin"
           />
-        ) : connected ? (
+        ) : !connected ? (
+          <span className="inline-flex rounded-full h-2 w-2 bg-ops-amber" />
+        ) : isLive ? (
           <span className="relative flex h-2 w-2">
-
-            {/* Soft pulse */}
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ops-green opacity-40" />
-
-            {/* Main dot */}
             <span className="relative inline-flex rounded-full h-2 w-2 bg-ops-green" />
-
           </span>
         ) : (
-          <span className="inline-flex rounded-full h-2 w-2 bg-ops-amber" />
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ops-teal opacity-40" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-ops-teal" />
+          </span>
         )}
 
         {/* Text */}
@@ -54,9 +56,11 @@ export const LinkStatusIndicator: React.FC = () => {
             <span className="text-xs font-semibold tracking-tight text-ops-text">
               {isRestoring
                 ? "Restoring link..."
-                : connected
-                ? "Live"
-                : "Degraded"}
+                : !connected
+                ? "Degraded"
+                : isLive
+                ? "Live Connection"
+                : "Simulation Mode"}
             </span>
 
             <span className="text-[9px] text-ops-text-3 font-medium group-hover:text-ops-text-2 transition-colors">
@@ -69,13 +73,15 @@ export const LinkStatusIndicator: React.FC = () => {
             <SourceBadge
               source="simulated"
               size="xs"
-              origin="Simulated demo control"
+              origin="Deterministic model"
               variant="dark"
             />
             <span className="text-[10px] text-ops-text-3 font-normal">
               {isRestoring
                 ? "Syncing telemetry..."
-                : `Synced: ${lastSynced}`}
+                : isLive
+                ? `Synced: ${lastSynced}`
+                : "Calibrated Telemetry"}
             </span>
           </div>
 
