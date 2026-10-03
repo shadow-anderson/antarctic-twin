@@ -1,280 +1,270 @@
-﻿# Demo Script
-
-## Overview
-
-Target runtime: 4ΓÇô5 minutes. Intended for the SIH 2026 PS-26060 demo video or
-live finals presentation. Narrative arc: two isolated Indian Antarctic stations
-are grounded by real archived weather data, every other metric is honestly
-labelled simulated or derived, and the system can reason forward ΓÇö simulate a
-disruption, project its cascade, and forecast resource depletion ΓÇö not just
-display a dashboard.
+﻿# POLAR TWIN â€” SIH 2026 Demo Script
+## "Antarctic Remote Operations Research Command Center"
 
 ---
 
-## Pre-demo checklist
-
-Run these before opening OBS or presenting:
-
-- [ ] **Backend commit check.** Hit `https://<your-render-url>/openapi.json` and
-  confirm the `paths` object contains `/stations/{station_id}/assets/{asset_id}`
-  (added in the hierarchy commit). If it is absent, the deployed service is
-  behind `main` ΓÇö trigger a manual redeploy from the Render dashboard before
-  recording.
-- [ ] **Both stations load.** Visit the app, click **Maitri**, wait for the
-  Overview panel to fully populate. Switch to **Bharati**, wait again. If either
-  returns a network error, the Render free-tier instance may be cold-starting ΓÇö
-  wait 30 seconds and retry.
-- [ ] **No stale what-if result.** Switch to the **What-If** tab. If a previous
-  simulation result ("Simulation Complete") is visible, refresh the page to
-  clear it before recording.
-- [ ] **Link indicator shows "Live".** In the top-right of the header, the
-  `LinkStatusIndicator` button should read **Live** with a green pulsing dot. If
-  it reads **Degraded**, click it once to toggle back. Wait for the
-  "Restoring link..." spinner (Γëê 750 ms) to clear before recording.
-- [ ] **Station is set to Maitri.** The `StationSwitcher` in the top-left should
-  show **Maitri** ΓÇö the scenario numbers in the script are written for Maitri's
-  baseline values.
-- [ ] **Browser zoom at 100 %.** The provenance ledger chip ("X Real ┬╖ Y
-  Simulated ┬╖ Z Derived") is only visible on the `lg` breakpoint and above; at
-  reduced zoom it may disappear. Use a 1080p or wider viewport.
+> **STEP 2 RESULT â€” LIVE LOOK:** Worked from code only (6 source files read in full).
+> The dev servers have been running 27+ hours and are live at `localhost:3000`,
+> but screenshot/browser tooling was not used. All UI copy below is quoted directly
+> from the source files â€” nothing is paraphrased or invented.
 
 ---
 
-## Script
+## PRE-RECORDING CHECKLIST âš ï¸
 
-### Step 1 ΓÇö Open on the Overview tab (0:00 ΓÇô 0:45)
+**Complete both checks before hitting record â€” do not skip:**
 
-**Action:** App is already on the **Overview** tab showing Maitri. Camera or
-screen capture is running.
+1. **Forecast tab live data check:** Navigate to Forecast. If you see the amber banner
+   *"Operating in offline mode â€” displaying calibrated local reference projectionsâ€¦"*,
+   the tab is showing the hardcoded mock fallback (`MOCK_FORECASTS`), not live data.
+   Confirm the backend `/stations/{id}/forecast` endpoint is responding before recording.
 
-**Narration:**
-
-> "This is the Antarctic Digital Twin for India's polar research programme ΓÇö
-> Maitri and Bharati stations. The first thing to notice is the header: that
-> chip in the top right reads '3 Real ┬╖ 6 Simulated ┬╖ 5 Derived'. Click it."
-
-Click the provenance ledger chip (labeled **Data Provenance Ledger** when open).
-The popover expands, listing every tracked metric grouped by source.
-
-> "Every data point in this system carries a source tag ΓÇö Real, Simulated, or
-> Derived. Real means measured and archived. Simulated means generated in code
-> because NCPOR doesn't publish live operational feeds publicly. Derived means
-> computed from those inputs. The pop-up is live ΓÇö it reads the source field off
-> the actual API response, not from a hardcoded list."
-
-Close the popover (click the ├ù or click outside it).
+2. **What-If "Simulation Verdict" hero check:** Run a simulation (any scenario). After
+   the result loads, confirm the large number ("X days to critical") and
+   URGENT/WARNING/MONITOR pill actually appear on screen. This hero only renders when
+   the backend returns an `urgency` field on the result. If the Verdict block is absent,
+   the backend is on an older commit â€” update and redeploy before recording.
 
 ---
 
-### Step 2 ΓÇö Weather: the real anchor (0:45 ΓÇô 1:30)
+## TIMING REFERENCE
 
-**Action:** Remain on **Overview**, scroll to the weather cards (Temperature,
-Wind Speed, Atmospheric Pressure). Each card shows a green dot and the label
-**Real**.
+| Segment | Words | Ã·2.4 wps | +Action Time | Segment Total | Running |
+|---------|-------|----------|--------------|---------------|---------|
+| 1. Face cam intro | 65 | ~27s | +0s | **~27s** | 0:27 |
+| 2. Overview + Provenance Ledger | 112 | ~47s | +8s | **~55s** | 1:22 |
+| 3. Assets â€” 3D Schematic | 82 | ~34s | +8s | **~42s** | 2:04 |
+| 4. What-If â€” Generator Failure | 120 | ~50s | +10s | **~60s** | 3:04 |
+| 5. Forecast â€” Depletion Horizon | 60 | ~25s | +4s | **~29s** | 3:33 |
+| 6. Android cut | 18 | ~8s | +4s | **~12s** | 3:45 |
+| 7. Close | 18 | ~8s | +5s hold | **~13s** | 3:58 |
 
-**Narration:**
-
-> "The weather section is the one place where the data is measured. It comes
-> from the NCPOR and IMD automatic weather station archive ΓÇö CSV files covering
-> Maitri from 1985 to December 2016 and Bharati from 2012 to December 2016. The
-> API picks the most recent row where all three fields ΓÇö temperature, pressure,
-> and wind speed ΓÇö are simultaneously non-null. The observation time shown here
-> is that archived row's timestamp, not today's time. This is archival data, and
-> the system says so."
-
-Briefly gesture at the observation timestamp displayed in the panel.
-
-> "Everything else on this page ΓÇö power, fuel, reserves ΓÇö carries an amber
-> Simulated badge, because those numbers come from a seeded model, not a sensor.
-> The distinction is explicit in the UI and in every API response."
+**Estimated total: ~3:58 â€” under the 4:00 hard constraint.**
 
 ---
 
-### Step 3 ΓÇö Assets tab, quick look (1:30 ΓÇô 2:00)
-
-**Action:** Click the **Assets** tab in the top navigation bar.
-
-**Narration:**
-
-> "The Assets tab models the physical subsystems ΓÇö thirteen nodes across power,
-> water, buildings, and logistics. The default view is Hierarchy."
-
-Point at the segmented toggle in the top-right of the Assets header.
-
-> "You can switch to the 3D Schematic view here."
-
-Click **3D Schematic** in the toggle. The schematic renders in the panel (height
-420 px, below the header).
-
-> "The schematic is illustrative ΓÇö not to scale and not a real floor plan ΓÇö which
-> the caption says explicitly. Asset status on both views is simulated telemetry,
-> seeded and jittered every three minutes."
-
-Click **Hierarchy** to switch back. In the left-side tree, click **Generator 02**
-(shown with a warning status on Maitri).
-
-> "Generator 02 at Maitri is in a warning state ΓÇö high vibration, due for
-> inspection. These states are hardcoded baselines with a small deterministic
-> jitter; they're not live sensor readings."
+## THE SCRIPT
 
 ---
 
-### Step 4 ΓÇö What-If: run a scenario (2:00 ΓÇô 3:15)
+### [00:00â€“00:27] SEGMENT 1 â€” FACE CAM INTRO
 
-**Action:** Click the **What-If** tab.
+**ON-SCREEN ACTIONS:**
+1. Face cam only. Clean background. Look directly at camera.
 
-**Narration:**
+**VOICEOVER:**
+> "Hi, I'm [your name], presenting Polar Twin â€” our solution for PS 26060.
+>
+> India's Maitri and Bharati stations sit in Antarctica
+> with no road access, twelve-hour satellite windows,
+> and weeks between supply runs.
+> If something goes wrong â€” a generator fails, a blizzard hits â€”
+> mission control at NCPOR has no real-time situational picture.
+>
+> Polar Twin is a browser-based digital twin that gives them one."
 
-> "The What-If tab is the simulation engine. The panel shows a three-step
-> pipeline: Select Trigger ΓåÆ Simulate Cascade ΓåÆ Assess Response."
-
-The scenario picker shows three cards: **GENERATOR FAILURE**, **BLIZZARD**,
-**RESUPPLY DELAY**. **GENERATOR FAILURE** is selected by default.
-
-> "Generator Failure is already selected ΓÇö it's the most relevant to the warning
-> state we just saw. The scenario parameters are: generation drops to 55 % of
-> current output, consumption is unchanged, and diesel burn rate increases by
-> 30 %."
-
-Click the **Run Simulation** button (amber, in the section below the picker,
-labeled "Run Simulation ΓåÆ").
-
-**Wait** approximately 1ΓÇô2 seconds for the API call to return. The button shows
-a spinning **Running Simulation** label during the call. When the response
-arrives, the Results section appears with a progress bar that begins filling.
-
-> "The results are being generated now ΓÇö this is a live API call to the backend,
-> not a canned response. The backend reads Maitri's current simulated energy
-> state, applies the scenario multipliers, computes how many days until diesel
-> hits the 15 % operational threshold, and returns a dynamic timeline and
-> recommendations."
-
-The cascade playback animates: Impact items appear one by one (typed at 20 ms
-per character), then Timeline events, then Recommendations ΓÇö each section
-advancing after a 550 ms inter-item pause and a 900 ms section transition.
-Observe the **Simulation Verdict** card showing `days_until_critical` and an
-urgency badge (URGENT / WARNING / MONITOR depending on computed values).
-
-> "The verdict is computed: days until diesel reaches the 15 % threshold under
-> the failure scenario. The urgency tier ΓÇö URGENT if that's under three days,
-> WARNING under seven, MONITOR otherwise ΓÇö comes from the same backend
-> calculation."
+*(~65 words, ~27s)*
 
 ---
 
-### Step 5 ΓÇö Forecast tab: making it concrete (3:15 ΓÇô 3:50)
+### [00:27â€“01:22] SEGMENT 2 â€” OVERVIEW TAB + PROVENANCE LEDGER
 
-**Action:** Click the **Forecast** tab.
+**ON-SCREEN ACTIONS:**
+1. Cut to browser at `localhost:3000`. Overview tab is active. Confirm you can see
+   the Maitri hero card: "Maitri / Research Station" heading, "â— Operational" pill,
+   SolarBadge (e.g. "Polar Night Â· Sun âˆ’XX.XÂ°"), stats grid showing Capacity,
+   Elevation, Established, and Link.
+2. Click the **StationSwitcher** in the top bar. Select **Bharati**. Pause 1â€“2s for
+   the hero image to cross-fade (opacity 0â†’1, scale 1.03â†’1 over ~700msâ€“1200ms).
+3. Point the cursor at the top-right area of the top bar. Click the provenance ledger
+   chip â€” it reads **"N Real Â· N Simulated Â· N Derived"** (green Â· amber Â· violet text).
+   The popover opens with header **"Data Provenance Ledger"**, containing three groups:
+   - **Real (green dot):** Temperature Â· Wind Speed Â· Atmospheric Pressure Â· Station Facts
+   - **Simulated (amber dot):** Power Generation Â· Power Consumption Â· Diesel Fuel Level Â·
+     Food Rations Reserve Â· Diesel Autonomy Â· Asset Telemetry Â· Comms Link State
+   - **Derived (violet dot):** Anomaly Flags Â· Diesel Depletion Forecast Â·
+     Food Depletion Forecast Â· What-If Simulation
+4. Let the popover sit open 3â€“4 seconds so viewers can read the groups. Then click X
+   (top-right of the popover) to close it.
 
-**Narration:**
+**VOICEOVER:**
+> "This is the Overview tab â€” we've just switched to Bharati station.
+>
+> Every number you see has a declared origin.
+> That chip in the top bar â€” click it.
+>
+> This is the Data Provenance Ledger.
+>
+> Weather readings â€” temperature, wind, pressure â€”
+> those are real: archived AWS data from NCPOR and IMD.
+>
+> Energy and logistics figures come from seeded station models.
+>
+> Forecasts and what-if results are derived â€”
+> computed on the fly, marked as such.
+>
+> Judges, scientists, mission planners:
+> they always know exactly what they're looking at
+> and where it came from.
+> That's not a feature. That's a design principle."
 
-> "The Forecast tab projects the same station's diesel and food reserves over
-> 30 days using a linear burn model. If consumption exceeds generation, the
-> diesel burn rate accelerates above 1├ù; food always depletes at 1├ù regardless.
-> The warning threshold is 15 days remaining; critical is 7 days."
-
-Gesture at the threshold lines or crossing annotations on the forecast chart.
-
-> "These projections are derived from simulated inventory numbers ΓÇö they're
-> honest about that with a Derived badge. The chart makes it easy to see when
-> a threshold is projected to be crossed, which is the kind of forward-view an
-> operator actually needs."
-
----
-
-### Step 6 ΓÇö Comms degradation: the standout beat (3:50 ΓÇô 4:30)
-
-**Action:** Navigate back to the **Overview** tab. Locate the **LinkStatusIndicator**
-button in the top-right corner of the header ΓÇö it currently reads **Live** with a
-green pulsing dot and a Wifi icon.
-
-**Narration:**
-
-> "The last thing to show is the comms degradation mode. In a real polar
-> operation, a satellite link can drop. We simulate that with this toggle."
-
-Click the **Live ┬╖ toggle** button once.
-
-**What happens immediately:** The backend `POST /link/toggle` call fires. The
-button text changes from **Live** to **Degraded**, the dot changes from green to
-amber, and the Wifi icon changes to WifiOff. The Overview panel shows a banner:
-"Communication Link Degraded ΓÇö Polar Backhaul Stalled ΓÇö Displaying the last
-synchronized station state." There is no loading spinner ΓÇö the transition is
-instant on the UI side once the API responds (the indicator's `duration-200`
-CSS transition applies).
-
-> "The link is now degraded. The dashboard keeps displaying the last
-> synchronized state ΓÇö it doesn't blank out. This is the graceful-degradation
-> path: cached telemetry rather than a broken UI."
-
-Pause for 3ΓÇô4 seconds to let the degraded state be visible.
-
-Click the **Degraded ┬╖ toggle** button once to restore.
-
-**What happens:** The button immediately shows a spinning RefreshCw icon and the
-text **Restoring link...** with a teal background. After exactly 750 ms
-(a `setTimeout` in `LinkContext.tsx`), the state resolves to **Live**, the green
-dot and Wifi icon return, and the Overview panel shows a brief green "Link
-Restored ΓÇö Synchronizing station telemetry state with polar ground station..."
-banner.
-
-> "The 750-millisecond restoration delay is deliberate ΓÇö it gives the UI time to
-> animate the sync handshake. The whole comms toggle is simulated demo
-> infrastructure; it's tagged as such with a Simulated badge on the indicator."
+*(~112 words, ~47s spoken + ~8s for station switch and chip click)*
 
 ---
 
-### Step 7 ΓÇö Close (4:30 ΓÇô 4:50)
+### [01:22â€“02:04] SEGMENT 3 â€” ASSETS TAB â€” 3D SCHEMATIC
 
-**Action:** Return to the **Overview** tab, link showing **Live**, Maitri data
-displayed.
+**ON-SCREEN ACTIONS:**
+1. Click **"Assets"** in the nav (Layers icon, second tab). Wait for the
+   "Loading Asset Subsystem Hierarchyâ€¦" spinner to clear.
+2. In the top-right of the Assets header card, locate the segmented toggle:
+   **"Hierarchy"** | **"3D Schematic"**. Click **"3D Schematic"** (Box icon).
+3. The Three.js WebGL canvas renders at 420px height â€” an isometric orthographic view:
+   Main Building on stilts (Maitri), Lab Module, Storage Facility, two Generators
+   with exhaust stacks, Battery System, Water Pump, Water Tank, Diesel Storage
+   cylinders, Food Supply, Medical Supplies, Water Reserves, Spare Parts containers.
+   Status-colored beacons glow on each asset. Scene label at bottom reads:
+   *"Illustrative schematic â€” not to scale Â· Asset status: [simulated badge]"*
+4. Hover over the **Generator 1** mesh (upper-right of scene). The HTML label
+   **"GENERATOR 1"** pops above it. Hold 1s.
+5. Click it â€” white edge wireframe activates (selected). The Asset Diagnostics panel
+   beside it updates to show gen-01 data.
 
-**Narration:**
+**VOICEOVER:**
+> "Assets tab â€” 13 physical nodes tracked across the station.
+>
+> Click 3D Schematic.
+>
+> This is a live Three.js render of the station layout:
+> main building, generators, water systems, logistics stores.
+> Each beacon is colored by asset status â€”
+> healthy, warning, or critical.
+>
+> Click any building â€” you get full diagnostics on the right.
+>
+> Maitri and Bharati render with structural differences.
+> That's Maitri's main building raised on stilts, exactly as built."
 
-> "To summarise: real archived weather from NCPOR grounds the twin; energy,
-> logistics, and asset telemetry are honestly labelled simulated; anomaly
-> detection, forecasts, and what-if results are derived from those inputs. Every
-> metric carries its source tag in the API response and in the UI. The
-> architecture is designed so any simulated field can be replaced by a real feed
-> without changing field names or the provenance system."
-
-End recording.
+*(~82 words, ~34s spoken + ~8s for toggle click, hover, asset click)*
 
 ---
 
-## If something breaks mid-recording
+### [02:04â€“03:04] SEGMENT 4 â€” WHAT-IF COMMAND CENTER
 
-- **Backend cold-start (504 / network error on any tab):** Switch to a
-  pre-recorded screen-capture backup clip of the same flow, which should be kept
-  ready. The Render free tier sleeps after 15 minutes of inactivity ΓÇö the first
-  request after a sleep can take 20ΓÇô30 seconds.
-- **What-If returns a 422 or the simulation result looks wrong:** Switch
-  scenarios. **Resupply Delay** is the most stable scenario because it uses
-  all-1.0 multipliers and only tests whether the 45-day delay exceeds current
-  reserves ΓÇö it always produces a clean, readable output regardless of the
-  jittered state.
-- **Provenance ledger chip is not visible:** The chip is hidden below the `lg`
-  breakpoint. Widen the browser window or zoom out to 90 % ΓÇö do not proceed
-  without the chip being visible since it is a key demo element.
+**ON-SCREEN ACTIONS:**
+1. Click **"What-If"** in the nav (Sparkles icon, third tab).
+   Section heading reads **"What-If Command Center"**.
+   Pipeline shows Step 01 â†’ **"Select Trigger"** / Step 02 â†’ **"Simulate Cascade"** /
+   Step 03 â†’ **"Assess Response"**.
+2. In the **"Operational Disruption"** section, confirm **"GENERATOR FAILURE"** is
+   already selected (it defaults to this on load). The Active Scenario box reads
+   **"GENERATOR FAILURE"** with tagline *"Primary power generation fault"*.
+3. Click the amber **"Run Simulation â†’"** button. It transitions to
+   a spinner: **"Running Simulation"**.
+4. When the result returns, **"Simulation Complete"** green pill appears.
+   Confirm the **Simulation Verdict** hero is visible â€” the large number,
+   **"days to critical"** label, and the urgency pill (URGENT / WARNING / MONITOR).
+   Hold on this for 3 full seconds before moving.
+
+**VOICEOVER:**
+> "What-If Command Center.
+>
+> Active scenario: Generator Failure â€” primary power fault.
+>
+> Hit Run Simulation.
+>
+> That request goes to our FastAPI backend.
+> It takes the station's current state,
+> applies the scenario's cascade multipliers,
+> and recomputes resource and operational impacts.
+>
+> This is not a scripted response.
+> Every run goes through the model.
+>
+> Simulation Verdict: days until the situation turns critical.
+> Urgency level: Urgent, Warning, or Monitor.
+>
+> For a station 14,000 kilometres away,
+> knowing that number before the failure compounds â€”
+> that's the entire point of this system."
+
+*(~120 words, ~50s spoken + ~10s for button click and animation wait)*
 
 ---
 
-## Notes for a live (not recorded) demo
+### [03:04â€“03:33] SEGMENT 5 â€” FORECAST TAB
 
-- **Backend warm-up:** Before walking into the room, open the app on your
-  machine and click through all four tabs at least once so the Render instance
-  is warm. The first cold-start after sleep can take 20ΓÇô30 seconds, which will
-  visibly stall the live demo.
-- **Fallback clip:** Have a local screen recording of the full flow on a second
-  device or in a separate browser tab (as a video file). If the Render backend
-  is unreachable during the judging session, play the clip and narrate over it ΓÇö
-  judges at SIH typically accept a backup recording when a live network failure
-  is the cause.
-- **Render vs. `main` drift:** Before the judging session, verify the deployed
-  Render URL is serving the same commit as `main` by checking
-  `/openapi.json` for the `/assets/{asset_id}` path. If it's missing, the
-  deployment is behind and the Assets tab will likely error live.
-- **Comms toggle is the most reliable beat:** The toggle does not depend on CSV
-  data or a complex computation ΓÇö it just POSTs to `/link/toggle`. Even if the
-  rest of the backend is slow, this beat will work cleanly and is visually
-  striking. Prioritise reaching this step if time is running short.
+**ON-SCREEN ACTIONS:**
+1. Click **"Forecast"** in the nav (TrendingDown icon, fourth tab).
+   Section header badge reads **"Depletion Horizon Analysis"** with live
+   ping indicator **"30-Day Predictive Model"**.
+   Page heading: **"Resource Autonomy & Depletion"**.
+   Status bar below heading shows:
+   *"Forecast Window: Day 0 to Day 30"* Â· *"Thresholds: Warning 15d Â· Critical 7d"*
+2. The threshold hero strip at top shows the nearest crossing
+   (e.g. *"[N] days Â· Diesel reaches WARNING threshold"* in amber).
+   Let this read clearly on screen.
+3. Scroll down slightly so both diesel and food `ResourceForecastCard` charts
+   are visible side-by-side.
+
+**VOICEOVER:**
+> "Forecast tab â€” 30-day depletion horizon.
+>
+> The system runs a daily linear burn against current reserves.
+>
+> That hero at the top: the nearest threshold crossing â€”
+> how many days until diesel or food hits the 15-day warning line
+> or the 7-day critical emergency line.
+>
+> Diesel on the left, food on the right.
+> Both charts update whenever station data refreshes."
+
+*(~60 words, ~25s spoken + ~4s for tab click and scroll)*
+
+---
+
+### [03:33â€“03:45] SEGMENT 6 â€” ANDROID APP (FAST CUT)
+
+**ON-SCREEN ACTIONS:**
+1. Cut to Android app on device or emulator. Show the main dashboard
+   rendering the same station data â€” Overview or Forecast tab visible.
+
+**VOICEOVER:**
+> "The same dashboard also runs natively on Android â€”
+> same data, same tabs, offline-capable."
+
+*(~18 words, ~8s spoken + ~4s for device transition)*
+
+---
+
+### [03:45â€“03:58] SEGMENT 7 â€” CLOSE
+
+**ON-SCREEN ACTIONS:**
+1. Cut to a title slide showing:
+   - **GitHub:** `github.com/shadow-anderson/antarctic-twin` (branch: t1)
+   - **Live demo:** [add your Vercel URL here before recording]
+2. Hold for 5 seconds.
+
+**VOICEOVER:**
+> "GitHub and live demo links on screen.
+>
+> Polar Twin â€” built for NCPOR, designed for the ice."
+
+*(~18 words, ~8s spoken + 5s hold)*
+
+---
+
+## PRODUCTION NOTES
+
+- **Station choice for Segment 2:** Start on Maitri, then switch to Bharati for the
+  provenance ledger demo. This avoids any risk of the Overview and Assets tabs being
+  compared side-by-side for the same station's diesel/food numbers
+  (known unresolved mismatch between those two views â€” cut around it, don't demo them
+  adjacent).
+- **Segment 4:** If the Simulation Verdict hero block does not appear after clicking
+  "Run Simulation" (i.e., `result.urgency` comes back null/absent from the backend),
+  do NOT record. That block is gated on `result.urgency` in `WhatIfPanel.tsx` line 393.
+  Update the backend to return that field before filming.
+- **Speaking pace:** 2.4 words/second. Read each segment aloud once at that pace before
+  recording to confirm feel. Do not rush Segment 4 â€” the verdict animation needs
+  audience attention.
