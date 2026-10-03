@@ -21,6 +21,8 @@ import { WeatherSection } from "./WeatherSection";
 import { EnergySection } from "./EnergySection";
 import { LogisticsSection } from "./LogisticsSection";
 
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
+
 import {
   MapPin,
   Users,
@@ -32,11 +34,19 @@ import {
   CalendarDays,
   ArrowUpRight,
   Satellite,
+  ShieldAlert,
 } from "lucide-react";
 
 export const OverviewPanel: React.FC = () => {
   const { selectedStation } = useStation();
   const { connected, isRestoring } = useLink();
+  const {
+    alertCounts,
+    isSimulationActive,
+    setIsAlertDrawerOpen,
+    cascadeResult,
+    highlightedElementId,
+  } = useOperationalIntelligence();
 
   // =========================================================
   // TELEMETRY STATE
@@ -848,6 +858,90 @@ Communication is provided through dedicated satellite channels, enabling voice, 
             : undefined
         }
       />
+
+      {/* =====================================================
+          OPERATIONAL ALERTS STRIP (Feature 3)
+      ===================================================== */}
+      {(alertCounts.critical > 0 || alertCounts.high > 0) && (
+        <div
+          className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border shadow-md ring-1 ring-white/5 ${
+            alertCounts.critical > 0
+              ? "bg-gradient-to-r from-ops-red/15 via-ops-panel to-ops-panel border-ops-red/30"
+              : "bg-gradient-to-r from-ops-amber/15 via-ops-panel to-ops-panel border-ops-amber/30"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className={`flex items-center justify-center w-10 h-10 rounded-xl ${
+                alertCounts.critical > 0 ? "bg-ops-red/20" : "bg-ops-amber/20"
+              }`}
+            >
+              <ShieldAlert
+                className={`w-5 h-5 ${
+                  alertCounts.critical > 0 ? "text-ops-red" : "text-ops-amber"
+                }`}
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-ops-text">
+                  Operational Alerts Active
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3 mt-1">
+                {alertCounts.critical > 0 && (
+                  <span className="flex items-center gap-1 text-[11px] font-bold text-ops-red">
+                    <span className="w-1.5 h-1.5 rounded-full bg-ops-red" />
+                    {alertCounts.critical} Critical
+                  </span>
+                )}
+                {alertCounts.high > 0 && (
+                  <span className="flex items-center gap-1 text-[11px] font-bold text-ops-amber">
+                    <span className="w-1.5 h-1.5 rounded-full bg-ops-amber" />
+                    {alertCounts.high} High
+                  </span>
+                )}
+                {alertCounts.warning > 0 && (
+                  <span className="flex items-center gap-1 text-[11px] font-semibold text-ops-ice">
+                    <span className="w-1.5 h-1.5 rounded-full bg-ops-ice" />
+                    {alertCounts.warning} Warning
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsAlertDrawerOpen(true)}
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ops-card hover:bg-white/10 border border-white/10 text-xs font-bold text-ops-text transition-colors cursor-pointer"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-ops-teal" />
+            Review Alerts
+          </button>
+        </div>
+      )}
+
+      {/* Simulation Impact Banner */}
+      {isSimulationActive && (
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-ops-violet/10 border border-ops-violet/30 text-xs">
+          <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-ops-violet/20 text-ops-violet">
+            <ShieldAlert className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-bold text-ops-violet uppercase text-[10px] tracking-wider">
+              Scenario Simulation Active
+            </span>
+            <p className="text-ops-text-2 mt-0.5 text-[11px]">
+              Mission Risk: <strong className="text-white">{cascadeResult.missionRisk.simulated}</strong> · 
+              Time to Critical: <strong className="text-white">{cascadeResult.timeToCritical.hoursOrDays}</strong> ·
+              Affected Systems: <strong className="text-white">{cascadeResult.affectedSystems.join(", ")}</strong>
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* =====================================================
           OPERATIONAL TELEMETRY

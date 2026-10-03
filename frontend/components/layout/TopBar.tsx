@@ -11,10 +11,13 @@ import {
   TrendingDown,
   Database,
   X,
+  FileText,
+  ShieldAlert,
 } from "lucide-react";
 
 import { getMissionTime, getStationCurrent } from "@/lib/api";
 import { useStation } from "@/context/StationContext";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 import {
   PROVENANCE_REGISTRY,
   ProvenanceEntry,
@@ -22,7 +25,7 @@ import {
 } from "@/lib/provenance";
 import { DataSource } from "@/lib/types";
 
-export type ConsoleTab = "overview" | "assets" | "whatif" | "forecast";
+export type ConsoleTab = "overview" | "assets" | "twin" | "whatif" | "forecast";
 
 interface TopBarProps {
   activeTab: ConsoleTab;
@@ -53,6 +56,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const [utcTime, setUtcTime] = useState<string>("--:--:-- UTC");
   const { selectedStation } = useStation();
+  const { alertCounts, setIsAlertDrawerOpen, setIsReportModalOpen } = useOperationalIntelligence();
 
   /* ============================================================
      PROVENANCE LEDGER STATE
@@ -292,6 +296,20 @@ export const TopBar: React.FC<TopBarProps> = ({
             Assets
           </button>
 
+          {/* 3D Twin */}
+          <button
+            type="button"
+            onClick={() => onTabChange("twin")}
+            className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all duration-200 ${
+              activeTab === "twin"
+                ? "bg-ops-card text-white shadow-sm ring-1 ring-white/10"
+                : "text-ops-text-2 hover:text-ops-text hover:bg-white/5"
+            }`}
+          >
+            <Database className="w-3.5 h-3.5 stroke-[2]" />
+            3D Twin
+          </button>
+
           {/* What-If */}
           <button
             type="button"
@@ -322,10 +340,38 @@ export const TopBar: React.FC<TopBarProps> = ({
         </nav>
 
         {/* =====================================================
-            RIGHT — PROVENANCE LEDGER + UTC + LINK STATUS
+            RIGHT — ALERTS + REPORT + PROVENANCE + UTC + LINK
         ===================================================== */}
 
-        <div className="flex items-center gap-3 sm:gap-4 w-full lg:w-auto justify-end">
+        <div className="flex items-center gap-2.5 sm:gap-3 w-full lg:w-auto justify-end">
+
+          {/* Actionable Alerts Pill (Feature 3) */}
+          <button
+            type="button"
+            onClick={() => setIsAlertDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-ops-card border border-ops-red/30 hover:bg-ops-red/10 text-xs font-semibold text-ops-text transition-all duration-150 cursor-pointer shadow-sm active:scale-[0.98]"
+            title="Actionable operational early-warning alerts"
+          >
+            <span className="relative flex w-2 h-2">
+              <span className="absolute inline-flex w-full h-full rounded-full bg-ops-red opacity-75 animate-ping" />
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-ops-red" />
+            </span>
+            <span className="text-ops-red font-bold text-[11px]">{alertCounts.critical} Crit</span>
+            <span className="text-ops-text-3 text-[10px]">·</span>
+            <span className="text-ops-amber font-semibold text-[11px]">{alertCounts.high} High</span>
+          </button>
+
+          {/* Mission Report Button (Feature 5) */}
+          <button
+            type="button"
+            onClick={() => setIsReportModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-ops-teal hover:bg-ops-teal/90 text-[#0D2130] text-xs font-bold transition-all duration-150 shadow-sm cursor-pointer active:scale-[0.98]"
+            title="Generate 10-section executive mission intelligence report"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Mission Report</span>
+            <span className="sm:hidden">Report</span>
+          </button>
 
           {/* Provenance Ledger Chip & Popover */}
           <div className="relative">

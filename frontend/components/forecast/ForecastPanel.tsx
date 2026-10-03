@@ -19,9 +19,12 @@ import {
   CalendarDays,
   CheckCircle2,
 } from "lucide-react";
+import { SmartResourceGrid } from "../intelligence/SmartResourceGrid";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 
 export const ForecastPanel: React.FC = () => {
   const { selectedStation } = useStation();
+  const { resources, isSimulationActive } = useOperationalIntelligence();
 
   const [forecast, setForecast] = useState<StationForecast | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -275,6 +278,14 @@ export const ForecastPanel: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
             <ResourceForecastCard forecast={forecast.diesel} />
             <ResourceForecastCard forecast={forecast.food} />
+          </div>
+
+          {/* Smart Resource & Inventory Tracker (Feature 4) */}
+          <div className="rounded-[28px] border border-white/[0.08] bg-ops-panel p-6 lg:p-8 shadow-[0_6px_22px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
+            <SmartResourceGrid
+              resources={resources}
+              isSimulationActive={isSimulationActive}
+            />
           </div>
         </div>
       ) : null}

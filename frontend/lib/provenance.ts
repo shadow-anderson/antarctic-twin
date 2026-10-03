@@ -101,6 +101,31 @@ export const PROVENANCE_REGISTRY: ProvenanceEntry[] = [
     source: "real",
     origin: "NCPOR station documentation",
   },
+  // ── OPERATIONAL INTELLIGENCE (Derived) ──────────────────────────────
+  {
+    key: "cascade_risk",
+    label: "Cascading Risk Engine",
+    source: "derived",
+    origin: "Deterministic interconnected system physics model",
+  },
+  {
+    key: "mitigation_actions",
+    label: "Recommended Mitigation",
+    source: "derived",
+    origin: "Deterministic rule-based response actions",
+  },
+  {
+    key: "actionable_alerts",
+    label: "Actionable Operational Alerts",
+    source: "derived",
+    origin: "Multi-subsystem telemetry early warning flags",
+  },
+  {
+    key: "mission_report",
+    label: "Mission Intelligence Report",
+    source: "derived",
+    origin: "10-section operational synthesis",
+  },
   // ── LINK STATE (Simulated) ────────────────────────────────────────────
   {
     key: "link_state",

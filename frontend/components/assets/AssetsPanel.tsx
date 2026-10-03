@@ -9,6 +9,7 @@ import { AssetTree } from "./AssetTree";
 import { AssetDetailPanel } from "./AssetDetailPanel";
 import { SchematicLoader } from "./schematic/SchematicLoader";
 import { SourceBadge } from "../shared/SourceBadge";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 import {
   Activity,
   Network,
@@ -26,6 +27,11 @@ export const AssetsPanel: React.FC = () => {
      SELECTED STATION
   ========================================================= */
   const { selectedStation } = useStation();
+  const {
+    isSimulationActive,
+    scenarioId,
+    highlightedElementId,
+  } = useOperationalIntelligence();
 
   /* =========================================================
      ASSET STATE
@@ -55,6 +61,74 @@ export const AssetsPanel: React.FC = () => {
   );
 
   /* =========================================================
+     SIMULATION-AWARE STATUS OVERLAYS
+     When a What-If scenario is active, degrade specific asset
+     statuses so the 3D schematic and hierarchy tree visually
+     reflect the cascade impact.
+  ========================================================= */
+  const getSimulatedStatus = (id: string, baseStatus: AssetStatus): AssetStatus => {
+    if (!isSimulationActive) return baseStatus;
+
+    const degradations: Record<string, Record<string, AssetStatus>> = {
+      extreme_cold: {
+        "gen-01": "warning",
+        "gen-02": "warning",
+        "battery-sys": "warning",
+        "hvac-01": "warning",
+      },
+      blizzard: {
+        "antenna-01": "warning",
+        "gen-02": "warning",
+        "solar-array": "critical",
+      },
+      high_wind: {
+        "antenna-01": "warning",
+        "solar-array": "warning",
+        "hvac-01": "warning",
+      },
+      generator_failure: {
+        "gen-01": "critical",
+        "gen-02": "warning",
+        "battery-sys": "critical",
+      },
+      battery_degradation: {
+        "battery-sys": "critical",
+        "gen-01": "warning",
+        "gen-02": "warning",
+      },
+      communication_failure: {
+        "antenna-01": "critical",
+        "sat-comm": "critical",
+      },
+      hvac_failure: {
+        "hvac-01": "critical",
+        "hvac-02": "warning",
+        "gen-01": "warning",
+      },
+      fuel_delay: {
+        "gen-01": "warning",
+        "gen-02": "warning",
+        "battery-sys": "warning",
+      },
+      logistics_delay: {
+        "gen-01": "warning",
+      },
+      multiple_failures: {
+        "gen-01": "critical",
+        "gen-02": "critical",
+        "battery-sys": "critical",
+        "hvac-01": "critical",
+        "antenna-01": "warning",
+      },
+    };
+
+    const scenarioDegradations = degradations[scenarioId];
+    if (!scenarioDegradations) return baseStatus;
+
+    return scenarioDegradations[id] ?? baseStatus;
+  };
+
+  /* =========================================================
      FLATTEN TREE → flat asset list for schematic
   ========================================================= */
   const flatAssets = useMemo(() => {
@@ -64,13 +138,17 @@ export const AssetsPanel: React.FC = () => {
         if (n.children && n.children.length > 0) {
           walk(n.children);
         } else {
-          result.push({ id: n.id, status: n.status ?? "healthy" });
+          result.push({
+            id: n.id,
+            status: getSimulatedStatus(n.id, n.status ?? "healthy"),
+          });
         }
       }
     };
     walk(treeData);
     return result;
-  }, [treeData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [treeData, isSimulationActive, scenarioId]);
 
   /* =========================================================
      LOAD ASSETS FOR SELECTED STATION
@@ -378,6 +456,23 @@ export const AssetsPanel: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Simulation Active Banner */}
+      {isSimulationActive && (
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-ops-amber/10 border border-ops-amber/30 text-xs">
+          <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-ops-amber/20 text-ops-amber">
+            <AlertTriangle className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-bold text-ops-amber uppercase text-[10px] tracking-wider">
+              Simulation Active
+            </span>
+            <p className="text-ops-text-2 mt-0.5 text-[11px]">
+              Asset statuses reflect projected degradation from the <strong className="text-white">{scenarioId.replace(/_/g, " ")}</strong> scenario.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* =====================================================
           3D SCHEMATIC VIEW

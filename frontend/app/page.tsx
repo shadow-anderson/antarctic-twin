@@ -1,14 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
-import { TopBar, ConsoleTab } from "@/components/layout/TopBar";
+import React from "react";
+import { TopBar } from "@/components/layout/TopBar";
 import { OverviewPanel } from "@/components/overview/OverviewPanel";
 import { AssetsPanel } from "@/components/assets/AssetsPanel";
+import { PolarisTwinPanel } from "@/components/twin/PolarisTwinPanel";
 import { WhatIfPanel } from "@/components/whatif/WhatIfPanel";
 import { ForecastPanel } from "@/components/forecast/ForecastPanel";
+import { AlertDrawer } from "@/components/intelligence/AlertDrawer";
+import { MissionReportModal } from "@/components/intelligence/MissionReportModal";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 
 export default function TwinConsolePage() {
-  const [activeTab, setActiveTab] = useState<ConsoleTab>("overview");
+  const {
+    activeTab,
+    setActiveTab,
+    isAlertDrawerOpen,
+    setIsAlertDrawerOpen,
+    isReportModalOpen,
+    setIsReportModalOpen,
+  } = useOperationalIntelligence();
 
   return (
     <div className="min-h-screen flex flex-col bg-ops-bg text-ops-text">
@@ -19,9 +30,20 @@ export default function TwinConsolePage() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-5 sm:p-7 lg:p-8 space-y-7">
         {activeTab === "overview" && <OverviewPanel />}
         {activeTab === "assets" && <AssetsPanel />}
+        {activeTab === "twin" && <PolarisTwinPanel />}
         {activeTab === "whatif" && <WhatIfPanel />}
         {activeTab === "forecast" && <ForecastPanel />}
       </main>
+
+      {/* Operational Intelligence Overlays */}
+      <AlertDrawer
+        isOpen={isAlertDrawerOpen}
+        onClose={() => setIsAlertDrawerOpen(false)}
+      />
+      <MissionReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
 
       {/* Enterprise Polar Footer */}
       <footer className="w-full border-t border-white/[0.08] bg-ops-panel/80 py-5 px-6 sm:px-8 mt-auto">
