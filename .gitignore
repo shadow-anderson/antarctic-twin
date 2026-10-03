@@ -3,3 +3,5 @@ __pycache__/
 venv/
 *.log
 uvicorn_out.txt
+docs/demo-script.md
+
