@@ -18,8 +18,46 @@ import { MOCK_FORECASTS } from "./mockData";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
+/**
+ * Returns true only when we have a non-localhost API URL configured.
+ * This prevents fetch hangs on Vercel where no backend is running.
+ */
+function isBackendAvailable(): boolean {
+  if (!API_BASE_URL) return false;
+  // Never attempt localhost calls in a non-browser or production context
+  if (typeof window !== "undefined") {
+    try {
+      const url = new URL(API_BASE_URL);
+      if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
+        return false; // skip — no backend on Vercel
+      }
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
+
 function getApiUrl(path: string) {
   return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
+}
+
+/**
+ * fetch() with a hard 3-second timeout so the app never hangs
+ * waiting for an unreachable backend.
+ */
+async function fetchWithTimeout(
+  url: string,
+  options?: RequestInit,
+  timeoutMs = 3000
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /*
@@ -271,9 +309,9 @@ const CALIBRATED_ASSET_DETAILS: Record<string, Record<string, AssetDetail>> = {
 export async function getStationCurrent(
   stationId: string
 ): Promise<StationCurrent> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl(`/stations/${stationId}/current`), {
+      const res = await fetchWithTimeout(getApiUrl(`/stations/${stationId}/current`), {
         cache: "no-store",
       });
       if (res.ok) {
@@ -298,9 +336,9 @@ export async function getStationCurrent(
 export async function getStationAnomalies(
   stationId: string
 ): Promise<Anomaly[]> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl(`/stations/${stationId}/anomalies`), {
+      const res = await fetchWithTimeout(getApiUrl(`/stations/${stationId}/anomalies`), {
         cache: "no-store",
       });
       if (res.ok) {
@@ -325,9 +363,9 @@ export async function simulateWhatIf(
   stationId: string,
   trigger: ScenarioTrigger
 ): Promise<WhatIfResult> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl(`/stations/${stationId}/simulate`), {
+      const res = await fetchWithTimeout(getApiUrl(`/stations/${stationId}/simulate`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ trigger }),
@@ -365,9 +403,9 @@ export async function simulateWhatIf(
  */
 
 export async function getLinkStatus(): Promise<LinkStatus> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl("/link/status"), { cache: "no-store" });
+      const res = await fetchWithTimeout(getApiUrl("/link/status"), { cache: "no-store" });
       if (res.ok) {
         return await res.json();
       }
@@ -376,7 +414,7 @@ export async function getLinkStatus(): Promise<LinkStatus> {
     }
   }
 
-  return { connected: true, last_synced: "Live UTC" };
+  return { connected: true, last_synced: "Simulation Mode" };
 }
 
 /*
@@ -387,9 +425,9 @@ export async function getLinkStatus(): Promise<LinkStatus> {
  */
 
 export async function toggleLink(): Promise<LinkStatus> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl("/link/toggle"), {
+      const res = await fetchWithTimeout(getApiUrl("/link/toggle"), {
         method: "POST",
         cache: "no-store",
       });
@@ -412,9 +450,9 @@ export async function toggleLink(): Promise<LinkStatus> {
  */
 
 export async function getMissionTime(): Promise<string> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl("/system/time"), { cache: "no-store" });
+      const res = await fetchWithTimeout(getApiUrl("/system/time"), { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         return data.utc_time;
@@ -438,9 +476,9 @@ export async function getMissionTime(): Promise<string> {
  */
 
 export async function getAssetTree(stationId: string): Promise<AssetNode[]> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl(`/stations/${stationId}/assets`), {
+      const res = await fetchWithTimeout(getApiUrl(`/stations/${stationId}/assets`), {
         cache: "no-store",
       });
       if (res.ok) {
@@ -467,9 +505,9 @@ export async function getAssetDetail(
   stationId: string,
   assetId: string
 ): Promise<AssetDetail | null> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         getApiUrl(`/stations/${stationId}/assets/${assetId}`),
         { cache: "no-store" }
       );
@@ -509,9 +547,9 @@ export async function getAssetDetail(
 export async function getStationForecast(
   stationId: string
 ): Promise<StationForecast> {
-  if (API_BASE_URL) {
+  if (isBackendAvailable()) {
     try {
-      const res = await fetch(getApiUrl(`/stations/${stationId}/forecast`), {
+      const res = await fetchWithTimeout(getApiUrl(`/stations/${stationId}/forecast`), {
         cache: "no-store",
       });
       if (res.ok) {

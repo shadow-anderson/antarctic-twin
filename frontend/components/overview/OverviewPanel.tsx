@@ -270,11 +270,11 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
           <div className="text-center">
             <p className="font-semibold text-ops-text">
-              Connecting to Digital Twin
+              Loading Station Data
             </p>
 
             <p className="text-xs text-ops-text-3 mt-1">
-              Synchronizing {meta.name} telemetry...
+              Preparing {meta.name} station telemetry...
             </p>
           </div>
 
