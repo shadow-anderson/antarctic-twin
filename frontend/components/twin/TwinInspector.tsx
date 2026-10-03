@@ -15,7 +15,9 @@ import {
   Zap,
   ArrowRight,
   ShieldAlert,
+  Wrench,
 } from "lucide-react";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 
 interface TwinInspectorProps {
   asset: TwinAsset | null;
@@ -66,6 +68,13 @@ export const TwinInspector: React.FC<TwinInspectorProps> = ({
 }) => {
   // If no asset is selected, do NOT render the inspector panel so the 3D model is 100% visible
   if (!asset) return null;
+
+  const { maintenanceRecords } = useOperationalIntelligence();
+  const maintRecord = maintenanceRecords.find(
+    (m) =>
+      m.assetId.toLowerCase() === asset.id.toLowerCase() ||
+      m.shortId.toLowerCase() === asset.shortId.toLowerCase()
+  );
 
   const data = stationId === "maitri" ? asset.maitri : asset.bharati;
   const statusMeta = STATUS_BADGES[data.status];
@@ -169,6 +178,40 @@ export const TwinInspector: React.FC<TwinInspectorProps> = ({
             </span>
           </div>
         </div>
+
+        {/* Predictive Maintenance Status (Feature 9.5) */}
+        {maintRecord && (
+          <div className="p-3 rounded-xl bg-[#0B1320]/80 border border-[#1E2E42] space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 text-slate-300">
+                <Wrench className="w-3 h-3 text-[#00E5FF]" />
+                Maintenance
+              </span>
+              <span
+                className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
+                  maintRecord.priority === "CRITICAL"
+                    ? "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                    : maintRecord.priority === "HIGH"
+                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
+                    : maintRecord.priority === "MEDIUM"
+                    ? "bg-blue-500/20 text-blue-400 border border-blue-500/40"
+                    : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                }`}
+              >
+                {maintRecord.priority} PRIORITY
+              </span>
+            </div>
+            <div className="text-[11px] text-slate-200">
+              <span className="text-slate-400">Recommended: </span>
+              {maintRecord.nextRecommended}
+            </div>
+            {maintRecord.reason.length > 0 && (
+              <div className="text-[10px] text-slate-400">
+                Reason: {maintRecord.reason[0]}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Description */}
         <p className="text-[11px] text-slate-300 leading-relaxed bg-[#0B1320]/65 p-2.5 rounded-xl border border-[#1E2E42]/50">

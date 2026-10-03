@@ -8,6 +8,7 @@ import { useStation } from "@/context/StationContext";
 import { AssetTree } from "./AssetTree";
 import { AssetDetailPanel } from "./AssetDetailPanel";
 import { SchematicLoader } from "./schematic/SchematicLoader";
+import { PredictiveMaintenancePanel } from "./PredictiveMaintenancePanel";
 import { SourceBadge } from "../shared/SourceBadge";
 import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 import {
@@ -597,6 +598,9 @@ export const AssetsPanel: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Feature 9: Predictive Maintenance */}
+      <PredictiveMaintenancePanel />
     </div>
   );
 };

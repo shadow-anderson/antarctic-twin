@@ -14,6 +14,12 @@ import { calculateCascadeRisk } from "@/lib/intelligence/cascadeEngine";
 import { generateAlerts, countAlerts, AlertCounts } from "@/lib/intelligence/alertEngine";
 import { calculateSmartResources } from "@/lib/intelligence/resourceEngine";
 import { buildMissionReport, MissionReportData } from "@/lib/intelligence/missionReportEngine";
+import { calculateMissionReadiness, ReadinessResult } from "@/lib/intelligence/readinessEngine";
+import { calculatePredictiveMaintenance, MaintenanceRecord } from "@/lib/intelligence/maintenanceEngine";
+import { generateScenarioTimeline, ScenarioTimeline } from "@/lib/intelligence/timelineEngine";
+import { calculateCommunicationHealth, CommunicationHealth } from "@/lib/intelligence/communicationEngine";
+import { simulateRoute, getRouteAlternatives, LogisticsRoute, RouteAlternative, WeatherCondition, ROUTE_DEFINITIONS } from "@/lib/intelligence/logisticsEngine";
+import { calculateInterStationCoordination, InterStationCoordination } from "@/lib/intelligence/coordinationEngine";
 import { ConsoleTab } from "@/components/layout/TopBar";
 
 interface OperationalIntelligenceContextType {
@@ -57,6 +63,33 @@ interface OperationalIntelligenceContextType {
   // Alert Drawer / Modal state
   isAlertDrawerOpen: boolean;
   setIsAlertDrawerOpen: (open: boolean) => void;
+
+  // ── NEW PHASE 2 / 3 FEATURES ──────────────────────────────────
+
+  // Feature 8 — Mission Readiness
+  missionReadiness: ReadinessResult;
+
+  // Feature 9 — Predictive Maintenance
+  maintenanceRecords: MaintenanceRecord[];
+
+  // Feature 10 — Scenario Timeline
+  scenarioTimeline: ScenarioTimeline;
+
+  // Feature 11 — (Explainable Risk is derived from cascadeResult.cascadeChain in the component)
+
+  // Feature 12 — Inter-Station Coordination
+  interStationCoordination: InterStationCoordination;
+
+  // Feature 13 — Logistics Route Simulation
+  selectedRouteId: string;
+  setSelectedRouteId: (id: string) => void;
+  logisticsWeather: WeatherCondition;
+  setLogisticsWeather: (w: WeatherCondition) => void;
+  currentRoute: LogisticsRoute;
+  routeAlternatives: RouteAlternative[];
+
+  // Feature 14 — Communication Health
+  communicationHealth: CommunicationHealth;
 }
 
 const OperationalIntelligenceContext = createContext<
@@ -76,7 +109,7 @@ export const OperationalIntelligenceProvider: React.FC<{
   const [severity, setSeverity] = useState<SeverityLevel>("severe");
   const [duration, setDuration] = useState<DurationWindow>("48h");
   const [appliedActionIds, setAppliedActionIds] = useState<string[]>([]);
-  const [isSimulationActive, setIsSimulationActive] = useState<boolean>(false); // user must explicitly run simulation
+  const [isSimulationActive, setIsSimulationActive] = useState<boolean>(false);
 
   // Modals & drawers
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
@@ -84,6 +117,12 @@ export const OperationalIntelligenceProvider: React.FC<{
   const [selectedAlert, setSelectedAlert] = useState<OperationalAlert | null>(null);
   const [dismissedAlertIds, setDismissedAlertIds] = useState<string[]>([]);
   const [highlightedElementId, setHighlightedElementId] = useState<string | null>(null);
+
+  // Logistics controls
+  const [selectedRouteId, setSelectedRouteId] = useState<string>(
+    selectedStation === "maitri" ? "goa-maitri-sea" : "goa-bharati-sea"
+  );
+  const [logisticsWeather, setLogisticsWeather] = useState<WeatherCondition>("NORMAL");
 
   // Toggle individual mitigation action
   const toggleAction = useCallback((actionId: string) => {
@@ -108,7 +147,8 @@ export const OperationalIntelligenceProvider: React.FC<{
     setActiveTab("whatif");
   }, []);
 
-  // Compute Cascade Result reactively
+  // ── EXISTING COMPUTED RESULTS ──────────────────────────────────
+
   const cascadeResult = useMemo(() => {
     return calculateCascadeRisk(
       selectedStation,
@@ -119,7 +159,6 @@ export const OperationalIntelligenceProvider: React.FC<{
     );
   }, [selectedStation, scenarioId, severity, duration, appliedActionIds]);
 
-  // Compute Actionable Alerts reactively
   const alerts = useMemo(() => {
     const rawAlerts = generateAlerts(
       selectedStation,
@@ -137,7 +176,6 @@ export const OperationalIntelligenceProvider: React.FC<{
     setDismissedAlertIds((prev) => [...prev, id]);
   }, []);
 
-  // Compute Smart Resources reactively
   const resources = useMemo(() => {
     return calculateSmartResources(
       selectedStation,
@@ -147,7 +185,6 @@ export const OperationalIntelligenceProvider: React.FC<{
     );
   }, [selectedStation, scenarioId, isSimulationActive, appliedActionIds]);
 
-  // Compute Mission Report reactively
   const missionReport = useMemo(() => {
     return buildMissionReport(
       selectedStation,
@@ -159,6 +196,68 @@ export const OperationalIntelligenceProvider: React.FC<{
     );
   }, [selectedStation, cascadeResult, resources, alerts, isSimulationActive]);
 
+  // ── NEW PHASE 2/3 COMPUTED RESULTS ────────────────────────────
+
+  // Feature 8 — Mission Readiness
+  const missionReadiness = useMemo(() => {
+    return calculateMissionReadiness(
+      selectedStation,
+      cascadeResult,
+      resources,
+      isSimulationActive,
+      appliedActionIds
+    );
+  }, [selectedStation, cascadeResult, resources, isSimulationActive, appliedActionIds]);
+
+  // Feature 9 — Predictive Maintenance
+  const maintenanceRecords = useMemo(() => {
+    return calculatePredictiveMaintenance(
+      selectedStation,
+      isSimulationActive ? cascadeResult : null,
+      isSimulationActive
+    );
+  }, [selectedStation, cascadeResult, isSimulationActive]);
+
+  // Feature 10 — Scenario Timeline
+  const scenarioTimeline = useMemo(() => {
+    return generateScenarioTimeline(cascadeResult, resources, appliedActionIds);
+  }, [cascadeResult, resources, appliedActionIds]);
+
+  // Feature 14 — Communication Health (needed for coordination)
+  const communicationHealth = useMemo(() => {
+    return calculateCommunicationHealth(
+      selectedStation,
+      isSimulationActive ? scenarioId : null,
+      isSimulationActive,
+      appliedActionIds
+    );
+  }, [selectedStation, scenarioId, isSimulationActive, appliedActionIds]);
+
+  // Feature 12 — Inter-Station Coordination
+  const interStationCoordination = useMemo(() => {
+    const activeRisk = isSimulationActive
+      ? cascadeResult.missionRisk.simulated
+      : "LOW";
+    return calculateInterStationCoordination(
+      selectedStation,
+      missionReadiness,
+      resources,
+      communicationHealth.overallScore,
+      activeRisk
+    );
+  }, [selectedStation, missionReadiness, resources, communicationHealth, cascadeResult, isSimulationActive]);
+
+  // Feature 13 — Logistics Route
+  const currentRoute = useMemo(() => {
+    // Auto-select appropriate route when station changes
+    const routeId = selectedRouteId;
+    return simulateRoute(routeId, logisticsWeather, resources);
+  }, [selectedRouteId, logisticsWeather, resources]);
+
+  const routeAlternatives = useMemo(() => {
+    return getRouteAlternatives(selectedStation, logisticsWeather, resources);
+  }, [selectedStation, logisticsWeather, resources]);
+
   // Jump to linked system from alert
   const jumpToAlertSystem = useCallback(
     (alert: OperationalAlert) => {
@@ -166,7 +265,6 @@ export const OperationalIntelligenceProvider: React.FC<{
       setActiveTab(alert.targetTab);
       setIsAlertDrawerOpen(false);
 
-      // Smooth scroll & highlight after DOM switch
       setTimeout(() => {
         setHighlightedElementId(alert.targetElementId);
         const el = document.getElementById(alert.targetElementId);
@@ -216,6 +314,19 @@ export const OperationalIntelligenceProvider: React.FC<{
 
         isAlertDrawerOpen,
         setIsAlertDrawerOpen,
+
+        // New features
+        missionReadiness,
+        maintenanceRecords,
+        scenarioTimeline,
+        interStationCoordination,
+        selectedRouteId,
+        setSelectedRouteId,
+        logisticsWeather,
+        setLogisticsWeather,
+        currentRoute,
+        routeAlternatives,
+        communicationHealth,
       }}
     >
       {children}

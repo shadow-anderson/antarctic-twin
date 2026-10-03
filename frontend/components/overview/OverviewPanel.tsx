@@ -20,6 +20,8 @@ import { MetricCard } from "../shared/MetricCard";
 import { WeatherSection } from "./WeatherSection";
 import { EnergySection } from "./EnergySection";
 import { LogisticsSection } from "./LogisticsSection";
+import { MissionReadinessCard } from "../intelligence/MissionReadinessCard";
+import { CommunicationHealthCard } from "../intelligence/CommunicationHealthCard";
 
 import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 
@@ -1035,6 +1037,19 @@ Communication is provided through dedicated satellite channels, enabling voice, 
 
         </div>
 
+      </div>
+
+      {/* =====================================================
+          FEATURE 8 & 14: MISSION READINESS & COMM HEALTH
+          Placed at the bottom — operational intelligence summary
+      ===================================================== */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 pt-2">
+        <div className="xl:col-span-7">
+          <MissionReadinessCard />
+        </div>
+        <div className="xl:col-span-5">
+          <CommunicationHealthCard />
+        </div>
       </div>
 
     </div>

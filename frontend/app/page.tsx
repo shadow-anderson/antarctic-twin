@@ -7,6 +7,7 @@ import { AssetsPanel } from "@/components/assets/AssetsPanel";
 import { PolarisTwinPanel } from "@/components/twin/PolarisTwinPanel";
 import { WhatIfPanel } from "@/components/whatif/WhatIfPanel";
 import { ForecastPanel } from "@/components/forecast/ForecastPanel";
+import { LogisticsPanel } from "@/components/logistics/LogisticsPanel";
 import { AlertDrawer } from "@/components/intelligence/AlertDrawer";
 import { MissionReportModal } from "@/components/intelligence/MissionReportModal";
 import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
@@ -33,6 +34,7 @@ export default function TwinConsolePage() {
         {activeTab === "twin" && <PolarisTwinPanel />}
         {activeTab === "whatif" && <WhatIfPanel />}
         {activeTab === "forecast" && <ForecastPanel />}
+        {activeTab === "logistics" && <LogisticsPanel />}
       </main>
 
       {/* Operational Intelligence Overlays */}

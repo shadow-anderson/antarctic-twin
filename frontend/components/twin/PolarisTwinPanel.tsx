@@ -19,7 +19,11 @@ import {
   Battery,
   Fuel,
   Compass,
+  Wifi,
+  WifiOff,
+  Satellite,
 } from "lucide-react";
+import { useOperationalIntelligence } from "@/context/OperationalIntelligenceContext";
 
 // Dynamic import of 3D Canvas with ssr: false
 const Twin3DCanvas = dynamic(
@@ -45,6 +49,7 @@ const Twin3DCanvas = dynamic(
 
 export const PolarisTwinPanel: React.FC = () => {
   const { selectedStation, setSelectedStation } = useStation();
+  const { communicationHealth } = useOperationalIntelligence();
 
   // Active layers (8 layers)
   const [activeLayers, setActiveLayers] = useState<Record<TwinLayerId, boolean>>({
@@ -297,6 +302,51 @@ export const PolarisTwinPanel: React.FC = () => {
           wireframe={wireframe}
           onToggleWireframe={() => setWireframe((prev) => !prev)}
         />
+
+        {/* Communication Health Layer Visualizer (Feature 14.5) */}
+        {activeLayers.communication && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2 rounded-2xl bg-[#0B1320]/90 border border-[#22354D] backdrop-blur-md shadow-2xl">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
+              <span className="font-mono text-[11px] font-bold text-slate-100 uppercase">
+                {selectedStation === "maitri" ? "Maitri Base" : "Bharati Base"}
+              </span>
+            </div>
+
+            {/* Visual Animated Connection Flow */}
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/40 border border-white/5">
+              {communicationHealth.status === "CONNECTED" ? (
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="w-6 h-0.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 animate-pulse" />
+                  <span className="text-[10px] font-mono font-bold tracking-wider">{communicationHealth.latencyMs}ms · NORMAL FLOW</span>
+                  <span className="w-6 h-0.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                </div>
+              ) : communicationHealth.status === "DEGRADED" ? (
+                <div className="flex items-center gap-1.5 text-amber-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span className="w-6 h-0.5 border-t border-dashed border-amber-400 animate-pulse" />
+                  <span className="text-[10px] font-mono font-bold tracking-wider">
+                    {communicationHealth.latencyMs}ms · DEGRADED FLOW
+                  </span>
+                  <span className="w-6 h-0.5 border-t border-dashed border-amber-400 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-rose-400">
+                  <WifiOff className="w-3.5 h-3.5" />
+                  <span className="text-[10px] font-mono font-bold tracking-wider">CARRIER LINK BROKEN</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <Satellite className="w-3.5 h-3.5 text-[#00E5FF]" />
+              <span className="font-mono text-[10px] text-slate-300">ISRO Sat Link</span>
+            </div>
+          </div>
+        )}
 
         {/* 3D Scene Viewport */}
         <div className="w-full h-full">
