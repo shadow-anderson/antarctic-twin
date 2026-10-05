@@ -1,4 +1,4 @@
-# Antarctic Digital Twin
+# Polar Twin
 
 A web-based monitoring and simulation platform for India's two Antarctic research stations — Maitri and Bharati — built for Smart India Hackathon 2026, Problem Statement **PS-26060: Digital Platform for efficient remote management of Indian Antarctic Research Stations** (Ministry of Earth Sciences / NCPOR).
 
